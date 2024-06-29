@@ -1,33 +1,67 @@
 package moodbuddy.moodbuddy.domain.user.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "user")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-public class User extends BaseEntity {
+@Setter
+@Builder
+public class User{
+
     @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id", columnDefinition = "bigint")
+    private Long userId;
 
-    @Column(name = "user_email")
-    private String userEmail;
-    private String userName;
-    private String userNickName;
-    private String userBirth;
-    private LocalDateTime userNoticeTime;
-    private Integer userDiaryNums = 0;
-    private String userRole = "ROLE_USER";
+    @Column(name = "user_role", columnDefinition = "varchar", length = 50)
+    private String userRole;
 
-    // deleted 역할이 무엇인 지 몰라서 빼둠
+    @Column(name = "nickname", columnDefinition = "varchar", length = 50)
+    private String nickname;
 
-    /** 생성자 **/
-    protected User() {}
+    @Column(name = "kakao_id", columnDefinition = "bigint")
+    private Long kakaoId;
+
+    @Column(name = "alarm", columnDefinition = "tinyint")
+    private Boolean alarm;
+
+    @Column(name = "alarm_time", columnDefinition = "date")
+    private LocalDateTime alarmTime;
+
+    @Column(name = "birthday", columnDefinition = "datetime(6)")
+    private LocalDateTime birthday;
+
+    @Column(name = "gender", columnDefinition = "tinyint")
+    private Boolean gender;
+
+    @Column(name = "user_cur_diary_nums", columnDefinition = "int")
+    private Integer userCurDiaryNums;
+
+    @CreationTimestamp
+    @Column(name = "created_at", columnDefinition = "datetime")
+    private LocalDateTime createdAt;
+
+    @Column(name="deleted", columnDefinition = "tinyint")
+    private Boolean deleted;
+
+    @Column(name = "access_token", columnDefinition = "text")
+    private String accessToken;
+
+    @Column(name = "access_token_expired_at", columnDefinition = "date")
+    private LocalDate accessTokenExpiredAt;
+
+    @Column(name = "refresh_token", columnDefinition = "text")
+    private String refreshToken;
+
+    @Column(name = "refresh_token_expired_at", columnDefinition = "date")
+    private LocalDate refreshTokenExpiredAt;
+
 }
