@@ -21,9 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,6 +99,21 @@ public class LetterServiceImpl implements LetterService {
             throw new RuntimeException("[LetterService] writeLetter error", e);
         }
     }
+
+    public void answerSave(){
+        log.info("[LetterService] answerSaver");
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                // 여기에 답장 내용 letterRepository
+            }
+        };
+
+        long delay = 12*60*60*1000; // 12시간 설정
+        timer.schedule(task, delay); // 12시간 뒤에 task
+    }
+
 
     @Override
     @Transactional

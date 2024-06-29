@@ -14,4 +14,5 @@ public interface LetterService {
 
     // 고민 편지 내용
     LetterResDetailsDTO details(Long letterId);
+
 }
