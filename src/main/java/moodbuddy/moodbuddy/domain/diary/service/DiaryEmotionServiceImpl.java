@@ -27,65 +27,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DiaryEmotionServiceImpl implements DiaryEmotionService {
     private final DiaryRepository diaryRepository;
-    private final ObjectMapper objectMapper;
     private final GptService gptService;
     @Override
     @Transactional
     public DiaryResDTO description() throws JsonProcessingException {
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        //헤더를 JSON으로 설정함
-        HttpHeaders headers = new HttpHeaders();
-
-        //파라미터로 들어온 dto를 JSON 객체로 변환
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        // 쿼리 결과를 JSON 객체로 변환
         Diary diary = diaryRepository.findDiarySummaryById(JwtUtil.getUserId())
                 .orElseThrow(() -> new DatabaseNullOrEmptyException("Diary Summary data not found for kakaoId: " + JwtUtil.getUserId()));
 
-        // 'diarySummary' key와 diary.getDiarySummary() 값을 포함하는 Map 생성
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("diarySummary", diary.getDiarySummary());
-
-        // Map을 JSON 문자열로 변환
-        String param = objectMapper.writeValueAsString(paramMap);
-        log.info(param+"서버로 전송");
-
-        HttpEntity<String> entity = new HttpEntity<String>(param , headers);
-
-        //실제 Flask 서버랑 연결하기 위한 URL
-        String url = "https://clean-brave-eel.ngrok-free.app/model";
-
-        // Flask 서버로 데이터를 전송하고 받은 응답 값을 처리
-        String response = restTemplate.postForObject(url, entity, String.class);
-
-        // 받은 응답 값을 DiaryDesResponseDto로 변환
-
-        DiaryResDTO responseDto = objectMapper.readValue(response, DiaryResDTO.class);
-
-        Mono<String> monoComment = gptService.emotionComment(response);
-        String comment = monoComment.block();
-
-        responseDto.setComment(comment);
-        responseDto.setDiaryDate(diary.getDiaryDate());
-
-        String emotion = responseDto.getEmotion();
+        String emotion = gptService.descriptionContent(diary.getDiaryContent()).block();
+        String comment = gptService.emotionComment(emotion).block();
 
         try {
-            // 문자열을 DiaryEmotion enum 값으로 변환
-            DiaryEmotion diaryEmotion = DiaryEmotion.valueOf(emotion.toUpperCase());
-
+            DiaryEmotion diaryEmotion = DiaryEmotion.valueOf(emotion);
             diary.setDiaryEmotion(diaryEmotion);
-            // diary 엔티티를 저장
             diaryRepository.save(diary);
         } catch (IllegalArgumentException e) {
-            // 유효하지 않은 emotion 값이 들어왔을 때의 처리
             System.err.println("Invalid emotion value: " + emotion);
         }
 
-
-        return responseDto;
+        return DiaryResDTO.builder()
+                .emotion(emotion)
+                .diaryDate(diary.getDiaryDate())
+                .comment(comment)
+                .build();
     }
 }

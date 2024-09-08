@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface LetterRepository extends JpaRepository<Letter, Long> {
     @Query("select l from Letter l where l.user.userId = :userId")
-    List<Letter> findByUserId(@Param("userId") Long userId);
+    List<Letter> findLettersByUserId(@Param("userId") Long userId);
 
     @Modifying
     @Transactional

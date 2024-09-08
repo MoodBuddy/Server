@@ -17,7 +17,7 @@ public interface LetterService {
     LetterResUpdateDTO updateLetterAlarm(LetterReqUpdateDTO letterReqUpdateDTO);
 
     // 고민 편지 작성
-    LetterResSaveDTO letterSave(Long kakaoId, LetterReqDTO letterReqDTO);
+    LetterResSaveDTO letterSave(LetterReqDTO letterReqDTO);
 
     // 고민 편지 내용
     LetterResDetailsDTO letterDetails(Long letterId);
