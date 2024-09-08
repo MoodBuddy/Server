@@ -50,9 +50,9 @@ public class OAuthController {
         return new RedirectView(kakaoLoginUrl);
     }
 
-//http://localhost:8080/api/v1/user/login/oauth2/code/kakao
-    //kakao id가 있다면 -> login
-    //kakao id가 없다면 -> signup
+    // http://localhost:8080/api/v1/user/login/oauth2/code/kakao
+    // kakao id가 있다면 -> login
+    // kakao id가 없다면 -> signup
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<LoginResponseDto> kakaoLogin(HttpServletRequest request) {
 

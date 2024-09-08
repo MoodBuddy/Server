@@ -45,18 +45,18 @@ public class DiaryServiceImpl implements DiaryService {
         log.info("[DiaryServiceImpl] save");
         final Long kakaoId = JwtUtil.getUserId();
 
-        DiaryUtil.validateExistingDiary(diaryRepository, diaryReqSaveDTO.getDiaryDate(), kakaoId);
+        DiaryUtil.validateExistingDiary(diaryRepository, diaryReqSaveDTO.getDiaryDate(), kakaoId); // 오늘 쓴 일기 있는지 확인
 
-        String summary = gptService.summarize(diaryReqSaveDTO.getDiaryContent()).block();
-        DiarySubject diarySubject = classifyDiaryContent(diaryReqSaveDTO.getDiaryContent());
+        String summary = gptService.summarize(diaryReqSaveDTO.getDiaryContent()).block(); // 일기 요약
+        DiarySubject diarySubject = classifyDiaryContent(diaryReqSaveDTO.getDiaryContent()); // 일기 주제
 
-        Diary diary = DiaryMapper.toDiaryEntity(diaryReqSaveDTO, kakaoId, summary, diarySubject);
-        diary = diaryRepository.save(diary);
+        Diary diary = DiaryMapper.toDiaryEntity(diaryReqSaveDTO, kakaoId, summary, diarySubject); // 일기 생성
+        diary = diaryRepository.save(diary); // 일기 DB에 저장
 
-        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqSaveDTO.getDiaryImgList(), diary);
+        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqSaveDTO.getDiaryImgList(), diary); // 일기 이미지 저장
 
-        checkTodayDiary(diaryReqSaveDTO.getDiaryDate(), kakaoId, false);
-        deleteDraftDiaries(diaryReqSaveDTO.getDiaryDate(), kakaoId);
+        checkTodayDiary(diaryReqSaveDTO.getDiaryDate(), kakaoId, false); // 편지지 개수와 일기 작성 가능 상태 변경
+        deleteDraftDiaries(diaryReqSaveDTO.getDiaryDate(), kakaoId); // 임시저장 일기 삭제
 
         return DiaryMapper.toDetailDTO(diary);
     }
@@ -190,10 +190,9 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     private DiarySubject classifyDiaryContent(String diaryContent) {
-        Mono<String> subjectMono = gptService.classifyDiaryContent(diaryContent);
-        String classifiedSubject = subjectMono.block();
-        return DiarySubject.valueOf(classifiedSubject);
+        return DiarySubject.valueOf(gptService.classifyDiaryContent(diaryContent).block());
     }
+
     private void checkTodayDiary(LocalDate diaryDate, Long kakaoId, boolean check) {
         LocalDate today = LocalDate.now();
         if (diaryDate.isEqual(today)) {

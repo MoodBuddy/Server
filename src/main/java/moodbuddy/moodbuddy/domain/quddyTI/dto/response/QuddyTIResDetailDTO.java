@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@Builder
 public class QuddyTIResDetailDTO {
+
     @Schema(description = "사용자 고유 식별자(kakaoId)", example = "2")
     private Long kakaoId;
     @Schema(description = "Happiness 갯수", example = "2")
