@@ -1,8 +1,8 @@
-package moodbuddy.moodbuddy.domain.gpt.service;
+package moodbuddy.moodbuddy.global.common.gpt.service;
 
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTRequestDTO;
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTResponseDTO;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTRequestDTO;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

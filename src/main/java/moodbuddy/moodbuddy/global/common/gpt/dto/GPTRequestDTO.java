@@ -1,9 +1,8 @@
-package moodbuddy.moodbuddy.domain.gpt.dto;
+package moodbuddy.moodbuddy.global.common.gpt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTMessageDTO;
 
 import java.util.ArrayList;
 import java.util.List;
