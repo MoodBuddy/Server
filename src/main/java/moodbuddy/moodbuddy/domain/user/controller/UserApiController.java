@@ -36,20 +36,12 @@ public class UserApiController {
 
     @GetMapping("/main")
     @Operation(summary = "메인 화면", description = "메인 화면으로 이동합니다.")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserResMainPageDTO.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> mainPage(){
         return ResponseEntity.ok(userService.mainPage());
     }
 
     @PostMapping("/main/month")
     @Operation(summary = "캘린더 달 이동", description = "캘린더의 달을 이동시킵니다.")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserResCalendarMonthListDTO.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> monthlyCalendar(
             @Parameter(description = "캘린더에서 이동할 년, 월을 담고 있는 DTO")
             @RequestBody UserReqCalendarMonthDTO calendarMonthDTO
@@ -59,10 +51,6 @@ public class UserApiController {
 
     @PostMapping("/main/summary")
     @Operation(summary = "일기 한 줄 요약", description = "사용자가 선택한 날짜의 일기를 한 줄 요약한 결과를 보여줍니다.")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserResCalendarSummaryDTO.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> summary(
             @Parameter(description = "사용자가 선택한 날짜를 담고 있는 DTO")
             @RequestBody UserReqCalendarSummaryDTO calendarSummaryDTO
@@ -73,10 +61,6 @@ public class UserApiController {
     //월별 통계 보기
     @GetMapping("/main/month-static")
     @Operation(summary = "월별 통계 보기", description = "사용자가 선택한 월의 통계(감정 리스트, 짧은 한 마디) 를 보여줍니다.")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserResStatisticsMonthDTO.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     @Parameters({
             @Parameter(name="month", description = "YYYY-MM-DD 형식으로 입력하세요"),
     })
@@ -88,10 +72,6 @@ public class UserApiController {
     // 다음 달 나에게 짧은 한 마디
     @PostMapping("/main/month-comment")
     @Operation(summary = "다음 달 나에게 짧은 한 마디")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserResMonthCommentDTO.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> monthComment(
             @Parameter(description = "월별 통계의 달과 한 마디를 받아오는 DTO")
             @RequestBody UserReqMonthCommentDTO userReqMonthCommentDTO
@@ -102,10 +82,6 @@ public class UserApiController {
     // 다음 달 나에게 짧은 한 마디 수정
     @PostMapping("/main/month-comment-update")
     @Operation(summary = "다음 달 나에게 짧은 한 마디 수정")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserResMonthCommentUpdateDTO.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> monthCommentUpdate(
             @Parameter(description = "월별 통계의 달과 수정할 한 마디를 받아오는 DTO")
             @RequestBody UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO
@@ -160,10 +136,6 @@ public class UserApiController {
     /** 테스트를 위한 임시 자체 로그인 **/
     @PostMapping("/test/login")
     @Operation(summary = "자체 로그인")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = LoginResponseDto.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> login(
             @Parameter(description = "자체 로그인 회원 정보를 받아오는 DTO")
             @RequestBody UserReqLoginDTO userReqLoginDTO
@@ -174,10 +146,6 @@ public class UserApiController {
 
     @GetMapping("/checkTodayDiary")
     @Operation(summary = "오늘 일기 작성 가능 여부 확인")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = UserResCheckTodayDiaryDTO.class)))
-            // @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> checkTodayDiary(){
         log.info("[DiaryApiController] login");
         return ResponseEntity.ok().body(ApiResponse.SUCCESS(HttpStatus.CREATED.value(), "[SUCCESS] UserApiController checkTodayDiary", userService.checkTodayDiary()));

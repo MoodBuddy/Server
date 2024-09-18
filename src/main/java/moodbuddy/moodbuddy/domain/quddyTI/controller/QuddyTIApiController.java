@@ -27,10 +27,6 @@ public class QuddyTIApiController {
     /** 구현 완료 **/
     @GetMapping("/findAll")
     @Operation(summary = "쿼디티아이 조회", description = "쿼디티아이 관련 내용을 모두 조회합니다.")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = QuddyTIResDetailDTO.class)))
-//            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> findAll() {
         log.info("[QuddyTIApiController] findAll");
         return ResponseEntity.ok().body(ApiResponse.SUCCESS(HttpStatus.CREATED.value(), "[SUCCESS] QuddyTIApiController findAll", quddyTIService.findAll()));

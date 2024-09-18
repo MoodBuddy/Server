@@ -30,10 +30,6 @@ public class BookMarkApiController {
     /** 구현 완료 **/
     @PostMapping("/toggle/{diaryId}")
     @Operation(summary = "북마크 토글", description = "북마크 토글 북마크 성공(true) / 북마크 취소(false)")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = BookMarkResToggleDTO.class)))
-//            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> toggle(@Parameter(description = "일기 고유 식별자")
                                   @PathVariable("diaryId") Long diaryId) throws IOException {
         log.info("[BookMarkApiController] toggle");
@@ -42,10 +38,6 @@ public class BookMarkApiController {
 
     @GetMapping("/findAll")
     @Operation(summary = "북마크 전체 조회", description = "북마크 전체 조회합니다.")
-    @ApiResponses(value = {
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "SUCCESS", content = @Content(schema = @Schema(implementation = DiaryResDetailDTO.class)))
-//            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-    })
     public ResponseEntity<?> findAll(Pageable pageable) throws IOException {
         log.info("[BookMarkApiController] findAll");
         return ResponseEntity.ok().body(ApiResponse.SUCCESS(HttpStatus.CREATED.value(), "[SUCCESS] BookMarkApiController findAll", bookMarkService.bookMarkFindAllByWithPageable(pageable)));
