@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResEmotionDTO;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryEmotionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +22,8 @@ public class DiaryEmotionApiController {
     //클라이언트가 일기 작성 -> 일기 요약본 flask서버로 전달 -> flask 서버에서는 모델을 통한 감정 분석 후 결과를 리턴
     @PostMapping("/description")
     @Operation(description = "일기 감정 분석")
-    public ResponseEntity<DiaryResDTO> description() throws JsonProcessingException {
-        DiaryResDTO result = diaryEmotionService.description();
+    public ResponseEntity<DiaryResEmotionDTO> description() throws JsonProcessingException {
+        DiaryResEmotionDTO result = diaryEmotionService.description();
         return ResponseEntity.ok(result);
     }
 }

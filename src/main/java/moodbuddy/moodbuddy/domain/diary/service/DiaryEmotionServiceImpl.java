@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResEmotionDTO;
 import moodbuddy.moodbuddy.domain.diary.entity.Diary;
 import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
@@ -31,7 +31,7 @@ public class DiaryEmotionServiceImpl implements DiaryEmotionService {
     private final GptService gptService;
     @Override
     @Transactional
-    public DiaryResDTO description() throws JsonProcessingException {
+    public DiaryResEmotionDTO description() throws JsonProcessingException {
 
         RestTemplate restTemplate = new RestTemplate();
 
@@ -63,7 +63,7 @@ public class DiaryEmotionServiceImpl implements DiaryEmotionService {
 
         // 받은 응답 값을 DiaryDesResponseDto로 변환
 
-        DiaryResDTO responseDto = objectMapper.readValue(response, DiaryResDTO.class);
+        DiaryResEmotionDTO responseDto = objectMapper.readValue(response, DiaryResEmotionDTO.class);
 
         Mono<String> monoComment = gptService.emotionComment(response);
         String comment = monoComment.block();
