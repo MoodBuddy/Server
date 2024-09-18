@@ -72,7 +72,6 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserResMainPageDTO mainPage(){
-        log.info("[UserService] mainPage");
         try {
             // kakaoId를 통해 userRepository에서 유저 조회 (Optional 사용)
             Long kakaoId = JwtUtil.getUserId();
@@ -132,7 +131,6 @@ public class UserServiceImpl implements UserService{
 
     // 각 emotion의 횟수를 세는 메소드
     public Map<DiaryEmotion,Integer> emotionNum(List<Diary> diaryList){
-        log.info("[UserService] emotionNum");
         try{
             // 각 Diary의 emotion을 통해 한 달의 emotion 횟수를 세기 위한 Map
             Map<DiaryEmotion,Integer> emotionNum = new HashMap<>();
@@ -153,7 +151,6 @@ public class UserServiceImpl implements UserService{
 
     // emotion 횟수의 최댓값을 찾기 위한 메소드
     public Map<DiaryEmotion, Integer> getMaxEmotion(Map<DiaryEmotion, Integer> emotionNum) {
-        log.info("[UserService] getMaxEmotion");
         try{
             int maxValue = 0;
             DiaryEmotion maxKey = null;
@@ -181,7 +178,6 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserResCalendarMonthListDTO monthlyCalendar(UserReqCalendarMonthDTO calendarMonthDTO){
-        log.info("[UserService] monthlyCalendar");
         try{
             // -> userID 가져오기
             Long kakaoId = JwtUtil.getUserId();
@@ -213,7 +209,6 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserResCalendarSummaryDTO summary(UserReqCalendarSummaryDTO calendarSummaryDTO) {
-        log.info("[UserService] summary");
         try {
             Long kakaoId = JwtUtil.getUserId();
 
@@ -312,7 +307,6 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserResMonthCommentDTO monthComment(UserReqMonthCommentDTO userReqMonthCommentDTO){
-        log.info("[UserService] monthComment");
         try {
             Long kakaoId = JwtUtil.getUserId();
 
@@ -341,7 +335,6 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserResMonthCommentUpdateDTO monthCommentUpdate(UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO){
-        log.info("[UserService] monthCommentUpdate");
         try{
             Long kakaoId = JwtUtil.getUserId();
             monthCommentRepository.updateCommentByKakaoIdAndMonth(kakaoId, userReqMonthCommentUpdateDTO.getChooseMonth(), userReqMonthCommentUpdateDTO.getMonthComment());
@@ -500,7 +493,6 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void scheduleUserMessage(Long kakaoId) {
-        log.info("[UserService] scheduleUserMessage");
         try {
             User user = userRepository.findByKakaoId(kakaoId)
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -526,7 +518,6 @@ public class UserServiceImpl implements UserService{
     }
 
     private void sendUserMessage(User user){
-        log.info("[UserService] sendUserMessage");
         try{
             DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecretKey, "https://api.coolsms.co.kr");
 
@@ -553,7 +544,6 @@ public class UserServiceImpl implements UserService{
     @Transactional
     @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 자정에 자동으로 실행
     public void changeDiaryNums(){
-        log.info("[UserService] changeDiaryNums");
         try{
             List<User> users = userRepository.findAll();
             for(User user : users){
@@ -568,12 +558,9 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void changeCount(Long kakaoId, boolean increment) {
-        log.info("[UserService] changeCount");
         try {
             User user = userRepository.findByKakaoId(kakaoId)
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-//            int curDiaryNums = user.getUserCurDiaryNums() == null ? 0 : user.getUserCurDiaryNums();
-//            int letterNums = user.getUserLetterNums() == null ? 0 : user.getUserLetterNums();
 
             if (!increment) { // true
                 user.plusUserNumCount();
@@ -581,8 +568,6 @@ public class UserServiceImpl implements UserService{
                 user.minusUserNumCount();
             }
 
-//            userRepository.updateCurDiaryNumsById(user.getUserId(), curDiaryNums);
-//            userRepository.updateLetterNumsById(user.getUserId(), letterNums);
         } catch (Exception e) {
             log.error("[UserService] changeCount error: " + e);
             throw new RuntimeException(e);
