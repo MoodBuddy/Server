@@ -3,22 +3,13 @@ package moodbuddy.moodbuddy.domain.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
-import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
-import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
-import moodbuddy.moodbuddy.domain.user.dto.response.UserResMainPageDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.global.common.response.ApiResponse;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -140,14 +131,12 @@ public class UserApiController {
             @Parameter(description = "자체 로그인 회원 정보를 받아오는 DTO")
             @RequestBody UserReqLoginDTO userReqLoginDTO
     ){
-        log.info("[DiaryApiController] login");
-        return ResponseEntity.ok().body(ApiResponse.SUCCESS(HttpStatus.CREATED.value(), "[SUCCESS] UserApiController login", userService.login(userReqLoginDTO)));
+        return ResponseEntity.ok().body(userService.login(userReqLoginDTO));
     }
 
     @GetMapping("/checkTodayDiary")
     @Operation(summary = "오늘 일기 작성 가능 여부 확인")
     public ResponseEntity<?> checkTodayDiary(){
-        log.info("[DiaryApiController] login");
-        return ResponseEntity.ok().body(ApiResponse.SUCCESS(HttpStatus.CREATED.value(), "[SUCCESS] UserApiController checkTodayDiary", userService.checkTodayDiary()));
+        return ResponseEntity.ok().body(userService.checkTodayDiary());
     }
 }
