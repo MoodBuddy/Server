@@ -30,7 +30,6 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Override
     @Transactional
     public BookMarkResToggleDTO toggle(Long diaryId) {
-        log.info("[BookMarkServiceImpl] toggle");
         final Long kakaoId = JwtUtil.getUserId();
 
         final User findUser = userService.findUserByKakaoId(kakaoId);
@@ -59,7 +58,6 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     public Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable) {
-        log.info("[BookMarkServiceImpl] bookMarkFindAllByWithPageable");
         final Long kakaoId = JwtUtil.getUserId();
         final User findUser = userService.findUserByKakaoId(kakaoId);
 
