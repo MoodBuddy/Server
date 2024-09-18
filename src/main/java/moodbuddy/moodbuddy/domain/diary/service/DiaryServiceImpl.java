@@ -10,8 +10,9 @@ import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
-import moodbuddy.moodbuddy.domain.diary.util.DiaryUtil;
 import moodbuddy.moodbuddy.domain.diaryImage.service.DiaryImageService;
+import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
+import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
@@ -45,15 +46,17 @@ public class DiaryServiceImpl implements DiaryService {
         log.info("[DiaryServiceImpl] save");
         final Long kakaoId = JwtUtil.getUserId();
 
-        DiaryUtil.validateExistingDiary(diaryRepository, diaryReqSaveDTO.getDiaryDate(), kakaoId);
+        validateExistingDiary(diaryRepository, diaryReqSaveDTO.getDiaryDate(), kakaoId);
 
-        String summary = gptService.summarize(diaryReqSaveDTO.getDiaryContent()).block();
-        DiarySubject diarySubject = classifyDiaryContent(diaryReqSaveDTO.getDiaryContent());
+        Diary diary = DiaryMapper.toDiaryEntity(
+                diaryReqSaveDTO,
+                kakaoId,
+                gptService.summarize(diaryReqSaveDTO.getDiaryContent()).block(),
+                classifyDiaryContent(diaryReqSaveDTO.getDiaryContent()));
 
-        Diary diary = DiaryMapper.toDiaryEntity(diaryReqSaveDTO, kakaoId, summary, diarySubject);
         diary = diaryRepository.save(diary);
 
-        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqSaveDTO.getDiaryImgList(), diary);
+        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
 
         checkTodayDiary(diaryReqSaveDTO.getDiaryDate(), kakaoId, false);
         deleteDraftDiaries(diaryReqSaveDTO.getDiaryDate(), kakaoId);
@@ -68,7 +71,7 @@ public class DiaryServiceImpl implements DiaryService {
         final Long kakaoId = JwtUtil.getUserId();
 
         if (isDraftToPublished(diaryReqUpdateDTO)) {
-            DiaryUtil.validateExistingDiary(diaryRepository, diaryReqUpdateDTO.getDiaryDate(), kakaoId);
+            validateExistingDiary(diaryRepository, diaryReqUpdateDTO.getDiaryDate(), kakaoId);
             checkTodayDiary(diaryReqUpdateDTO.getDiaryDate(), kakaoId, false);
         }
 
@@ -81,10 +84,9 @@ public class DiaryServiceImpl implements DiaryService {
         findDiary.updateDiary(diaryReqUpdateDTO, summary, diarySubject);
 
         // 기존 이미지 삭제
-//        DiaryUtil.deleteAllDiaryImages(diaryImageService, findDiary);
-        DiaryUtil.deleteExcludingImages(diaryImageService, findDiary, diaryReqUpdateDTO.getExistingDiaryImgList());
+        diaryImageService.deleteExcludingImages(findDiary, diaryReqUpdateDTO.getExistingDiaryImgList());
         // 새로운 이미지 저장
-        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqUpdateDTO.getDiaryImgList(), findDiary);
+        diaryImageService.saveDiaryImages(diaryReqUpdateDTO.getDiaryImgList(), findDiary);
 
         deleteDraftDiaries(diaryReqUpdateDTO.getDiaryDate(), kakaoId);
 
@@ -102,7 +104,7 @@ public class DiaryServiceImpl implements DiaryService {
         checkTodayDiary(findDiary.getDiaryDate(), kakaoId, true);
 
         bookMarkService.deleteByDiaryId(diaryId);
-        DiaryUtil.deleteAllDiaryImages(diaryImageService, findDiary);
+        diaryImageService.deleteAllDiaryImages(findDiary);
         diaryRepository.delete(findDiary);
     }
 
@@ -115,7 +117,7 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = DiaryMapper.toDraftEntity(diaryReqSaveDTO, kakaoId);
         diary = diaryRepository.save(diary);
 
-        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqSaveDTO.getDiaryImgList(), diary);
+        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
 
         return DiaryMapper.toDetailDTO(diary);
     }
@@ -139,7 +141,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         diariesToDelete.forEach(diary -> {
             try {
-                DiaryUtil.deleteAllDiaryImages(diaryImageService, diary);
+                diaryImageService.deleteAllDiaryImages(diary);
             } catch (IOException e) {
                 log.error("Error deleting diary images", e);
                 throw new RuntimeException(e);  // 필요에 따라 적절한 예외 처리
@@ -205,6 +207,12 @@ public class DiaryServiceImpl implements DiaryService {
         List<Diary> draftDiaries = diaryRepository.findAllByDiaryDateAndKakaoIdAndDiaryStatus(diaryDate, kakaoId, DiaryStatus.DRAFT);
         if (!draftDiaries.isEmpty()) {
             diaryRepository.deleteAll(draftDiaries);
+        }
+    }
+
+    private void validateExistingDiary(DiaryRepository diaryRepository, LocalDate diaryDate, Long kakaoId) {
+        if (diaryRepository.findByDiaryDateAndKakaoIdAndDiaryStatus(diaryDate, kakaoId, DiaryStatus.PUBLISHED).isPresent()) {
+            throw new DiaryTodayExistingException(ErrorCode.TODAY_EXISTING_DIARY);
         }
     }
 }
