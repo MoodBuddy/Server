@@ -27,8 +27,7 @@ public class QuddyTIApiController {
     /** 구현 완료 **/
     @GetMapping("/findAll")
     @Operation(summary = "쿼디티아이 조회", description = "쿼디티아이 관련 내용을 모두 조회합니다.")
-    public ResponseEntity<?> findAll() {
-        log.info("[QuddyTIApiController] findAll");
-        return ResponseEntity.ok().body(ApiResponse.SUCCESS(HttpStatus.CREATED.value(), "[SUCCESS] QuddyTIApiController findAll", quddyTIService.findAll()));
+    public ResponseEntity<QuddyTIResDetailDTO> findAll() {
+        return ResponseEntity.ok().body(quddyTIService.findAll());
     }
 }
