@@ -8,7 +8,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDTO;
 import moodbuddy.moodbuddy.domain.diary.entity.Diary;
 import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
-import moodbuddy.moodbuddy.domain.gpt.service.GptService;
+import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.global.common.exception.database.DatabaseNullOrEmptyException;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.http.HttpEntity;

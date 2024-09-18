@@ -1,6 +1,6 @@
-package moodbuddy.moodbuddy.domain.gpt.service;
+package moodbuddy.moodbuddy.global.common.gpt.service;
 
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTResponseDTO;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
 import reactor.core.publisher.Mono;
 
 public interface GptService {

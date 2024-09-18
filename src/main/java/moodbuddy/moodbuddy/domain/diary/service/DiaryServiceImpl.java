@@ -12,7 +12,7 @@ import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.domain.diary.util.DiaryUtil;
 import moodbuddy.moodbuddy.domain.diaryImage.service.DiaryImageService;
-import moodbuddy.moodbuddy.domain.gpt.service.GptService;
+import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.data.domain.Page;
