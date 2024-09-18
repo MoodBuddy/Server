@@ -23,7 +23,6 @@ public class DiaryEmotionApiController {
     @PostMapping("/description")
     @Operation(description = "일기 감정 분석")
     public ResponseEntity<DiaryResEmotionDTO> description() throws JsonProcessingException {
-        DiaryResEmotionDTO result = diaryEmotionService.description();
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(diaryEmotionService.description());
     }
 }
