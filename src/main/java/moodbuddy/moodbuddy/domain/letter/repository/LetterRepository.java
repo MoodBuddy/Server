@@ -12,14 +12,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LetterRepository extends JpaRepository<Letter, Long> {
-    @Query("select l from Letter l where l.user.userId = :userId")
+
+    @Query("select l from Letter l where l.userId = :userId")
     List<Letter> findLettersByUserId(@Param("userId") Long userId);
 
     @Modifying
     @Transactional
     @Query("update Letter l set l.letterAnswerContent = :answer where l.id = :letterId")
-    void updateAnswerByLetterId(@Param("letterId")Long letterId, @Param("answer")String answer);
+    void updateAnswerByLetterId(@Param("letterId") Long letterId, @Param("answer") String answer);
 
-    @Query("select l from Letter l where l.id = :letterId and l.user.userId = :userId")
+    @Query("select l from Letter l where l.id = :letterId and l.userId = :userId")
     Optional<Letter> findByIdAndUserId(@Param("letterId") Long letterId, @Param("userId") Long userId);
 }

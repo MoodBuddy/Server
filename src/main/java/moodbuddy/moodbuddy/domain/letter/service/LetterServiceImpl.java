@@ -1,9 +1,6 @@
 package moodbuddy.moodbuddy.domain.letter.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTMessageDTO;
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTResponseDTO;
-import moodbuddy.moodbuddy.domain.gpt.service.GptService;
 import moodbuddy.moodbuddy.domain.letter.dto.request.LetterReqDTO;
 import moodbuddy.moodbuddy.domain.letter.dto.request.LetterReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.letter.dto.response.*;
@@ -17,26 +14,16 @@ import moodbuddy.moodbuddy.domain.sms.service.SmsService;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTMessageDTO;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
+import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,12 +46,12 @@ public class LetterServiceImpl implements LetterService {
     public LetterResPageDTO letterPage() {
         log.info("[LetterService] letterPage");
         try {
-            Long kakaoId = JwtUtil.getUserId();
+            final Long userId = JwtUtil.getUserId();
 
-            User user = getUserByKakaoId(kakaoId);
-            updateLetterAlarmFromUser(user, kakaoId);
+            User user = getUserByUserId(userId);
+            updateLetterAlarmFromUser(user, userId);
 
-            return createLetterResPageDto(kakaoId, user);
+            return createLetterResPageDto(userId, user);
         } catch (Exception e) {
             log.error("[LetterService] letterPage error", e);
             throw new RuntimeException("[LetterService] letterPage error", e);
@@ -72,13 +59,13 @@ public class LetterServiceImpl implements LetterService {
     }
 
 
-    private Profile getProfileByKakaoId(Long kakaoId){
-        return profileRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new NoSuchElementException("프로필을 찾을 수 없습니다. kakaoId: " + kakaoId));
+    private Profile getProfileByUserId(Long userId){
+        return profileRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoSuchElementException("프로필을 찾을 수 없습니다. userId: " + userId));
     }
 
-    private String getProfileImageUrlByKakaoId(Long kakaoId){
-        return profileImageRepository.findByKakaoId(kakaoId)
+    private String getProfileImageUrlByUserId(Long userId){
+        return profileImageRepository.findByUserId(userId)
                 .map(ProfileImage::getProfileImgURL)
                 .orElse("");
     }
@@ -94,17 +81,17 @@ public class LetterServiceImpl implements LetterService {
                 .collect(Collectors.toList());
     }
 
-    private LetterResPageDTO createLetterResPageDto(Long kakaoId, User user) {
-        Profile profile = getProfileByKakaoId(kakaoId);
-        String profileImageURL = getProfileImageUrlByKakaoId(kakaoId);
+    private LetterResPageDTO createLetterResPageDto(Long userId, User user) {
+        Profile profile = getProfileByUserId(userId);
+        String profileImageURL = getProfileImageUrlByUserId(userId);
         List<LetterResPageAnswerDTO> letterResPageAnswerDTOList = getLetterResPageAnswerDTOListForLetterPage(user.getUserId());
 
         return getLetterResPageDtoForLetterPage(user, profile, profileImageURL, letterResPageAnswerDTOList);
     }
 
-    private void updateLetterAlarmFromUser(User user, Long kakaoId){
+    private void updateLetterAlarmFromUser(User user, Long userId){
         if(user.getLetterAlarm()==null){
-            userRepository.updateLetterAlarmByKakaoId(kakaoId, false);
+            userRepository.updateLetterAlarmByUserId(userId, false);
         }
     }
 
@@ -125,9 +112,9 @@ public class LetterServiceImpl implements LetterService {
     public LetterResUpdateDTO updateLetterAlarm(LetterReqUpdateDTO letterReqUpdateDTO){
         log.info("[LetterService] updateLetterAlarm");
         try{
-            Long kakaoId = JwtUtil.getUserId();
+            final Long userId = JwtUtil.getUserId();
 
-            User user = getUserByKakaoIdWithPessimisticLock(kakaoId);
+            User user = getUserByUserIdWithPessimisticLock(userId);
             user.setLetterAlarm(letterReqUpdateDTO.getLetterAlarm());
 
             return getLetterResUpdateDtoForUpdateLetterAlarm(user);
@@ -148,9 +135,9 @@ public class LetterServiceImpl implements LetterService {
     @Transactional
     public LetterResSaveDTO letterSave(LetterReqDTO letterReqDTO) {
         log.info("[LetterService] save");
-        Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
         try {
-            User user = getUserByKakaoIdWithPessimisticLock(kakaoId);
+            User user = getUserByUserIdWithPessimisticLock(userId);
             validateUserLetterAvailability(user);
 
             User updatedUser = updateUserLetterNums(user);
@@ -158,7 +145,7 @@ public class LetterServiceImpl implements LetterService {
             LetterResSaveDTO letterResSaveDTO = buildLetterResSaveDtoForLetterSave(updatedUser, letter);
 
             // 30초 후에 letterAnswerSave 호출 예약
-            scheduleLetterAnswerSave(kakaoId, letterResSaveDTO);
+            scheduleLetterAnswerSave(userId, letterResSaveDTO);
 
             return letterResSaveDTO;
         } catch (Exception e) {
@@ -182,7 +169,7 @@ public class LetterServiceImpl implements LetterService {
 
     private Letter SaveLetter(User user, LetterReqDTO letterReqDTO){
         return letterRepository.save(Letter.builder()
-                .user(user)
+                .userId(user.getUserId())
                 .letterFormat(letterReqDTO.getLetterFormat())
                 .letterWorryContent(letterReqDTO.getLetterWorryContent())
                 .letterDate(letterReqDTO.getLetterDate())
@@ -197,23 +184,23 @@ public class LetterServiceImpl implements LetterService {
                 .build();
     }
 
-    private void scheduleLetterAnswerSave(Long kakaoId, LetterResSaveDTO letterResSaveDTO) {
+    private void scheduleLetterAnswerSave(Long userId, LetterResSaveDTO letterResSaveDTO) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 // 30초 후에 실행할 작업
-                letterAnswerSave(kakaoId, letterResSaveDTO);
+                letterAnswerSave(userId, letterResSaveDTO);
             }
         }, SCHEDULED_DELAY); // 25초 지연
     }
 
     @Override
     @Transactional(timeout = 30)
-    public void letterAnswerSave(Long kakaoId, LetterResSaveDTO letterResSaveDTO) {
+    public void letterAnswerSave(Long userId, LetterResSaveDTO letterResSaveDTO) {
         log.info("[LetterService] answerSave");
         try {
-            User user = getUserByKakaoIdWithPessimisticLock(kakaoId);
+            User user = getUserByUserIdWithPessimisticLock(userId);
             Letter letter = getLetterById(letterResSaveDTO.getLetterId());
 
             // GPT의 응답을 가져옴
@@ -254,7 +241,7 @@ public class LetterServiceImpl implements LetterService {
 
     private void sendMessageIfEnabled(User user) {
         if (user.getLetterAlarm() && !user.getPhoneNumber().isEmpty()) {
-            smsService.sendMessage(user.getPhoneNumber());
+            smsService.sendMessage(user.getPhoneNumber(),"LETTER");
         }
     }
 
@@ -263,9 +250,9 @@ public class LetterServiceImpl implements LetterService {
     public LetterResDetailsDTO letterDetails(Long letterId) {
         log.info("[LetterService] details");
         try {
-            Long kakaoId = JwtUtil.getUserId();
+            final Long userId = JwtUtil.getUserId();
 
-            User user = getUserByKakaoId(kakaoId);
+            User user = getUserByUserId(userId);
             Letter letter = getLetterByIdAndUserId(letterId, user.getUserId());
 
             return getLetterResDetailsDtoForLetterDetails(user, letter);
@@ -275,9 +262,9 @@ public class LetterServiceImpl implements LetterService {
         }
     }
 
-    private User getUserByKakaoId(Long kakaoId){
-        return userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new NoSuchElementException("kakaoId에 해당되는 User가 없습니다"));
+    private User getUserByUserId(Long userId){
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new NoSuchElementException("userId에 해당되는 User가 없습니다"));
     }
 
     private Letter getLetterByIdAndUserId(Long letterId, Long userId){
@@ -296,8 +283,8 @@ public class LetterServiceImpl implements LetterService {
                 .build();
     }
 
-    private User getUserByKakaoIdWithPessimisticLock(Long kakaoId){
-        return userRepository.findByKakaoIdWithPessimisticLock(kakaoId).orElseThrow(
+    private User getUserByUserIdWithPessimisticLock(Long userId){
+        return userRepository.findByUserIdWithPessimisticLock(userId).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
     }
