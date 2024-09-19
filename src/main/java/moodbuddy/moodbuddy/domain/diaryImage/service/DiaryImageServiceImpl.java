@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -72,27 +73,18 @@ public class DiaryImageServiceImpl implements DiaryImageService {
 
     @Override
     @Transactional
-    public void deleteAllDiaryImages(Diary diary) {
+    public void deleteAllDiaryImages(Diary diary) throws IOException {
         List<DiaryImage> diaryImages = diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
         for (DiaryImage diaryImage : diaryImages) {
-            try {
-                deleteImageFromS3(diaryImage.getDiaryImgURL());
-                diaryImageRepository.delete(diaryImage);
-            } catch (IOException e) {
-                log.error("Failed to delete image from S3", e);
-                throw new RuntimeException("Failed to delete image from S3", e);
-            }
-        }
-    }
-    @Transactional
-    public void deleteDiaryImage(DiaryImage diaryImage) {
-        try {
             deleteImageFromS3(diaryImage.getDiaryImgURL());
             diaryImageRepository.delete(diaryImage);
-        } catch (IOException e) {
-            log.error("Failed to delete image from S3", e);
-            throw new RuntimeException("Failed to delete image from S3", e);
         }
+    }
+
+    @Transactional
+    public void deleteDiaryImage(DiaryImage diaryImage) throws IOException {
+        deleteImageFromS3(diaryImage.getDiaryImgURL());
+        diaryImageRepository.delete(diaryImage);
     }
 
     private void deleteImageFromS3(String imageUrl) throws IOException {
@@ -109,5 +101,20 @@ public class DiaryImageServiceImpl implements DiaryImageService {
     @Override
     public String saveProfileImages(MultipartFile newProfileImg) throws IOException {
         return uploadImage(newProfileImg);
+    }
+
+    @Transactional
+    public void deleteExcludingImages(Diary diary, List<String> existingImgUrls) throws IOException {
+        if (existingImgUrls == null) {
+            existingImgUrls = new ArrayList<>();
+        }
+
+        List<DiaryImage> diaryImages = findImagesByDiary(diary);
+        for (DiaryImage diaryImage : diaryImages) {
+            String imageUrl = diaryImage.getDiaryImgURL().trim();
+            if (!existingImgUrls.contains(imageUrl)) {
+                deleteDiaryImage(diaryImage);
+            }
+        }
     }
 }

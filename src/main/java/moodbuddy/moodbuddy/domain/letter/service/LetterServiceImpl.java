@@ -1,9 +1,6 @@
 package moodbuddy.moodbuddy.domain.letter.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTMessageDTO;
-import moodbuddy.moodbuddy.domain.gpt.dto.GPTResponseDTO;
-import moodbuddy.moodbuddy.domain.gpt.service.GptService;
 import moodbuddy.moodbuddy.domain.letter.dto.request.LetterReqDTO;
 import moodbuddy.moodbuddy.domain.letter.dto.request.LetterReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.letter.dto.response.*;
@@ -17,26 +14,16 @@ import moodbuddy.moodbuddy.domain.sms.service.SmsService;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTMessageDTO;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
+import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
