@@ -34,7 +34,6 @@ import java.util.Optional;
 public class KakaoServiceImpl implements KakaoService{
     private final ProfileImageRepository profileImageRepository;
     private final ProfileRepository profileRepository;
-
     private final KakaoProperties kakaoProperties;
     private final UserRepository userRepository;
 
@@ -155,10 +154,10 @@ public class KakaoServiceImpl implements KakaoService{
                             .alarm(kakaoProfile.getKakaoAccount().isTalkMessage())
                             .userCurDiaryNums(0)
                             .deleted(false)
-                            .accessToken(JwtUtil.createJwt(kakaoProfile.getId()))
-                            .accessTokenExpiredAt(LocalDate.now().plusYears(1L))
-                            .refreshToken(JwtUtil.createRefreshToken(kakaoProfile.getId()))
-                            .refreshTokenExpiredAt(LocalDate.now().plusYears(1L))
+//                            .accessToken(JwtUtil.createJwt(kakaoProfile.getId()))
+//                            .accessTokenExpiredAt(LocalDate.now().plusYears(1L))
+//                            .refreshToken(JwtUtil.createRefreshToken(kakaoProfile.getId()))
+//                            .refreshTokenExpiredAt(LocalDate.now().plusYears(1L))
                             .build()
             );
 
@@ -182,8 +181,8 @@ public class KakaoServiceImpl implements KakaoService{
 
             // UserResLoginDTO 생성
             UserResLoginDTO responseDto = new UserResLoginDTO();
-            responseDto.setAccessToken(save.getAccessToken());
-            responseDto.setRefreshToken(save.getRefreshToken());
+//            responseDto.setAccessToken(save.getAccessToken());
+//            responseDto.setRefreshToken(save.getRefreshToken());
 
             return responseDto;
 
@@ -195,8 +194,8 @@ public class KakaoServiceImpl implements KakaoService{
 //            return  modelMapper.map(loginUser, UserResLoginDTO.class);
 
             UserResLoginDTO responseDto = new UserResLoginDTO();
-            responseDto.setAccessToken(loginUser.getAccessToken());
-            responseDto.setRefreshToken(loginUser.getRefreshToken());
+//            responseDto.setAccessToken(loginUser.getAccessToken());
+//            responseDto.setRefreshToken(loginUser.getRefreshToken());
 
             return responseDto;
         }

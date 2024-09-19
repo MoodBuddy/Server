@@ -66,11 +66,6 @@ public class Diary extends BaseEntity {
     @Column(name = "diary_font_size", columnDefinition = "varchar(10)")
     private DiaryFontSize diaryFontSize;
 
-    /** sql문 **/
-    // ALTER TABLE diary
-    // ADD COLUMN diary_font VARCHAR(10),
-    // ADD COLUMN diary_font_size VARCHAR(10);
-
     public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, String diarySummary, DiarySubject diarySubject) {
         this.diaryTitle = diaryReqUpdateDTO.getDiaryTitle();
         this.diaryDate = diaryReqUpdateDTO.getDiaryDate();
