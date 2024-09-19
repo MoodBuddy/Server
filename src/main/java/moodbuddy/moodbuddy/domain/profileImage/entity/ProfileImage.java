@@ -1,21 +1,27 @@
 package moodbuddy.moodbuddy.domain.profileImage.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import moodbuddy.moodbuddy.domain.profile.entity.Profile;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @Entity
+@Table(name = "profile_image")
 @Getter
+@Setter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProfileImage extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_image_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "profile_id")
-    private Profile profile;
-    private String profileImgURL = "";
-    /** 생성자 **/
-    protected ProfileImage() {}
+    @Column(name = "kakao_id", columnDefinition = "bigint")
+    private Long kakaoId;
+
+    @Column(name = "profile_img_url", columnDefinition = "varchar(255)")
+    private String profileImgURL;
+
 }

@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/swagger-resources/**"))
                 .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**"))
                 .requestMatchers(new AntPathRequestMatcher("/user/sign-up"))
+                .requestMatchers(new AntPathRequestMatcher("/api/healthCheck"))
                 .requestMatchers(new AntPathRequestMatcher("/user/login")));
     }
 
@@ -39,7 +40,7 @@ public class SecurityConfig {
                 .cors(c -> {
                     CorsConfigurationSource source = request -> {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Arrays.asList("http://localhost:8080"));
+                        config.setAllowedOrigins(Arrays.asList("http://react-app:3000","http://localhost:5173","http://localhost:3000","http://moodbuddy:8080","https://moodbuddy.site","http://moodbuddy.site","https://neon-cat-f70a98.netlify.app"));
                         config.setAllowedHeaders(List.of("*"));
                         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                         config.setAllowCredentials(true);
@@ -53,8 +54,10 @@ public class SecurityConfig {
                                 "/swagger-ui.html/**",
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**",
-                                "/user/sign-up",
-                                "/user/login"
+                                "api/v1/user/sign-up",
+                                "api/v1/user/login/**",
+                                "api/v1/member/**",
+                                "*"
                         ).permitAll() // 위 경로들은 모두 접근 허용
                         .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 );

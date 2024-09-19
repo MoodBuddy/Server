@@ -1,22 +1,28 @@
 package moodbuddy.moodbuddy.domain.profile.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
 @Entity
+@Table(name = "profile")
 @Getter
+@Setter
+@AllArgsConstructor
+@SuperBuilder
 public class Profile extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_id")
     private Long id;
-    private String profileNickName;
-    private String profileComment = "";
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    /** 생성자 **/
+
+    @Column(name = "profile_comment", columnDefinition = "varchar(255)")
+    private String profileComment;
+
+    @Column(name = "kakao_id", columnDefinition = "bigint")
+    private Long kakaoId;
+
     protected Profile() {}
 }

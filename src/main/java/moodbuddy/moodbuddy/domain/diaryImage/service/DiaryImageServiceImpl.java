@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class DiaryImageServiceImpl implements DiaryImageService {
     private final DiaryImageRepository diaryImageRepository;
     private final AmazonS3 amazonS3;
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -31,6 +34,7 @@ public class DiaryImageServiceImpl implements DiaryImageService {
     private String imgFolder;
 
     @Override
+    @Transactional
     public void saveDiaryImages(List<MultipartFile> diaryImgList, Diary diary) throws IOException {
         if (diaryImgList != null && !diaryImgList.isEmpty()) {
             List<String> diaryUrlList = diaryImgList.stream()
@@ -45,7 +49,8 @@ public class DiaryImageServiceImpl implements DiaryImageService {
     private String uploadImage(MultipartFile diaryImg) {
         try {
             String originalFilename = diaryImg.getOriginalFilename();
-            String filePath = imgFolder + "/" + originalFilename;
+            String fileName = UUID.randomUUID().toString() + "_" + originalFilename;
+            String filePath = imgFolder + "/" + fileName;
 
             amazonS3.putObject(bucket, filePath, diaryImg.getInputStream(), new ObjectMetadata());
             return amazonS3.getUrl(bucket, filePath).toString();
@@ -66,33 +71,43 @@ public class DiaryImageServiceImpl implements DiaryImageService {
     }
 
     @Override
-    public void deleteDiaryImages(List<String> imagesToDelete) {
-        for (String imageUrl : imagesToDelete) {
+    @Transactional
+    public void deleteAllDiaryImages(Diary diary) {
+        List<DiaryImage> diaryImages = diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
+        for (DiaryImage diaryImage : diaryImages) {
             try {
-                deleteImageFromS3(imageUrl);
-                deleteImageFromDatabase(imageUrl);
+                deleteImageFromS3(diaryImage.getDiaryImgURL());
+                diaryImageRepository.delete(diaryImage);
             } catch (IOException e) {
                 log.error("Failed to delete image from S3", e);
                 throw new RuntimeException("Failed to delete image from S3", e);
             }
         }
     }
-
-    private void deleteImageFromS3(String imageUrl) throws IOException {
-        String filePath = imgFolder + "/" + imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, filePath));
+    @Transactional
+    public void deleteDiaryImage(DiaryImage diaryImage) {
+        try {
+            deleteImageFromS3(diaryImage.getDiaryImgURL());
+            diaryImageRepository.delete(diaryImage);
+        } catch (IOException e) {
+            log.error("Failed to delete image from S3", e);
+            throw new RuntimeException("Failed to delete image from S3", e);
+        }
     }
 
-    private void deleteImageFromDatabase(String imageUrl) {
-        Optional<DiaryImage> optionalDiaryImage = diaryImageRepository.findByDiaryImgURL(imageUrl); // 예외 로직 추가
-        if (optionalDiaryImage.get() != null) {
-            diaryImageRepository.delete(optionalDiaryImage.get());
-        }
+    private void deleteImageFromS3(String imageUrl) throws IOException {
+        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+        String filePath = imgFolder + "/" + fileName;
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, filePath));
     }
 
     @Override
     public List<DiaryImage> findImagesByDiary(Diary diary) {
-        Optional<List<DiaryImage>> optionalDiaryList = diaryImageRepository.findByDiary(diary); // 예외 로직 추가
-        return optionalDiaryList.get();
+        return diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
+    }
+
+    @Override
+    public String saveProfileImages(MultipartFile newProfileImg) throws IOException {
+        return uploadImage(newProfileImg);
     }
 }
