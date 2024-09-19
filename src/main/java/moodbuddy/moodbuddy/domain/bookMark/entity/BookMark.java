@@ -17,9 +17,8 @@ public class BookMark extends BaseEntity {
     @Column(name = "bookmark_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)

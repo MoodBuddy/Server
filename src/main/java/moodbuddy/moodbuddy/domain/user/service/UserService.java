@@ -37,7 +37,7 @@ public interface UserService {
     UserResProfileDTO updateProfile(UserProfileUpdateDto dto) throws IOException;
 
     // 사용자가 설정한 알림 시간에 문자 보내기
-    void scheduleUserMessage(Long kakaoId);
+    void scheduleUserMessage(Long userId);
 
     // 다음 달 나에게 짧은 한 마디
     UserResMonthCommentDTO monthComment(UserReqMonthCommentDTO userReqMonthCommentDTO);
@@ -45,16 +45,13 @@ public interface UserService {
     // 다음 달 나에게 짧은 한 마디 수정
     UserResMonthCommentUpdateDTO monthCommentUpdate(UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO);
 
-    // kakaoId를 통한 사용자 찾기
-    User findUserByKakaoId(Long kakaoId);
-
     // 매월 1이 자정에 자동으로 curDiaryNums 0으로 초기화
     void changeDiaryNums();
 
     // 이번 달 일기 개수와 편지지 개수 변경
-    void changeCount(Long kakaoId, boolean increment);
+    void changeCount(Long userId, boolean increment);
 
-     void setUserCheckTodayDairy(Long kakaoId, Boolean check);
+     void setUserCheckTodayDairy(Long userId, Boolean check);
 
     /** 오늘 일기 작성한 지 가능 여부 **/
     UserResCheckTodayDiaryDTO checkTodayDiary();
@@ -62,5 +59,5 @@ public interface UserService {
     /** 테스트 (로그인 / 회원가입) **/
     UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO);
     UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO);
-
+    User getUser_Id(Long userId);
 }

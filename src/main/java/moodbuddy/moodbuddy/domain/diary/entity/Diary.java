@@ -5,9 +5,7 @@ import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
-import java.awt.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "diary")
 public class Diary extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -28,7 +25,6 @@ public class Diary extends BaseEntity {
     @Column(name = "diary_date", nullable = false)
     private LocalDate diaryDate;
 
-//    @Lob
     @Column(name = "diary_content", nullable = false, columnDefinition = "text")
     private String diaryContent;
 
@@ -51,8 +47,8 @@ public class Diary extends BaseEntity {
     @Column(name = "diary_summary", columnDefinition = "varchar(255)")
     private String diarySummary;
 
-    @Column(name = "kakao_id", columnDefinition = "bigint")
-    private Long kakaoId;
+    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+    private Long userId;
 
     @Column(name = "diary_book_mark_check", columnDefinition = "varchar(20)")
     private Boolean diaryBookMarkCheck; // 북마크 여부

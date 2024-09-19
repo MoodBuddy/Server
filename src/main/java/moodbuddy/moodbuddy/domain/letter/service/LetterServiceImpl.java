@@ -54,13 +54,12 @@ public class LetterServiceImpl implements LetterService {
     @Override
     @Transactional(timeout = 30)
     public LetterResPageDTO letterPage() {
-        log.info("[LetterService] letterPage");
         try {
-            Long kakaoId = JwtUtil.getUserId();
-            Optional<User> optionalUser = userRepository.findByKakaoId(kakaoId);
-            Optional<Profile> optionalProfile = profileRepository.findByKakaoId(kakaoId);
+            Long userId = JwtUtil.getUserId();
+            Optional<User> optionalUser = userRepository.findByUserId(userId);
+            Optional<Profile> optionalProfile = profileRepository.findByUserId(userId);
             if (optionalUser.isPresent() && optionalProfile.isPresent()) {
-                Optional<ProfileImage> optionalProfileImage = profileImageRepository.findByKakaoId(kakaoId);
+                Optional<ProfileImage> optionalProfileImage = profileImageRepository.findByUserId(userId);
                 String profileImageURL = optionalProfileImage.map(ProfileImage::getProfileImgURL).orElse("");
 
                 List<Letter> letters = letterRepository.findByUserId(optionalUser.get().getUserId());
@@ -73,7 +72,7 @@ public class LetterServiceImpl implements LetterService {
                         .collect(Collectors.toList());
 
                 if(optionalUser.get().getLetterAlarm()==null){
-                    userRepository.updateLetterAlarmByKakaoId(kakaoId, false);
+                    userRepository.updateLetterAlarmByUserId(userId, false);
                 }
 
                 return LetterResPageDTO.builder()
@@ -86,7 +85,7 @@ public class LetterServiceImpl implements LetterService {
                         .letterResPageAnswerDTOList(letterResPageAnswerDTOList)
                         .build();
             }
-            throw new NoSuchElementException("유저 또는 프로필을 찾을 수 없습니다. kakaoId: " + kakaoId);
+            throw new NoSuchElementException("유저 또는 프로필을 찾을 수 없습니다. userId: " + userId);
         } catch (Exception e) {
             log.error("[LetterService] letterPage error", e);
             throw new RuntimeException("[LetterService] letterPage error", e);
@@ -98,8 +97,8 @@ public class LetterServiceImpl implements LetterService {
     public LetterResUpdateDTO updateLetterAlarm(LetterReqUpdateDTO letterReqUpdateDTO){
         log.info("[LetterService] updateLetterAlarm");
         try{
-            Long kakaoId = JwtUtil.getUserId();
-            User user = userRepository.findByKakaoIdWithPessimisticLock(kakaoId).orElseThrow(
+            Long userId = JwtUtil.getUserId();
+            User user = userRepository.findByUserIdWithPessimisticLock(userId).orElseThrow(
                     () -> new MemberIdNotFoundException(JwtUtil.getUserId())
             );
             user.setLetterAlarm(letterReqUpdateDTO.getLetterAlarm());
@@ -115,10 +114,10 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     @Transactional
-    public LetterResSaveDTO letterSave(Long kakaoId, LetterReqDTO letterReqDTO) {
+    public LetterResSaveDTO letterSave(Long userId, LetterReqDTO letterReqDTO) {
         log.info("[LetterService] save");
         try {
-            User user = userRepository.findByKakaoIdWithPessimisticLock(kakaoId).orElseThrow(
+            User user = userRepository.findByUserIdWithPessimisticLock(userId).orElseThrow(
                     () -> new MemberIdNotFoundException(JwtUtil.getUserId())
             );
 
@@ -133,7 +132,7 @@ public class LetterServiceImpl implements LetterService {
             userRepository.save(user);
 
             Letter letter = Letter.builder()
-                    .user(user)
+                    .userId(userId)
                     .letterFormat(letterReqDTO.getLetterFormat())
                     .letterWorryContent(letterReqDTO.getLetterWorryContent())
                     .letterDate(letterReqDTO.getLetterDate())
@@ -153,10 +152,9 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     @Transactional(timeout = 30)
-    public void letterAnswerSave(Long kakaoId, LetterResSaveDTO letterResSaveDTO) {
-        log.info("[LetterService] answerSave");
+    public void letterAnswerSave(Long userId, LetterResSaveDTO letterResSaveDTO) {
         try {
-            User user = userRepository.findByKakaoIdWithPessimisticLock(kakaoId).orElseThrow(
+            User user = userRepository.findByUserIdWithPessimisticLock(userId).orElseThrow(
                     () -> new MemberIdNotFoundException(JwtUtil.getUserId())
             );
 
@@ -206,11 +204,10 @@ public class LetterServiceImpl implements LetterService {
     @Override
     @Transactional(readOnly = true, timeout = 30)
     public LetterResDetailsDTO letterDetails(Long letterId) {
-        log.info("[LetterService] details");
         try {
-            Long kakaoId = JwtUtil.getUserId();
-            User user = userRepository.findByKakaoId(kakaoId)
-                    .orElseThrow(() -> new NoSuchElementException("kakaoId에 해당되는 User가 없습니다"));
+            Long userId = JwtUtil.getUserId();
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new NoSuchElementException("userId에 해당되는 User가 없습니다"));
 
             Letter letter = letterRepository.findByIdAndUserId(letterId, user.getUserId())
                     .orElseThrow(() -> new NoSuchElementException("letterId에 매핑되는 편지가 없습니다"));

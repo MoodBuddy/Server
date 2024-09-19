@@ -15,9 +15,9 @@ public class QuddyTIMapper {
         return modelMapper.map(quddyTI, QuddyTIResDetailDTO.class);
     }
 
-    public static QuddyTI toQuddyTI(Long kakaoId, Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts, String quddyTIType) {
+    public static QuddyTI toQuddyTI(Long userId, Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts, String quddyTIType) {
         return QuddyTI.builder()
-                .kakaoId(kakaoId)
+                .userId(userId)
                 .happinessCount(emotionCounts.getOrDefault(DiaryEmotion.HAPPINESS, 0L).intValue())
                 .angerCount(emotionCounts.getOrDefault(DiaryEmotion.ANGER, 0L).intValue())
                 .disgustCount(emotionCounts.getOrDefault(DiaryEmotion.DISGUST, 0L).intValue())

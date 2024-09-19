@@ -2,15 +2,12 @@ package moodbuddy.moodbuddy.domain.diary.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.bookMark.entity.BookMark;
 import moodbuddy.moodbuddy.domain.diary.entity.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,8 +16,8 @@ import java.util.List;
 public class DiaryResDetailDTO {
     @Schema(description = "일기 고유 식별자(diaryId)", example = "1")
     private Long diaryId;
-    @Schema(description = "사용자 고유 식별자(kakaoId)", example = "1")
-    private Long kakaoId;
+    @Schema(description = "사용자 고유 식별자(userId)", example = "1")
+    private Long userId;
     @Schema(description = "일기 제목", example = "쿼카의 하루")
     private String diaryTitle;
     @Schema(description = "일기 날짜", example = "2023-07-02T15:30:00")
@@ -50,9 +47,9 @@ public class DiaryResDetailDTO {
     private DiaryFontSize diaryFontSize;
 
 
-    public DiaryResDetailDTO(Long diaryId, Long kakaoId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, DiaryStatus diaryStatus, String diarySummary, DiarySubject diarySubject, Boolean diaryBookMarkCheck, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {
+    public DiaryResDetailDTO(Long diaryId, Long userId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, DiaryStatus diaryStatus, String diarySummary, DiarySubject diarySubject, Boolean diaryBookMarkCheck, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {
         this.diaryId = diaryId;
-        this.kakaoId = kakaoId;
+        this.userId = userId;
         this.diaryTitle = diaryTitle;
         this.diaryDate = diaryDate;
         this.diaryContent = diaryContent;
@@ -65,9 +62,9 @@ public class DiaryResDetailDTO {
         this.diaryFont = diaryFont;
         this.diaryFontSize = diaryFontSize;
     }
-    public DiaryResDetailDTO(Long diaryId, Long kakaoId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, DiaryStatus diaryStatus, String diarySummary, DiarySubject diarySubject, Boolean diaryBookMarkCheck, List<String> diaryImgList, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {
+    public DiaryResDetailDTO(Long diaryId, Long userId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, DiaryStatus diaryStatus, String diarySummary, DiarySubject diarySubject, Boolean diaryBookMarkCheck, List<String> diaryImgList, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {
         this.diaryId = diaryId;
-        this.kakaoId = kakaoId;
+        this.userId = userId;
         this.diaryTitle = diaryTitle;
         this.diaryDate = diaryDate;
         this.diaryContent = diaryContent;

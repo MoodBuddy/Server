@@ -119,7 +119,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public DiaryResDraftFindAllDTO draftFindAll() {
         final Long kakaoId = JwtUtil.getUserId();
-        return diaryRepository.draftFindAllByKakaoId(kakaoId);
+        return diaryRepository.draftFindAllByUserId(kakaoId);
     }
 
     @Override
@@ -158,7 +158,7 @@ public class DiaryServiceImpl implements DiaryService {
     public Page<DiaryResDetailDTO> findAll(Pageable pageable) {
         final Long kakaoId = JwtUtil.getUserId();
 
-        return diaryRepository.findAllByKakaoIdWithPageable(kakaoId, pageable);
+        return diaryRepository.findAllByUserIdWithPageable(kakaoId, pageable);
     }
 
     @Override
@@ -192,14 +192,14 @@ public class DiaryServiceImpl implements DiaryService {
         }
     }
     private void deleteDraftDiaries(LocalDate diaryDate, Long kakaoId) {
-        List<Diary> draftDiaries = diaryRepository.findAllByDiaryDateAndKakaoIdAndDiaryStatus(diaryDate, kakaoId, DiaryStatus.DRAFT);
+        List<Diary> draftDiaries = diaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, kakaoId, DiaryStatus.DRAFT);
         if (!draftDiaries.isEmpty()) {
             diaryRepository.deleteAll(draftDiaries);
         }
     }
 
     private void validateExistingDiary(DiaryRepository diaryRepository, LocalDate diaryDate, Long kakaoId) {
-        if (diaryRepository.findByDiaryDateAndKakaoIdAndDiaryStatus(diaryDate, kakaoId, DiaryStatus.PUBLISHED).isPresent()) {
+        if (diaryRepository.findByDiaryDateAndUserIdAndDiaryStatus(diaryDate, kakaoId, DiaryStatus.PUBLISHED).isPresent()) {
             throw new DiaryTodayExistingException(ErrorCode.TODAY_EXISTING_DIARY);
         }
     }
