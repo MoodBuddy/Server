@@ -12,7 +12,6 @@ import moodbuddy.moodbuddy.domain.profileImage.repository.ProfileImageRepository
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResLoginDTO;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import moodbuddy.moodbuddy.global.properties.KakaoProperties;
 import moodbuddy.moodbuddy.domain.user.dto.KakaoProfile;
 import moodbuddy.moodbuddy.domain.user.dto.KakaoTokenDto;
@@ -26,7 +25,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -142,7 +140,7 @@ public class KakaoServiceImpl implements KakaoService{
         log.info("kakao Access Token 받아오기 성공 " + kakaoAccessToken);
 
         KakaoProfile kakaoProfile = getUserInfo(kakaoAccessToken);
-        final Optional<User> byKakaoId = userRepository.findByKakaoId(kakaoProfile.getId());
+        final Optional<User> byKakaoId = userRepository.findByUserId(kakaoProfile.getId());
 
         //kakaoId가 존재한다면 login, 존재하지 않는다면 signup
         if (byKakaoId.isEmpty()) {
@@ -163,13 +161,13 @@ public class KakaoServiceImpl implements KakaoService{
 
             profileRepository.save(
                     Profile.builder()
-                            .kakaoId(kakaoProfile.getId())
+                            .userId(kakaoProfile.getId())
                             .build()
             );
 
             profileImageRepository.save(
                     ProfileImage.builder()
-                            .kakaoId(kakaoProfile.getId())
+//                            .kakaoId(kakaoProfile.getId())
                             .profileImgURL(kakaoProfile.getProperties().getProfileImage())
                             .build()
             );

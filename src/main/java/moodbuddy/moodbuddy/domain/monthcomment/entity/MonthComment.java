@@ -20,8 +20,8 @@ public class MonthComment extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "kakao_id", nullable = false, columnDefinition = "bigint")
-    private Long kakaoId;
+    @Column(name = "userId", nullable = false, columnDefinition = "bigint")
+    private Long userId;
 
     @Column(name = "comment_date", columnDefinition = "varchar(255)")
     private String commentDate;

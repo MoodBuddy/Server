@@ -7,7 +7,7 @@ import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.quddyTI.QuddyTINotFoundException;
-import moodbuddy.moodbuddy.global.common.exception.user.UserKakaoIdNotFoundException;
+import moodbuddy.moodbuddy.global.common.exception.user.UserUserIdNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -74,8 +74,8 @@ public class ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserKakaoIdNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(UserKakaoIdNotFoundException ex) {
+    @ExceptionHandler(UserUserIdNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(UserUserIdNotFoundException ex) {
         ErrorCode errorCode = ex.getErrorCode();
         return new ResponseEntity<>(
                 new ApiErrorResponse(

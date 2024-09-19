@@ -22,7 +22,7 @@ import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
-import moodbuddy.moodbuddy.global.common.exception.user.UserKakaoIdNotFoundException;
+import moodbuddy.moodbuddy.global.common.exception.user.UserUserIdNotFoundException;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
@@ -72,15 +72,15 @@ public class UserServiceImpl implements UserService{
     public UserResMainPageDTO mainPage(){
         try {
             // kakaoId를 통해 userRepository에서 유저 조회 (Optional 사용)
-            Long kakaoId = JwtUtil.getUserId();
-            Optional<User> optionalUser = userRepository.findByKakaoId(kakaoId);
+            Long userId = JwtUtil.getUserId();
+            Optional<User> optionalUser = userRepository.findByUserId(userId);
 
             // 조회한 유저의 user_id를 통해 profileRepository에서 유저 프로필 조회 (Optional 사용)
-            Optional<Profile> optionalProfile = profileRepository.findByKakaoId(kakaoId);
+            Optional<Profile> optionalProfile = profileRepository.findByUserId(userId);
 
             if (optionalUser.isPresent() && optionalProfile.isPresent()) {
                 // profile_id를 통해 profileImageRepository에서 유저 프로필 이미지 조회 (Optional 사용)
-                Optional<ProfileImage> optionalProfileImage = profileImageRepository.findByKakaoId(kakaoId);
+                Optional<ProfileImage> optionalProfileImage = profileImageRepository.findByUserId(userId);
                 String profileImgURL = optionalProfileImage.map(ProfileImage::getProfileImgURL).orElse("");
 
                 // 현재 달 계산
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService{
                 String currentYearMonth = yearMonth.toString();
 
                 // 현재 달의 일기 리스트
-                List<Diary> diaryList = diaryRepository.findByKakaoIdAndMonthAndDiaryStatus(kakaoId, currentYearMonth, "PUBLISHED");
+                List<Diary> diaryList = diaryRepository.findByUserIdAndMonthAndDiaryStatus(userId, currentYearMonth, "PUBLISHED");
 
                 log.info("diaryList : "+diaryList);
 
@@ -178,14 +178,14 @@ public class UserServiceImpl implements UserService{
     public UserResCalendarMonthListDTO monthlyCalendar(UserReqCalendarMonthDTO calendarMonthDTO){
         try{
             // -> userID 가져오기
-            Long kakaoId = JwtUtil.getUserId();
+            Long userId = JwtUtil.getUserId();
 
             // calendarMonthDTO에서 month 가져오기
             // user_id에 맞는 List<Diary> 중에서, month에서 DateTimeFormatter의 ofPattern을 이용한 LocalDateTime 파싱을 통해 년, 월을 얻어오고,
             // repository 에서는 LIKE 연산자를 이용해서 그 년, 월에 맞는 List<Diary>를 얻어온다
             // (여기서 user_id에 맞는 리스트 전체 조회를 하지 말고, user_id와 년 월에 맞는 리스트만 조회하자)
             // -> 그 Diary 리스트를 그대로 DTO에 넣어서 반환해주면 될 것 같다.
-            List<Diary> monthlyDiaryList = diaryRepository.findByKakaoIdAndMonthAndDiaryStatus(kakaoId, calendarMonthDTO.getCalendarMonth(), "PUBLISHED");
+            List<Diary> monthlyDiaryList = diaryRepository.findByUserIdAndMonthAndDiaryStatus(userId, calendarMonthDTO.getCalendarMonth(), "PUBLISHED");
 
             List<UserResCalendarMonthDTO> diaryResCalendarMonthDTOList = monthlyDiaryList.stream()
                     .map(diary -> UserResCalendarMonthDTO.builder()
@@ -208,10 +208,10 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public UserResCalendarSummaryDTO summary(UserReqCalendarSummaryDTO calendarSummaryDTO) {
         try {
-            Long kakaoId = JwtUtil.getUserId();
+            Long userId = JwtUtil.getUserId();
 
             // userEmail와 calendarSummaryDTO에서 가져온 day와 일치하는 Diary 하나를 가져온다.
-            Optional<Diary> summaryDiary = diaryRepository.findByKakaoIdAndDayAndDiaryStatus(kakaoId, calendarSummaryDTO.getCalendarDay(), "PUBLISHED");
+            Optional<Diary> summaryDiary = diaryRepository.findByUserIdAndDayAndDiaryStatus(userId, calendarSummaryDTO.getCalendarDay(), "PUBLISHED");
 
             // summaryDiary가 존재하면 그에 맞게 DTO를 build하여 반환하고, 그렇지 않으면 빈 DTO를 반환한다.
             return summaryDiary.map(diary -> UserResCalendarSummaryDTO.builder()
@@ -233,12 +233,12 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = true)
     public UserResStatisticsMonthDTO getMonthStatic(LocalDate month) {
 
-        Long kakaoId = JwtUtil.getUserId();
+        Long userId = JwtUtil.getUserId();
 
         int year = month.getYear();
         int monthValue = month.getMonthValue();
 
-        List<Diary> diaries = diaryRepository.findDiaryEmotionByKakaoIdAndMonth(kakaoId, year, monthValue);
+        List<Diary> diaries = diaryRepository.findDiaryEmotionByUserIdAndMonth(userId, year, monthValue);
 
         // 감정별로 횟수를 세기 위한 Map 생성 및 초기화
         Map<DiaryEmotion, Integer> emotionCountMap = new HashMap<>();
@@ -260,12 +260,7 @@ public class UserServiceImpl implements UserService{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
         String formattedMonth = month.format(formatter);
 
-//        // 다음 달 나에게 짧은 한 마디 내용
-//        String monthComment = monthCommentRepository.findCommentByKakaoIdAndMonth(kakaoId,formattedMonth)
-//                .map(MonthComment::getCommentContent)
-//                .orElse(null);
-
-        Optional<MonthComment> monthComment = monthCommentRepository.findCommentByKakaoIdAndMonth(kakaoId, formattedMonth);
+        Optional<MonthComment> monthComment = monthCommentRepository.findCommentByUserIdAndMonth(userId, formattedMonth);
 
         // Map을 UserEmotionStaticDTO 리스트로 변환하고 nums 값으로 내림차순 정렬
         List<UserEmotionStaticDTO> userEmotionStaticDTOList = emotionCountMap.entrySet().stream()
@@ -289,14 +284,14 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public UserResMonthCommentDTO monthComment(UserReqMonthCommentDTO userReqMonthCommentDTO){
         try {
-            Long kakaoId = JwtUtil.getUserId();
+            Long userId = JwtUtil.getUserId();
 
             // 기존에 다음 달의 한 마디가 존재할 경우 예외 발생
-            monthCommentRepository.findCommentByKakaoIdAndMonth(kakaoId, userReqMonthCommentDTO.getChooseMonth())
+            monthCommentRepository.findCommentByUserIdAndMonth(userId, userReqMonthCommentDTO.getChooseMonth())
                     .ifPresent(monthComment -> { throw new RuntimeException("이미 다음 달의 한 마디가 존재합니다."); });
 
             MonthComment monthComment = MonthComment.builder()
-                    .kakaoId(kakaoId)
+                    .userId(userId)
                     .commentDate(userReqMonthCommentDTO.getChooseMonth())
                     .commentContent(userReqMonthCommentDTO.getMonthComment())
                     .build();
@@ -317,9 +312,9 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public UserResMonthCommentUpdateDTO monthCommentUpdate(UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO){
         try{
-            Long kakaoId = JwtUtil.getUserId();
-            monthCommentRepository.updateCommentByKakaoIdAndMonth(kakaoId, userReqMonthCommentUpdateDTO.getChooseMonth(), userReqMonthCommentUpdateDTO.getMonthComment());
-            MonthComment mc = monthCommentRepository.findCommentByKakaoIdAndMonth(kakaoId,userReqMonthCommentUpdateDTO.getChooseMonth())
+            Long userId = JwtUtil.getUserId();
+            monthCommentRepository.updateCommentByUserIdAndMonth(userId, userReqMonthCommentUpdateDTO.getChooseMonth(), userReqMonthCommentUpdateDTO.getMonthComment());
+            MonthComment mc = monthCommentRepository.findCommentByUserIdAndMonth(userId,userReqMonthCommentUpdateDTO.getChooseMonth())
                     .orElseThrow(()->new NoSuchElementException("그 달에 해당하는 한 마디가 없습니다."));
             return UserResMonthCommentUpdateDTO.builder()
                     .chooseMonth(mc.getCommentDate())
@@ -338,10 +333,10 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = true)
     public List<UserDiaryNumsDTO> getDiaryNums(LocalDate year) {
 
-        Long kakaoId = JwtUtil.getUserId();
+        Long userId = JwtUtil.getUserId();
         int yearValue = year.getYear();
 
-        List<Diary> diaries = diaryRepository.findAllByYearAndDiaryStatus(kakaoId, yearValue, DiaryStatus.PUBLISHED);
+        List<Diary> diaries = diaryRepository.findAllByYearAndDiaryStatus(userId, yearValue, DiaryStatus.PUBLISHED);
 
         Map<Integer, Integer> yearCountMap = new HashMap<>();
 
@@ -368,9 +363,9 @@ public class UserServiceImpl implements UserService{
     @Transactional(readOnly = true)
     public List<UserEmotionStaticDTO> getEmotionNums() {
 
-        Long kakaoId = JwtUtil.getUserId();
+        Long userId = JwtUtil.getUserId();
 
-        List<Diary> diaries = diaryRepository.findDiaryEmotionAllByKakaoId(kakaoId);
+        List<Diary> diaries = diaryRepository.findDiaryEmotionAllByUserId(userId);
 
         log.info("일기들", diaries);
 
@@ -396,15 +391,15 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public UserResProfileDTO getUserProfile() {
-        Long kakaoId = JwtUtil.getUserId();
+        Long userId = JwtUtil.getUserId();
 
-        User user = userRepository.findByKakaoId(kakaoId).orElseThrow(
+        User user = userRepository.findByUserId(userId).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
-        Profile profile = profileRepository.findByKakaoId(kakaoId).orElseThrow(
+        Profile profile = profileRepository.findByUserId(userId).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
-        ProfileImage profileImage = profileImageRepository.findByKakaoId(kakaoId).orElseThrow(
+        ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
 
@@ -427,15 +422,15 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserResProfileDTO updateProfile(UserProfileUpdateDto dto) throws IOException {
-        Long kakaoId = JwtUtil.getUserId();
+        Long userId = JwtUtil.getUserId();
 
-        User user = userRepository.findByKakaoId(kakaoId).orElseThrow(
+        User user = userRepository.findByUserId(userId).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
-        Profile profile = profileRepository.findByKakaoId(kakaoId).orElseThrow(
+        Profile profile = profileRepository.findByUserId(userId).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
-        ProfileImage profileImage = profileImageRepository.findByKakaoId(kakaoId).orElseThrow(
+        ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
 
@@ -473,9 +468,9 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public void scheduleUserMessage(Long kakaoId) {
+    public void scheduleUserMessage(Long userId) {
         try {
-            User user = userRepository.findByKakaoId(kakaoId)
+            User user = userRepository.findByUserId(userId)
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
             String alarmTimeString = user.getAlarmTime();
             LocalTime alarmTime = LocalTime.parse(alarmTimeString, DateTimeFormatter.ofPattern("HH:mm"));
@@ -490,7 +485,7 @@ public class UserServiceImpl implements UserService{
             scheduledExecutorService.schedule(() -> {
                 sendUserMessage(user);
                 // 다음 날 동일 시간에 다시 스케줄링
-                scheduleUserMessage(kakaoId);
+                scheduleUserMessage(userId);
             }, delay, TimeUnit.MILLISECONDS);
 
         } catch (Exception e) {
@@ -538,9 +533,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void changeCount(Long kakaoId, boolean increment) {
+    public void changeCount(Long userId, boolean increment) {
         try {
-            User user = getUser_kakaoId(kakaoId);
+            User user = getUser_Id(userId);
 
             if (!increment) {
                 user.plusUserNumCount();
@@ -555,30 +550,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findUserByKakaoId(Long kakaoId) {
-        return userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-    }
-
-    @Override
     public UserResCheckTodayDiaryDTO checkTodayDiary() {
-        Long kakaoId = JwtUtil.getUserId();
+        Long userId = JwtUtil.getUserId();
         return UserResCheckTodayDiaryDTO.builder()
-                .kakaoId(kakaoId)
-                .checkTodayDairy(getUser_kakaoId(kakaoId).getCheckTodayDairy())
+                .userId(userId)
+                .checkTodayDairy(getUser_Id(userId).getCheckTodayDairy())
                 .build();
     }
 
     @Override
-    public void setUserCheckTodayDairy(Long kakaoId, Boolean check) {
-        User findUser = getUser_kakaoId(kakaoId);
+    public void setUserCheckTodayDairy(Long userId, Boolean check) {
+        User findUser = getUser_Id(userId);
         findUser.setCheckTodayDiary(check);
     }
 
     /** 테스트를 위한 임시 자체 로그인 **/
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
-        User findUser = getUser_kakaoId(userReqLoginDTO.getKakaoId());
+        User findUser = getUser_Id(userReqLoginDTO.getUserId());
         return  modelMapper.map(findUser, UserResLoginDTO.class);
     }
 
@@ -588,10 +577,11 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
-    private User getUser_kakaoId(Long kakaoId) {
-        final Optional<User> optionalUser = userRepository.findByKakaoId(kakaoId);
+    @Override
+    public User getUser_Id(Long userId) {
+        final Optional<User> optionalUser = userRepository.findByUserId(userId);
         if(!optionalUser.isPresent()) {
-            throw new UserKakaoIdNotFoundException(ErrorCode.NOT_FOUND_USER);
+            throw new UserUserIdNotFoundException(ErrorCode.NOT_FOUND_USER);
         }
         return optionalUser.get();
     }
