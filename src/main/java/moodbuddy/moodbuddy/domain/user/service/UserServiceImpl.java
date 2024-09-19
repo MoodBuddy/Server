@@ -567,12 +567,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
         User findUser = getUser_Id(userReqLoginDTO.getUserId());
-        return  modelMapper.map(findUser, UserResLoginDTO.class);
+        return modelMapper.map(findUser, UserResLoginDTO.class);
     }
 
     /** 테스트를 위한 임시 자체 회원가입 **/
     @Override
     public UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO) {
+
         return null;
     }
 
