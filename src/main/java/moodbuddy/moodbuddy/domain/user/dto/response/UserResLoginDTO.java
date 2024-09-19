@@ -2,14 +2,12 @@ package moodbuddy.moodbuddy.domain.user.dto.response;
 
 import lombok.*;
 
-import java.time.LocalDate;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
-public class LoginResponseDto {
+public class UserResLoginDTO {
 //    private Long userId;
     private String accessToken;
     private String refreshToken;

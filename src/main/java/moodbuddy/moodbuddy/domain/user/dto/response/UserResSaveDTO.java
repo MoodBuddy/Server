@@ -5,9 +5,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
-public class DiaryNumsDto {
-    private String month;
-    private Integer nums;
+@Data
+public class UserResSaveDTO {
 }

@@ -9,7 +9,7 @@ import moodbuddy.moodbuddy.domain.profile.entity.Profile;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.profileImage.entity.ProfileImage;
 import moodbuddy.moodbuddy.domain.profileImage.repository.ProfileImageRepository;
-import moodbuddy.moodbuddy.domain.user.dto.response.LoginResponseDto;
+import moodbuddy.moodbuddy.domain.user.dto.response.UserResLoginDTO;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
@@ -28,7 +28,6 @@ import org.springframework.http.HttpHeaders;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import static moodbuddy.moodbuddy.global.common.config.MapperConfig.modelMapper;
 
 @Service
 @Slf4j
@@ -139,7 +138,7 @@ public class KakaoServiceImpl implements KakaoService{
 
     @Override
     @Transactional
-    public LoginResponseDto login(String kakaoAccessToken) {
+    public UserResLoginDTO login(String kakaoAccessToken) {
 
         log.info("kakao Access Token 받아오기 성공 " + kakaoAccessToken);
 
@@ -179,10 +178,10 @@ public class KakaoServiceImpl implements KakaoService{
 
             log.info("sign up is success" +kakaoProfile.getProperties().getNickname());
 
-//            return modelMapper.map(save, LoginResponseDto.class);
+//            return modelMapper.map(save, UserResLoginDTO.class);
 
-            // LoginResponseDto 생성
-            LoginResponseDto responseDto = new LoginResponseDto();
+            // UserResLoginDTO 생성
+            UserResLoginDTO responseDto = new UserResLoginDTO();
             responseDto.setAccessToken(save.getAccessToken());
             responseDto.setRefreshToken(save.getRefreshToken());
 
@@ -193,9 +192,9 @@ public class KakaoServiceImpl implements KakaoService{
 
             log.info("login is success" + kakaoProfile.getProperties().getNickname());
 
-//            return  modelMapper.map(loginUser, LoginResponseDto.class);
+//            return  modelMapper.map(loginUser, UserResLoginDTO.class);
 
-            LoginResponseDto responseDto = new LoginResponseDto();
+            UserResLoginDTO responseDto = new UserResLoginDTO();
             responseDto.setAccessToken(loginUser.getAccessToken());
             responseDto.setRefreshToken(loginUser.getRefreshToken());
 

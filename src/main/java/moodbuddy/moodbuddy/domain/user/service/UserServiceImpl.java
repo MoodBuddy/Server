@@ -29,7 +29,6 @@ import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -228,23 +226,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-//    @Override
-//    @Transactional
-//    @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 자정에 자동으로 실행
-//    public void changeDiaryNums(){
-//        log.info("[UserService] changeDiaryNums");
-//        try{
-//            List<User> users = userRepository.findAll();
-//            for(User user : users){
-//                userRepository.updateLastDiaryNumsById(user.getUserId(), user.getUserCurDiaryNums()); // 한 달이 지났으니 userCurDiaryNums를 userlastDiaryNums로 변경
-//                userRepository.updateCurDiaryNumsById(user.getUserId(), 0); // 새로운 달의 일기 개수를 위해 userCurDiaryNums 초기화
-//            }
-//        } catch (Exception e) {
-//            log.error("[UserService] changeDiaryNums error"+ e);
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     /** =========================================================  다연  ========================================================= **/
 
     //해당하는 월에 유저 아이디로 diary_emotion 조회 -> 감정별로 group by or 불러와서 리스트 또는 hashmap 형태로 가공 (감정(key), 횟수(value))
@@ -286,19 +267,19 @@ public class UserServiceImpl implements UserService{
 
         Optional<MonthComment> monthComment = monthCommentRepository.findCommentByKakaoIdAndMonth(kakaoId, formattedMonth);
 
-        // Map을 EmotionStaticDto 리스트로 변환하고 nums 값으로 내림차순 정렬
-        List<EmotionStaticDto> emotionStaticDtoList = emotionCountMap.entrySet().stream()
-                .map(entry -> new EmotionStaticDto(entry.getKey(), entry.getValue()))
+        // Map을 UserEmotionStaticDTO 리스트로 변환하고 nums 값으로 내림차순 정렬
+        List<UserEmotionStaticDTO> userEmotionStaticDTOList = emotionCountMap.entrySet().stream()
+                .map(entry -> new UserEmotionStaticDTO(entry.getKey(), entry.getValue()))
                 .sorted((e1, e2) -> e2.getNums().compareTo(e1.getNums())) // nums 값으로 내림차순 정렬
                 .collect(Collectors.toList());
 
         return monthComment.map(mc -> UserResStatisticsMonthDTO.builder()
-                        .emotionStaticDtoList(emotionStaticDtoList)
+                        .userEmotionStaticDTOList(userEmotionStaticDTOList)
                         .monthComment(mc.getCommentContent())
                         .commentCheck(true)
                         .build())
                 .orElse(UserResStatisticsMonthDTO.builder()
-                        .emotionStaticDtoList(emotionStaticDtoList)
+                        .userEmotionStaticDTOList(userEmotionStaticDTOList)
                         .monthComment(null)
                         .commentCheck(false)
                         .build());
@@ -355,7 +336,7 @@ public class UserServiceImpl implements UserService{
     //year parameter로 받아서 -> year에 해당하는 데이터 key,value <month, nums> 형태로 출력
     @Override
     @Transactional(readOnly = true)
-    public List<DiaryNumsDto> getDiaryNums(LocalDate year) {
+    public List<UserDiaryNumsDTO> getDiaryNums(LocalDate year) {
 
         Long kakaoId = JwtUtil.getUserId();
         int yearValue = year.getYear();
@@ -378,14 +359,14 @@ public class UserServiceImpl implements UserService{
         // 결과를 정렬하여 반환
         return yearCountMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey()) // 키 값으로 정렬
-                .map(entry -> new DiaryNumsDto(entry.getKey() + "월", entry.getValue())) // String 형식으로 변환
+                .map(entry -> new UserDiaryNumsDTO(entry.getKey() + "월", entry.getValue())) // String 형식으로 변환
                 .collect(Collectors.toList());
     }
 
     //감정 횟수 조회(해당 년도)
     @Override
     @Transactional(readOnly = true)
-    public List<EmotionStaticDto> getEmotionNums() {
+    public List<UserEmotionStaticDTO> getEmotionNums() {
 
         Long kakaoId = JwtUtil.getUserId();
 
@@ -407,14 +388,14 @@ public class UserServiceImpl implements UserService{
         }
 
         return emotionCountMap.entrySet().stream()
-                .map(entry -> new EmotionStaticDto(entry.getKey(), entry.getValue()))
+                .map(entry -> new UserEmotionStaticDTO(entry.getKey(), entry.getValue()))
                 .sorted((e1, e2) -> e2.getNums().compareTo(e1.getNums())) // nums 값으로 내림차순 정렬
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public UserProfileDto getUserProfile() {
+    public UserResProfileDTO getUserProfile() {
         Long kakaoId = JwtUtil.getUserId();
 
         User user = userRepository.findByKakaoId(kakaoId).orElseThrow(
@@ -427,7 +408,7 @@ public class UserServiceImpl implements UserService{
                 () -> new MemberIdNotFoundException(JwtUtil.getUserId())
         );
 
-        UserProfileDto profileDto = UserProfileDto.builder()
+        UserResProfileDTO profileDto = UserResProfileDTO.builder()
                 .url(profileImage.getProfileImgURL())
                 .profileComment(profile.getProfileComment())
                 .nickname(user.getNickname())
@@ -445,7 +426,7 @@ public class UserServiceImpl implements UserService{
     //프로필 이미지 s3에 저장 -> url setter로 변경
     @Override
     @Transactional
-    public UserProfileDto updateProfile(UserProfileUpdateDto dto) throws IOException {
+    public UserResProfileDTO updateProfile(UserProfileUpdateDto dto) throws IOException {
         Long kakaoId = JwtUtil.getUserId();
 
         User user = userRepository.findByKakaoId(kakaoId).orElseThrow(
@@ -475,8 +456,8 @@ public class UserServiceImpl implements UserService{
             profileImageRepository.save(profileImage);
         }
 
-        // 업데이트된 정보를 기반으로 UserProfileDto 객체를 생성하여 반환
-        UserProfileDto updateUserProfile = UserProfileDto.builder()
+        // 업데이트된 정보를 기반으로 UserResProfileDTO 객체를 생성하여 반환
+        UserResProfileDTO updateUserProfile = UserResProfileDTO.builder()
                 .url(profileImage.getProfileImgURL())
                 .profileComment(profile.getProfileComment())
                 .alarm(user.getAlarm())
@@ -559,12 +540,11 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void changeCount(Long kakaoId, boolean increment) {
         try {
-            User user = userRepository.findByKakaoId(kakaoId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+            User user = getUser_kakaoId(kakaoId);
 
-            if (!increment) { // true
+            if (!increment) {
                 user.plusUserNumCount();
-            } else { // false
+            } else {
                 user.minusUserNumCount();
             }
 
@@ -578,13 +558,6 @@ public class UserServiceImpl implements UserService{
     public User findUserByKakaoId(Long kakaoId) {
         return userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-    }
-
-    /** 테스트를 위한 임시 자체 로그인 **/
-    @Override
-    public LoginResponseDto login(UserReqLoginDTO userReqLoginDTO) {
-        User findUser = getUser_kakaoId(userReqLoginDTO.getKakaoId());
-        return  modelMapper.map(findUser, LoginResponseDto.class);
     }
 
     @Override
@@ -602,6 +575,18 @@ public class UserServiceImpl implements UserService{
         findUser.setCheckTodayDiary(check);
     }
 
+    /** 테스트를 위한 임시 자체 로그인 **/
+    @Override
+    public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
+        User findUser = getUser_kakaoId(userReqLoginDTO.getKakaoId());
+        return  modelMapper.map(findUser, UserResLoginDTO.class);
+    }
+
+    /** 테스트를 위한 임시 자체 회원가입 **/
+    @Override
+    public UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO) {
+        return null;
+    }
 
     private User getUser_kakaoId(Long kakaoId) {
         final Optional<User> optionalUser = userRepository.findByKakaoId(kakaoId);
