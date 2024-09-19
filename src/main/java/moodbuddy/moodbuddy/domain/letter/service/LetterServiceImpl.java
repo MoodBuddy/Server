@@ -241,7 +241,7 @@ public class LetterServiceImpl implements LetterService {
 
     private void sendMessageIfEnabled(User user) {
         if (user.getLetterAlarm() && !user.getPhoneNumber().isEmpty()) {
-            smsService.sendMessage(user.getPhoneNumber());
+            smsService.sendMessage(user.getPhoneNumber(),"LETTER");
         }
     }
 
