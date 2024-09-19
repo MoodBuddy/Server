@@ -9,10 +9,9 @@ import moodbuddy.moodbuddy.domain.profile.entity.Profile;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.profileImage.entity.ProfileImage;
 import moodbuddy.moodbuddy.domain.profileImage.repository.ProfileImageRepository;
-import moodbuddy.moodbuddy.domain.user.dto.response.LoginResponseDto;
+import moodbuddy.moodbuddy.domain.user.dto.response.UserResLoginDTO;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import moodbuddy.moodbuddy.global.properties.KakaoProperties;
 import moodbuddy.moodbuddy.domain.user.dto.KakaoProfile;
 import moodbuddy.moodbuddy.domain.user.dto.KakaoTokenDto;
@@ -26,16 +25,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpHeaders;
 
-import java.time.LocalDate;
 import java.util.Optional;
-import static moodbuddy.moodbuddy.global.common.config.MapperConfig.modelMapper;
 
 @Service
 @Slf4j
 public class KakaoServiceImpl implements KakaoService{
     private final ProfileImageRepository profileImageRepository;
     private final ProfileRepository profileRepository;
-
     private final KakaoProperties kakaoProperties;
     private final UserRepository userRepository;
 
@@ -139,12 +135,12 @@ public class KakaoServiceImpl implements KakaoService{
 
     @Override
     @Transactional
-    public LoginResponseDto login(String kakaoAccessToken) {
+    public UserResLoginDTO login(String kakaoAccessToken) {
 
         log.info("kakao Access Token 받아오기 성공 " + kakaoAccessToken);
 
         KakaoProfile kakaoProfile = getUserInfo(kakaoAccessToken);
-        final Optional<User> byKakaoId = userRepository.findByKakaoId(kakaoProfile.getId());
+        final Optional<User> byKakaoId = userRepository.findByUserId(kakaoProfile.getId());
 
         //kakaoId가 존재한다면 login, 존재하지 않는다면 signup
         if (byKakaoId.isEmpty()) {
@@ -156,22 +152,22 @@ public class KakaoServiceImpl implements KakaoService{
                             .alarm(kakaoProfile.getKakaoAccount().isTalkMessage())
                             .userCurDiaryNums(0)
                             .deleted(false)
-                            .accessToken(JwtUtil.createJwt(kakaoProfile.getId()))
-                            .accessTokenExpiredAt(LocalDate.now().plusYears(1L))
-                            .refreshToken(JwtUtil.createRefreshToken(kakaoProfile.getId()))
-                            .refreshTokenExpiredAt(LocalDate.now().plusYears(1L))
+//                            .accessToken(JwtUtil.createJwt(kakaoProfile.getId()))
+//                            .accessTokenExpiredAt(LocalDate.now().plusYears(1L))
+//                            .refreshToken(JwtUtil.createRefreshToken(kakaoProfile.getId()))
+//                            .refreshTokenExpiredAt(LocalDate.now().plusYears(1L))
                             .build()
             );
 
             profileRepository.save(
                     Profile.builder()
-                            .kakaoId(kakaoProfile.getId())
+                            .userId(kakaoProfile.getId())
                             .build()
             );
 
             profileImageRepository.save(
                     ProfileImage.builder()
-                            .kakaoId(kakaoProfile.getId())
+//                            .kakaoId(kakaoProfile.getId())
                             .profileImgURL(kakaoProfile.getProperties().getProfileImage())
                             .build()
             );
@@ -179,12 +175,12 @@ public class KakaoServiceImpl implements KakaoService{
 
             log.info("sign up is success" +kakaoProfile.getProperties().getNickname());
 
-//            return modelMapper.map(save, LoginResponseDto.class);
+//            return modelMapper.map(save, UserResLoginDTO.class);
 
-            // LoginResponseDto 생성
-            LoginResponseDto responseDto = new LoginResponseDto();
-            responseDto.setAccessToken(save.getAccessToken());
-            responseDto.setRefreshToken(save.getRefreshToken());
+            // UserResLoginDTO 생성
+            UserResLoginDTO responseDto = new UserResLoginDTO();
+//            responseDto.setAccessToken(save.getAccessToken());
+//            responseDto.setRefreshToken(save.getRefreshToken());
 
             return responseDto;
 
@@ -193,11 +189,11 @@ public class KakaoServiceImpl implements KakaoService{
 
             log.info("login is success" + kakaoProfile.getProperties().getNickname());
 
-//            return  modelMapper.map(loginUser, LoginResponseDto.class);
+//            return  modelMapper.map(loginUser, UserResLoginDTO.class);
 
-            LoginResponseDto responseDto = new LoginResponseDto();
-            responseDto.setAccessToken(loginUser.getAccessToken());
-            responseDto.setRefreshToken(loginUser.getRefreshToken());
+            UserResLoginDTO responseDto = new UserResLoginDTO();
+//            responseDto.setAccessToken(loginUser.getAccessToken());
+//            responseDto.setRefreshToken(loginUser.getRefreshToken());
 
             return responseDto;
         }

@@ -26,8 +26,8 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     }
 
     @Override
-    public void validateDiaryAccess(Diary findDiary, Long kakaoId) {
-        if (!findDiary.getKakaoId().equals(kakaoId)) {
+    public void validateDiaryAccess(Diary findDiary, Long userId) {
+        if (!findDiary.getUserId().equals(userId)) {
             throw new DiaryNoAccessException(ErrorCode.NO_ACCESS_DIARY);
         }
     }

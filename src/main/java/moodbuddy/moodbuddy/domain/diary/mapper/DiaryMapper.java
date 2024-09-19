@@ -14,7 +14,7 @@ public class DiaryMapper {
 
     private static final ModelMapper modelMapper = new ModelMapper();
 
-    public static Diary toDiaryEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long kakaoId, String summary, DiarySubject diarySubject) {
+    public static Diary toDiaryEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId, String summary, DiarySubject diarySubject) {
         return Diary.builder()
                 .diaryTitle(diaryReqSaveDTO.getDiaryTitle())
                 .diaryDate(diaryReqSaveDTO.getDiaryDate())
@@ -23,21 +23,21 @@ public class DiaryMapper {
                 .diaryStatus(DiaryStatus.PUBLISHED)
                 .diarySummary(summary)
                 .diarySubject(diarySubject)
-                .kakaoId(kakaoId)
+                .userId(userId)
                 .diaryBookMarkCheck(false)
                 .diaryFont(diaryReqSaveDTO.getDiaryFont())
                 .diaryFontSize(diaryReqSaveDTO.getDiaryFontSize())
                 .build();
     }
 
-    public static Diary toDraftEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long kakaoId) {
+    public static Diary toDraftEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId) {
         return Diary.builder()
                 .diaryTitle(diaryReqSaveDTO.getDiaryTitle())
                 .diaryDate(diaryReqSaveDTO.getDiaryDate())
                 .diaryContent(diaryReqSaveDTO.getDiaryContent())
                 .diaryWeather(diaryReqSaveDTO.getDiaryWeather())
                 .diaryStatus(DiaryStatus.DRAFT)
-                .kakaoId(kakaoId)
+                .userId(userId)
                 .diaryBookMarkCheck(false)
                 .diaryFont(diaryReqSaveDTO.getDiaryFont())
                 .diaryFontSize(diaryReqSaveDTO.getDiaryFontSize())

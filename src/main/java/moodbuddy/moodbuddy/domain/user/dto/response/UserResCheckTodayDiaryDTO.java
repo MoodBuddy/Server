@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class UserResCheckTodayDiaryDTO {
-    private Long kakaoId;
+    private Long userId;
     private Boolean checkTodayDairy;
 
-    public UserResCheckTodayDiaryDTO(Long kakaoId, Boolean checkTodayDairy) {
-        this.kakaoId = kakaoId;
+    public UserResCheckTodayDiaryDTO(Long userId, Boolean checkTodayDairy) {
+        this.userId = userId;
         this.checkTodayDairy = checkTodayDairy;
     }
 }

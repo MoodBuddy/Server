@@ -39,7 +39,7 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     @Override
     @Transactional
     public void aggregateAndSaveDiaryData() {
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
         LocalDate[] lastMonthRange = getLastMonthDateTimeRange();
 
         Map<DiaryEmotion, Long> emotionCounts = getDiaryEmotionCounts(lastMonthRange[0], lastMonthRange[1]);
@@ -47,19 +47,19 @@ public class QuddyTIServiceImpl implements QuddyTIService {
 
         final String quddyTIType = determineQuddyTIType(emotionCounts, subjectCounts);
 
-        final QuddyTI quddyTI = QuddyTIMapper.toQuddyTI(kakaoId, emotionCounts, subjectCounts, quddyTIType);
+        final QuddyTI quddyTI = QuddyTIMapper.toQuddyTI(userId, emotionCounts, subjectCounts, quddyTIType);
         saveQuddyTI(quddyTI);
     }
 
     @Override
     public QuddyTIResDetailDTO findAll() {
-        final Long kakaoId = JwtUtil.getUserId();
-        final QuddyTI findQuddyTI = getQuddyTI(kakaoId);
+        final Long userId = JwtUtil.getUserId();
+        final QuddyTI findQuddyTI = getQuddyTI(userId);
         return QuddyTIMapper.toQuddyTIResDetailDTO(findQuddyTI);
     }
 
-    private QuddyTI getQuddyTI(Long kakaoId) {
-        return quddyTIRepository.findByKakaoId(kakaoId)
+    private QuddyTI getQuddyTI(Long userId) {
+        return quddyTIRepository.findByUserId(userId)
                 .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.NOT_FOUND_QUDDYTI));
     }
 

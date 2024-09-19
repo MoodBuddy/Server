@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
 import java.time.LocalDateTime;
@@ -22,9 +21,8 @@ public class Letter extends BaseEntity {
     @Column(name = "letter_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+    private Long userId;
 
     @Column(name = "letter_format", nullable = false, columnDefinition = "int")
     private Integer letterFormat;
