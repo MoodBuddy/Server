@@ -1,9 +1,7 @@
 package moodbuddy.moodbuddy.domain.diaryImage.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.entity.Diary;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
@@ -11,6 +9,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DiaryImage extends BaseEntity {
     @Id
     @GeneratedValue
@@ -22,9 +21,5 @@ public class DiaryImage extends BaseEntity {
     private Diary diary;
 
     @Column(name = "diary_img_url")
-    private String diaryImgURL = "";
-
-    protected DiaryImage() {
-
-    }
+    private String diaryImgURL;
 }

@@ -76,10 +76,28 @@ dependencies {
 
     // WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.3.1'
+
+    // coolsms
+    implementation 'net.nurigo:sdk:4.3.0'
+    implementation 'net.nurigo:javaSDK:2.2'
+
+    //slack
+    implementation 'com.github.maricn:logback-slack-appender:1.4.0'
+
+//    implementation platform('com.google.firebase:firebase-bom:33.1.1')
+//    implementation 'com.google.firebase:firebase-analytics'
+
+//    // Elasticsearch
+//    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-parameters'
 }
 
 // === ⭐ QueryDsl 빌드 옵션 (선택) ===
