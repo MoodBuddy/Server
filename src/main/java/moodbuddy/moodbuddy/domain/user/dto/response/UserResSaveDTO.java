@@ -7,4 +7,5 @@ import lombok.*;
 @Builder
 @Data
 public class UserResSaveDTO {
+    private Long userId;
 }

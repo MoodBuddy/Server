@@ -1,6 +1,4 @@
 package moodbuddy.moodbuddy.domain.bookMark.repository;
-
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
