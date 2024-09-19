@@ -26,7 +26,7 @@ public class JwtUtil {
     public static String JWT_SECRET_KEY;
     private static final long EXPIRATION_TIME =  1000 * 60 * 60 * 24 * 365; // 365일
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 365; // 365일
-    public static final long ACCESS_TOKEN_EXPIRE_TIME = 365;
+    public static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 365;
 
     @Value("${jwt.secret}")
     public void setKey(String key) {
@@ -59,6 +59,20 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
+                .signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY)
+                .compact();
+    }
+
+    // jwt access 토큰 생성
+    public static String createAccessToken(Long id) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", id);
+
+        Date now = new Date();
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setClaims(claims)
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME))
                 .signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY)
                 .compact();
     }

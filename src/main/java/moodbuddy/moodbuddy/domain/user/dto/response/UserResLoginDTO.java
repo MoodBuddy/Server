@@ -8,10 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class UserResLoginDTO {
-//    private Long userId;
+    private Long userId;
     private String accessToken;
     private String refreshToken;
-//    private String nickname;
-//    private LocalDate accessTokenExpiredAt;
-//    private LocalDate refreshTokenExpiredAt;
 }
