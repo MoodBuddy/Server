@@ -12,11 +12,11 @@ import java.time.LocalDate;
 
 
 public interface DiaryRepositoryCustom {
-    DiaryResDraftFindAllDTO draftFindAllByUserId(Long kakaoId);
+    DiaryResDraftFindAllDTO draftFindAllByUserId(Long userId);
     DiaryResDetailDTO findOneByDiaryId(Long diaryId);
-    Page<DiaryResDetailDTO> findAllByUserIdWithPageable(Long kakaoId, Pageable pageable);
-    Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long kakaoId, Pageable pageable);
-    Page<DiaryResDetailDTO> findAllByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long kakaoId, Pageable pageable);
+    Page<DiaryResDetailDTO> findAllByUserIdWithPageable(Long userId, Pageable pageable);
+    Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable);
+    Page<DiaryResDetailDTO> findAllByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable);
     long countByEmotionAndDateRange(DiaryEmotion emotion, LocalDate start, LocalDate end);
     long countBySubjectAndDateRange(DiarySubject subject, LocalDate start, LocalDate end);
 }

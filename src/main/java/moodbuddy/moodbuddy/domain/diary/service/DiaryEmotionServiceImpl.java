@@ -43,7 +43,7 @@ public class DiaryEmotionServiceImpl implements DiaryEmotionService {
 
         // 쿼리 결과를 JSON 객체로 변환
         Diary diary = diaryRepository.findDiarySummaryById(JwtUtil.getUserId())
-                .orElseThrow(() -> new DatabaseNullOrEmptyException("Diary Summary data not found for kakaoId: " + JwtUtil.getUserId()));
+                .orElseThrow(() -> new DatabaseNullOrEmptyException("Diary Summary data not found for userId: " + JwtUtil.getUserId()));
 
         // 'diarySummary' key와 diary.getDiarySummary() 값을 포함하는 Map 생성
         Map<String, Object> paramMap = new HashMap<>();

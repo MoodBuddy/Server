@@ -4,5 +4,5 @@ import moodbuddy.moodbuddy.domain.diary.entity.Diary;
 
 public interface DiaryFindService {
     Diary findDiaryById(Long diaryId);
-    void validateDiaryAccess(Diary findDiary, Long kakaoId);
+    void validateDiaryAccess(Diary findDiary, Long userId);
 }
