@@ -8,16 +8,9 @@ import moodbuddy.moodbuddy.domain.bookMark.repository.BookMarkRepository;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.entity.Diary;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryFindService;
-import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
-import moodbuddy.moodbuddy.domain.diary.service.DiaryServiceImpl;
-import moodbuddy.moodbuddy.domain.diary.util.DiaryUtil;
-import moodbuddy.moodbuddy.domain.diaryImage.service.DiaryImageServiceImpl;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.domain.user.service.UserServiceImpl;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,15 +30,14 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Override
     @Transactional
     public BookMarkResToggleDTO toggle(Long diaryId) {
-        log.info("[BookMarkServiceImpl] toggle");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
-        final User findUser = userService.findUserByKakaoId(kakaoId);
+        final User findUser = userService.getUser_Id(userId);
         final Diary findDiary = diaryFindService.findDiaryById(diaryId);
 
-        diaryFindService.validateDiaryAccess(findDiary, kakaoId);
+        diaryFindService.validateDiaryAccess(findDiary, userId);
 
-        Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserAndDiary(findUser, findDiary);
+        Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserIdAndDiary(findUser.getUserId(), findDiary);
 
         if(optionalBookMark.isPresent()) { // 북마크가 존재한다면,
             // 북마크 취소
@@ -55,7 +47,7 @@ public class BookMarkServiceImpl implements BookMarkService {
         } else { // 북마크가 존재하지 않는다면,
             // 북마크 저장
             BookMark newBookMark = BookMark.builder()
-                    .user(findUser)
+                    .userId(findUser.getUserId())
                     .diary(findDiary)
                     .build();
             findDiary.setDiaryBookMarkCheck(true);
@@ -66,9 +58,8 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     public Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable) {
-        log.info("[BookMarkServiceImpl] bookMarkFindAllByWithPageable");
-        final Long kakaoId = JwtUtil.getUserId();
-        final User findUser = userService.findUserByKakaoId(kakaoId);
+        final Long userId = JwtUtil.getUserId();
+        final User findUser = userService.getUser_Id(userId);
 
         return bookMarkRepository.bookMarkFindAllWithPageable(findUser, pageable);
     }

@@ -9,6 +9,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @Getter
 @Builder
 @AllArgsConstructor
+@Table(name = "diary_image")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DiaryImage extends BaseEntity {
     @Id

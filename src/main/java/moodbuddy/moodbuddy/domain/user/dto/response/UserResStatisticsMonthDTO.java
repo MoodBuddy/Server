@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 public class UserResStatisticsMonthDTO {
     @Schema(description = "월별 통계 감정 리스트")
-    private List<EmotionStaticDto> emotionStaticDtoList;
+    private List<UserEmotionStaticDTO> userEmotionStaticDTOList;
     @Schema(description = "다음 달 나에게 짧은 한 마디")
     private String monthComment;
     @Schema(description = "다음 달 나에게 짧은 한 마디 작성 여부")

@@ -20,14 +20,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static moodbuddy.moodbuddy.domain.diary.entity.QDiary.diary;
 import static moodbuddy.moodbuddy.domain.diaryImage.entity.QDiaryImage.diaryImage;
-import static org.hibernate.query.results.Builders.fetch;
 
 @Slf4j
 public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
@@ -38,22 +36,22 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     }
 
     @Override
-    public DiaryResDraftFindAllDTO draftFindAllByKakaoId(Long kakaoId) {
+    public DiaryResDraftFindAllDTO draftFindAllByUserId(Long userId) {
         List<DiaryResDraftFindOneDTO> draftList = queryFactory
                 .select(Projections.constructor(DiaryResDraftFindOneDTO.class,
                         diary.id,
-                        diary.kakaoId,
+                        diary.userId,
                         diary.diaryDate,
                         diary.diaryStatus,
                         diary.diaryFont,
                         diary.diaryFontSize
                 ))
                 .from(diary)
-                .where(diary.kakaoId.eq(kakaoId)
+                .where(diary.userId.eq(userId)
                         .and(diary.diaryStatus.eq(DiaryStatus.DRAFT)))
                 .fetch()
                 .stream()
-                .map(d -> new DiaryResDraftFindOneDTO(d.getDiaryId(), d.getKakaoId(), d.getDiaryDate(), d.getDiaryStatus(), d.getDiaryFont(), d.getDiaryFontSize()))
+                .map(d -> new DiaryResDraftFindOneDTO(d.getDiaryId(), d.getUserId(), d.getDiaryDate(), d.getDiaryStatus(), d.getDiaryFont(), d.getDiaryFontSize()))
                 .collect(Collectors.toList());
 
         return new DiaryResDraftFindAllDTO(draftList);
@@ -61,10 +59,9 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
 
     @Override
     public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
-        log.info("[findOneByDiaryId]");
         DiaryResDetailDTO diaryResDetailDTO = queryFactory.select(Projections.constructor(DiaryResDetailDTO.class,
                         diary.id,
-                        diary.kakaoId,
+                        diary.userId,
                         diary.diaryTitle,
                         diary.diaryDate,
                         diary.diaryContent,
@@ -92,9 +89,9 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     }
 
     @Override
-    public Page<DiaryResDetailDTO> findAllByKakaoIdWithPageable(Long kakaoId, Pageable pageable) {
+    public Page<DiaryResDetailDTO> findAllByUserIdWithPageable(Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
-                .where(diary.kakaoId.eq(kakaoId)
+                .where(diary.userId.eq(userId)
                         .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)))
                 .orderBy(pageable.getSort().stream()
                         .map(order -> new OrderSpecifier(
@@ -122,7 +119,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                     .diaryStatus(d.getDiaryStatus())
                     .diarySummary(d.getDiarySummary())
                     .diarySubject(d.getDiarySubject())
-                    .kakaoId(d.getKakaoId())
+                    .userId(d.getUserId())
                     .diaryImgList(diaryImgList)
                     .diaryBookMarkCheck(d.getDiaryBookMarkCheck())
                     .diaryFont(d.getDiaryFont())
@@ -131,16 +128,16 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
         }).collect(Collectors.toList());
 
         long total = queryFactory.selectFrom(diary)
-                .where(diary.kakaoId.eq(kakaoId))
+                .where(diary.userId.eq(userId))
                 .fetchCount();
 
         return new PageImpl<>(diaryList, pageable, total);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long kakaoId, Pageable pageable) {
+    public Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
-                .where(diaryEmotionEq(emotion).and(diary.kakaoId.eq(kakaoId)))
+                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -157,7 +154,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
         List<DiaryResDetailDTO> dtoList = diaries.stream()
                 .map(d -> new DiaryResDetailDTO(
                         d.getId(),
-                        d.getKakaoId(),
+                        d.getUserId(),
                         d.getDiaryTitle(),
                         d.getDiaryDate(),
                         d.getDiaryContent(),
@@ -174,19 +171,19 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                 .collect(Collectors.toList());
 
         long total = queryFactory.selectFrom(diary)
-                .where(diaryEmotionEq(emotion).and(diary.kakaoId.eq(kakaoId)))
+                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId)))
                 .fetchCount();
 
         return new PageImpl<>(dtoList, pageable, total);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> findAllByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long kakaoId, Pageable pageable) {
+    public Page<DiaryResDetailDTO> findAllByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable) {
         LocalDate startDate = null;
         LocalDate endDate = null;
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(diary.kakaoId.eq(kakaoId));
+        builder.and(diary.userId.eq(userId));
 
         if (filterDTO.getYear() != null) {
             startDate = LocalDate.of(filterDTO.getYear(), 1, 1);
@@ -235,7 +232,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
         List<DiaryResDetailDTO> dtoList = results.stream()
                 .map(d -> DiaryResDetailDTO.builder()
                         .diaryId(d.getId())
-                        .kakaoId(d.getKakaoId())
+                        .userId(d.getUserId())
                         .diaryTitle(d.getDiaryTitle())
                         .diaryDate(d.getDiaryDate())
                         .diaryContent(d.getDiaryContent())

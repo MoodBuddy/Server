@@ -1,8 +1,11 @@
 # 📔 MoodBuddy 입니다 📔
 
 ## 🖥️ 프로젝트 소개
-감정 일기 서비스입니다.
+사용자의 공간에서 쿼디와 함께 하루의 기록과 고민을 편리하게 작성할 수 있는 감정 일기 웹 서비스
 <br>
+
+## 🎥 시연 영상
+![GIFMaker_me](https://github.com/user-attachments/assets/2a61f871-a1ca-402a-98a2-3643112e5b53)
 
 ## 🕰️ 개발 기간
 * 24.04.01일 - 진행중
@@ -27,6 +30,9 @@
       <img src="https://avatars.githubusercontent.com/u/105933726?v=4" width="100"> 
     </a>
 </p>
+
+## 🛠️아키텍처 구조도
+![아키텍처 구조도_3](https://github.com/user-attachments/assets/402eedcc-b640-4d14-9b0b-d02c5a2feac9)
 
 ## 📝 규칙
 - `커밋 컨벤션`
@@ -68,28 +74,13 @@
         - feat: 로그인 구현 - #mung
 <br>
 
-- `PR 규칙`
-    - PR 템플릿
-
-        ```markdown
-        ## 📋 이슈 번호
-        
-        ## 🛠 구현 사항
-        
-        ## 📚 기타
-        
-        ```
-        <br>
-
 - `DTO 규칙`
-    - 엔티티명 + Response/Request + DTO
+    - 엔티티명 + Res/Req + 역할 + DTO
     - 예시
-        - UserResponseDTO
-        - PostRequestDTO
+        - UserResSaveDTO
+        - PostReqSaveDTO
 
 ## 📌 API 명세서
-
-
-## 📌 참고 자료
+https://vagabond-cheque-7c0.notion.site/Moodbuddy-f9c25277ca2d4ec89c7ea272f96fb773?pvs=4
 
 ---

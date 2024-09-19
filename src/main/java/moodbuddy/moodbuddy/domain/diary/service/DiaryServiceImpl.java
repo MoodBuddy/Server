@@ -10,9 +10,10 @@ import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
-import moodbuddy.moodbuddy.domain.diary.util.DiaryUtil;
 import moodbuddy.moodbuddy.domain.diaryImage.service.DiaryImageService;
-import moodbuddy.moodbuddy.domain.gpt.service.GptService;
+import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
+import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
+import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.data.domain.Page;
@@ -37,26 +38,25 @@ public class DiaryServiceImpl implements DiaryService {
     private final UserService userService;
     private final GptService gptService;
 
-    /** =========================================================  정목  ========================================================= **/
-
     @Override
     @Transactional
     public DiaryResDetailDTO save(DiaryReqSaveDTO diaryReqSaveDTO) throws IOException {
-        log.info("[DiaryServiceImpl] save");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
-        DiaryUtil.validateExistingDiary(diaryRepository, diaryReqSaveDTO.getDiaryDate(), kakaoId); // 오늘 쓴 일기 있는지 확인
+        validateExistingDiary(diaryRepository, diaryReqSaveDTO.getDiaryDate(), userId);
 
-        String summary = gptService.summarize(diaryReqSaveDTO.getDiaryContent()).block(); // 일기 요약
-        DiarySubject diarySubject = classifyDiaryContent(diaryReqSaveDTO.getDiaryContent()); // 일기 주제
+        Diary diary = DiaryMapper.toDiaryEntity(
+                diaryReqSaveDTO,
+                userId,
+                gptService.summarize(diaryReqSaveDTO.getDiaryContent()).block(),
+                classifyDiaryContent(diaryReqSaveDTO.getDiaryContent()));
 
-        Diary diary = DiaryMapper.toDiaryEntity(diaryReqSaveDTO, kakaoId, summary, diarySubject); // 일기 생성
-        diary = diaryRepository.save(diary); // 일기 DB에 저장
+        diary = diaryRepository.save(diary);
 
-        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqSaveDTO.getDiaryImgList(), diary); // 일기 이미지 저장
+        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
 
-        checkTodayDiary(diaryReqSaveDTO.getDiaryDate(), kakaoId, false); // 편지지 개수와 일기 작성 가능 상태 변경
-        deleteDraftDiaries(diaryReqSaveDTO.getDiaryDate(), kakaoId); // 임시저장 일기 삭제
+        checkTodayDiary(diaryReqSaveDTO.getDiaryDate(), userId, false);
+        deleteDraftDiaries(diaryReqSaveDTO.getDiaryDate(), userId);
 
         return DiaryMapper.toDetailDTO(diary);
     }
@@ -64,16 +64,15 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public DiaryResDetailDTO update(DiaryReqUpdateDTO diaryReqUpdateDTO) throws IOException {
-        log.info("[DiaryServiceImpl] update");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
         if (isDraftToPublished(diaryReqUpdateDTO)) {
-            DiaryUtil.validateExistingDiary(diaryRepository, diaryReqUpdateDTO.getDiaryDate(), kakaoId);
-            checkTodayDiary(diaryReqUpdateDTO.getDiaryDate(), kakaoId, false);
+            validateExistingDiary(diaryRepository, diaryReqUpdateDTO.getDiaryDate(), userId);
+            checkTodayDiary(diaryReqUpdateDTO.getDiaryDate(), userId, false);
         }
 
         Diary findDiary = diaryFindService.findDiaryById(diaryReqUpdateDTO.getDiaryId());
-        diaryFindService.validateDiaryAccess(findDiary, kakaoId);
+        diaryFindService.validateDiaryAccess(findDiary, userId);
 
         String summary = gptService.summarize(diaryReqUpdateDTO.getDiaryContent()).block();
         DiarySubject diarySubject = classifyDiaryContent(diaryReqUpdateDTO.getDiaryContent());
@@ -81,12 +80,11 @@ public class DiaryServiceImpl implements DiaryService {
         findDiary.updateDiary(diaryReqUpdateDTO, summary, diarySubject);
 
         // 기존 이미지 삭제
-//        DiaryUtil.deleteAllDiaryImages(diaryImageService, findDiary);
-        DiaryUtil.deleteExcludingImages(diaryImageService, findDiary, diaryReqUpdateDTO.getExistingDiaryImgList());
+        diaryImageService.deleteExcludingImages(findDiary, diaryReqUpdateDTO.getExistingDiaryImgList());
         // 새로운 이미지 저장
-        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqUpdateDTO.getDiaryImgList(), findDiary);
+        diaryImageService.saveDiaryImages(diaryReqUpdateDTO.getDiaryImgList(), findDiary);
 
-        deleteDraftDiaries(diaryReqUpdateDTO.getDiaryDate(), kakaoId);
+        deleteDraftDiaries(diaryReqUpdateDTO.getDiaryDate(), userId);
 
         return DiaryMapper.toDetailDTO(findDiary);
     }
@@ -94,52 +92,48 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public void delete(Long diaryId) throws IOException {
-        log.info("[DiaryServiceImpl] delete");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
         final Diary findDiary = diaryFindService.findDiaryById(diaryId);
-        diaryFindService.validateDiaryAccess(findDiary, kakaoId);
+        diaryFindService.validateDiaryAccess(findDiary, userId);
 
-        checkTodayDiary(findDiary.getDiaryDate(), kakaoId, true);
+        checkTodayDiary(findDiary.getDiaryDate(), userId, true);
 
         bookMarkService.deleteByDiaryId(diaryId);
-        DiaryUtil.deleteAllDiaryImages(diaryImageService, findDiary);
+        diaryImageService.deleteAllDiaryImages(findDiary);
         diaryRepository.delete(findDiary);
     }
 
     @Override
     @Transactional
     public DiaryResDetailDTO draftSave(DiaryReqSaveDTO diaryReqSaveDTO) throws IOException {
-        log.info("[DiaryServiceImpl] draftSave");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
-        Diary diary = DiaryMapper.toDraftEntity(diaryReqSaveDTO, kakaoId);
+        Diary diary = DiaryMapper.toDraftEntity(diaryReqSaveDTO, userId);
         diary = diaryRepository.save(diary);
 
-        DiaryUtil.saveDiaryImages(diaryImageService, diaryReqSaveDTO.getDiaryImgList(), diary);
+        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
 
         return DiaryMapper.toDetailDTO(diary);
     }
 
     @Override
     public DiaryResDraftFindAllDTO draftFindAll() {
-        log.info("[DiaryServiceImpl] draftFindAll");
-        final Long kakaoId = JwtUtil.getUserId();
-        return diaryRepository.draftFindAllByKakaoId(kakaoId);
+        final Long userId = JwtUtil.getUserId();
+        return diaryRepository.draftFindAllByUserId(userId);
     }
 
     @Override
     @Transactional
     public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO diaryReqDraftSelectDeleteDTO) {
-        log.info("[DiaryServiceImpl] draftSelectDelete");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
         List<Diary> diariesToDelete = diaryRepository.findAllById(diaryReqDraftSelectDeleteDTO.getDiaryIdList()).stream()
-                .peek(diary -> diaryFindService.validateDiaryAccess(diary, kakaoId)) // 접근 권한 확인
+                .peek(diary -> diaryFindService.validateDiaryAccess(diary, userId)) // 접근 권한 확인
                 .collect(Collectors.toList());
 
         diariesToDelete.forEach(diary -> {
             try {
-                DiaryUtil.deleteAllDiaryImages(diaryImageService, diary);
+                diaryImageService.deleteAllDiaryImages(diary);
             } catch (IOException e) {
                 log.error("Error deleting diary images", e);
                 throw new RuntimeException(e);  // 필요에 따라 적절한 예외 처리
@@ -152,37 +146,33 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
-        log.info("[DiaryServiceImpl] findOneByDiaryId");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
         final Diary findDiary = diaryFindService.findDiaryById(diaryId);
-        diaryFindService.validateDiaryAccess(findDiary, kakaoId);
+        diaryFindService.validateDiaryAccess(findDiary, userId);
 
         return diaryRepository.findOneByDiaryId(diaryId);
     }
 
     @Override
     public Page<DiaryResDetailDTO> findAll(Pageable pageable) {
-        log.info("[DiaryServiceImpl] findAllWithPageable");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
-        return diaryRepository.findAllByKakaoIdWithPageable(kakaoId, pageable);
+        return diaryRepository.findAllByUserIdWithPageable(userId, pageable);
     }
 
     @Override
     public Page<DiaryResDetailDTO> findAllByEmotion(DiaryEmotion diaryEmotion, Pageable pageable) {
-        log.info("[DiaryServiceImpl] findAllByEmotionWithPageable");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
-        return diaryRepository.findAllByEmotionWithPageable(diaryEmotion, kakaoId, pageable);
+        return diaryRepository.findAllByEmotionWithPageable(diaryEmotion, userId, pageable);
     }
 
     @Override
     public Page<DiaryResDetailDTO> findAllByFilter(DiaryReqFilterDTO diaryReqFilterDTO, Pageable pageable) {
-        log.info("[DiaryServiceImpl] findAllByFilter");
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
-        return diaryRepository.findAllByFilterWithPageable(diaryReqFilterDTO, kakaoId, pageable);
+        return diaryRepository.findAllByFilterWithPageable(diaryReqFilterDTO, userId, pageable);
     }
 
     private boolean isDraftToPublished(DiaryReqUpdateDTO diaryReqUpdateDTO) {
@@ -190,20 +180,27 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     private DiarySubject classifyDiaryContent(String diaryContent) {
-        return DiarySubject.valueOf(gptService.classifyDiaryContent(diaryContent).block());
+        Mono<String> subjectMono = gptService.classifyDiaryContent(diaryContent);
+        String classifiedSubject = subjectMono.block();
+        return DiarySubject.valueOf(classifiedSubject);
     }
-
-    private void checkTodayDiary(LocalDate diaryDate, Long kakaoId, boolean check) {
+    private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
         LocalDate today = LocalDate.now();
         if (diaryDate.isEqual(today)) {
-            userService.changeCount(kakaoId, check); // 일기 작성하면 편지지 개수 늘려주기
-            userService.setUserCheckTodayDairy(kakaoId, check); // 일기 작성 불가
+            userService.changeCount(userId, check); // 일기 작성하면 편지지 개수 늘려주기
+            userService.setUserCheckTodayDairy(userId, check); // 일기 작성 불가
         }
     }
-    private void deleteDraftDiaries(LocalDate diaryDate, Long kakaoId) {
-        List<Diary> draftDiaries = diaryRepository.findAllByDiaryDateAndKakaoIdAndDiaryStatus(diaryDate, kakaoId, DiaryStatus.DRAFT);
+    private void deleteDraftDiaries(LocalDate diaryDate, Long userId) {
+        List<Diary> draftDiaries = diaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT);
         if (!draftDiaries.isEmpty()) {
             diaryRepository.deleteAll(draftDiaries);
+        }
+    }
+
+    private void validateExistingDiary(DiaryRepository diaryRepository, LocalDate diaryDate, Long userId) {
+        if (diaryRepository.findByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.PUBLISHED).isPresent()) {
+            throw new DiaryTodayExistingException(ErrorCode.TODAY_EXISTING_DIARY);
         }
     }
 }

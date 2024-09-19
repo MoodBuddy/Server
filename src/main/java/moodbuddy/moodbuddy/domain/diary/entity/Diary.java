@@ -5,9 +5,7 @@ import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
-import java.awt.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,60 +14,53 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "diary")
 public class Diary extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "diary_title", nullable = false, columnDefinition = "varchar(255)")
+    @Column(name = "diary_title", nullable = false)
     private String diaryTitle;
 
     @Column(name = "diary_date", nullable = false)
     private LocalDate diaryDate;
 
-//    @Lob
     @Column(name = "diary_content", nullable = false, columnDefinition = "text")
     private String diaryContent;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_weather", nullable = false, columnDefinition = "varchar(10)")
+    @Column(name = "diary_weather", nullable = false)
     private DiaryWeather diaryWeather;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_emotion", columnDefinition = "varchar(10)")
+    @Column(name = "diary_emotion")
     private DiaryEmotion diaryEmotion;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_status", nullable = false, columnDefinition = "varchar(10)")
+    @Column(name = "diary_status", nullable = false)
     private DiaryStatus diaryStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_subject", columnDefinition = "varchar(10)")
+    @Column(name = "diary_subject")
     private DiarySubject diarySubject;
 
     @Column(name = "diary_summary", columnDefinition = "varchar(255)")
     private String diarySummary;
 
-    @Column(name = "kakao_id", columnDefinition = "bigint")
-    private Long kakaoId;
+    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+    private Long userId;
 
-    @Column(name = "diary_book_mark_check", columnDefinition = "varchar(20)")
+    @Column(name = "diary_book_mark_check")
     private Boolean diaryBookMarkCheck; // 북마크 여부
 
     /** 추가 칼럼 **/
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_font", columnDefinition = "varchar(10)")
+    @Column(name = "diary_font")
     private DiaryFont diaryFont;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_font_size", columnDefinition = "varchar(10)")
+    @Column(name = "diary_font_size")
     private DiaryFontSize diaryFontSize;
-
-    /** sql문 **/
-    // ALTER TABLE diary
-    // ADD COLUMN diary_font VARCHAR(10),
-    // ADD COLUMN diary_font_size VARCHAR(10);
 
     public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, String diarySummary, DiarySubject diarySubject) {
         this.diaryTitle = diaryReqUpdateDTO.getDiaryTitle();
