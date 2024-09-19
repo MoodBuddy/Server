@@ -1,7 +1,5 @@
 package moodbuddy.moodbuddy.domain.user.service;
 
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
@@ -12,7 +10,6 @@ import moodbuddy.moodbuddy.domain.user.entity.User;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
     // 메인 화면 이동
@@ -28,16 +25,16 @@ public interface UserService {
     UserResStatisticsMonthDTO getMonthStatic(LocalDate month);
 
     //내 활동 _ 일기 횟수 조회 , 년 + 해당하는 월
-    List<DiaryNumsDto> getDiaryNums(LocalDate year);
+    List<UserDiaryNumsDTO> getDiaryNums(LocalDate year);
 
     //연별 감정 횟수 조회
-    List<EmotionStaticDto> getEmotionNums();
+    List<UserEmotionStaticDTO> getEmotionNums();
 
     //프로필 조회
-    UserProfileDto getUserProfile();
+    UserResProfileDTO getUserProfile();
 
     //프로필 수정
-    UserProfileDto updateProfile(UserProfileUpdateDto dto) throws IOException;
+    UserResProfileDTO updateProfile(UserProfileUpdateDto dto) throws IOException;
 
     // 사용자가 설정한 알림 시간에 문자 보내기
     void scheduleUserMessage(Long kakaoId);
@@ -59,10 +56,11 @@ public interface UserService {
 
      void setUserCheckTodayDairy(Long kakaoId, Boolean check);
 
-    /** 테스트를 위한 임시 자체 로그인 **/
-    LoginResponseDto login(UserReqLoginDTO userReqLoginDTO);
-
     /** 오늘 일기 작성한 지 가능 여부 **/
     UserResCheckTodayDiaryDTO checkTodayDiary();
+
+    /** 테스트 (로그인 / 회원가입) **/
+    UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO);
+    UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO);
 
 }
