@@ -19,6 +19,7 @@ import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResMainPageDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
 import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.user.mapper.UserMapper;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
@@ -56,7 +57,6 @@ public class UserServiceImpl implements UserService{
     private final MonthCommentRepository monthCommentRepository;
     private final DiaryImageServiceImpl diaryImageService;
     private final ScheduledExecutorService scheduledExecutorService;
-
 
     @Value("${coolsms.api-key}")
     private String smsApiKey;
@@ -566,13 +566,13 @@ public class UserServiceImpl implements UserService{
     /** 테스트를 위한 임시 자체 로그인 **/
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
-        User findUser = getUser_Id(userReqLoginDTO.getUserId());
-        return  modelMapper.map(findUser, UserResLoginDTO.class);
+        return UserMapper.toUserResLoginDTO(getUser_Id(userReqLoginDTO.getUserId()));
     }
 
     /** 테스트를 위한 임시 자체 회원가입 **/
     @Override
     public UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO) {
+
         return null;
     }
 
