@@ -22,7 +22,7 @@ import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
-import moodbuddy.moodbuddy.global.common.exception.user.UserUserIdNotFoundException;
+import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundException;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
@@ -71,7 +71,6 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public UserResMainPageDTO mainPage(){
         try {
-            // kakaoId를 통해 userRepository에서 유저 조회 (Optional 사용)
             Long userId = JwtUtil.getUserId();
             Optional<User> optionalUser = userRepository.findByUserId(userId);
 
@@ -581,7 +580,7 @@ public class UserServiceImpl implements UserService{
     public User getUser_Id(Long userId) {
         final Optional<User> optionalUser = userRepository.findByUserId(userId);
         if(!optionalUser.isPresent()) {
-            throw new UserUserIdNotFoundException(ErrorCode.NOT_FOUND_USER);
+            throw new UserNotFoundException(ErrorCode.NOT_FOUND_USER);
         }
         return optionalUser.get();
     }

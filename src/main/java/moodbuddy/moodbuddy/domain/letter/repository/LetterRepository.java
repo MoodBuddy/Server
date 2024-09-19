@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LetterRepository extends JpaRepository<Letter, Long> {
-    @Query("select l from Letter l where l.user.userId = :userId")
+    @Query("select l from Letter l where l.userId = :userId")
     List<Letter> findByUserId(@Param("userId") Long userId);
 
     @Modifying
