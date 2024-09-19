@@ -19,7 +19,7 @@ public class Diary extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "diary_title", nullable = false, columnDefinition = "varchar(255)")
+    @Column(name = "diary_title", nullable = false)
     private String diaryTitle;
 
     @Column(name = "diary_date", nullable = false)
@@ -29,19 +29,19 @@ public class Diary extends BaseEntity {
     private String diaryContent;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_weather", nullable = false, columnDefinition = "varchar(10)")
+    @Column(name = "diary_weather", nullable = false)
     private DiaryWeather diaryWeather;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_emotion", columnDefinition = "varchar(10)")
+    @Column(name = "diary_emotion")
     private DiaryEmotion diaryEmotion;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_status", nullable = false, columnDefinition = "varchar(10)")
+    @Column(name = "diary_status", nullable = false)
     private DiaryStatus diaryStatus;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_subject", columnDefinition = "varchar(10)")
+    @Column(name = "diary_subject")
     private DiarySubject diarySubject;
 
     @Column(name = "diary_summary", columnDefinition = "varchar(255)")
@@ -50,16 +50,16 @@ public class Diary extends BaseEntity {
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
-    @Column(name = "diary_book_mark_check", columnDefinition = "varchar(20)")
+    @Column(name = "diary_book_mark_check")
     private Boolean diaryBookMarkCheck; // 북마크 여부
 
     /** 추가 칼럼 **/
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_font", columnDefinition = "varchar(10)")
+    @Column(name = "diary_font")
     private DiaryFont diaryFont;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "diary_font_size", columnDefinition = "varchar(10)")
+    @Column(name = "diary_font_size")
     private DiaryFontSize diaryFontSize;
 
     public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, String diarySummary, DiarySubject diarySubject) {
