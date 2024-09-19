@@ -9,15 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 public interface DiaryRepositoryCustom {
-    DiaryResDraftFindAllDTO draftFindAllByKakaoId(Long kakaoId);
+    DiaryResDraftFindAllDTO draftFindAllByUserId(Long userId);
     DiaryResDetailDTO findOneByDiaryId(Long diaryId);
-    Page<DiaryResDetailDTO> findAllByKakaoIdWithPageable(Long kakaoId, Pageable pageable);
-    Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long kakaoId, Pageable pageable);
-    Page<DiaryResDetailDTO> findAllByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long kakaoId, Pageable pageable);
+    Page<DiaryResDetailDTO> findAllByUserIdWithPageable(Long userId, Pageable pageable);
+    Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable);
+    Page<DiaryResDetailDTO> findAllByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable);
     long countByEmotionAndDateRange(DiaryEmotion emotion, LocalDate start, LocalDate end);
     long countBySubjectAndDateRange(DiarySubject subject, LocalDate start, LocalDate end);
 }

@@ -10,17 +10,16 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @Getter
 @Builder
 @AllArgsConstructor
+@Table(name = "book_mark")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookMark extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "bookmark_id")
+    @Column(name = "book_mark_id")
     private Long id;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)

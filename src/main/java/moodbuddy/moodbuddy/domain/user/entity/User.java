@@ -4,28 +4,20 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
-
-
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
+import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
 @Entity
-@Table(name = "user")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Builder
-public class User {
-
+@AllArgsConstructor
+@Table(name = "user")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", columnDefinition = "bigint")
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "user_role", columnDefinition = "varchar(50)")
@@ -55,24 +47,8 @@ public class User {
     @Column(name = "gender", columnDefinition = "tinyint")
     private Boolean gender;
 
-    @CreationTimestamp
-    @Column(name = "created_at", columnDefinition = "datetime")
-    private LocalDateTime createdAt;
-
     @Column(name = "deleted", columnDefinition = "tinyint")
     private Boolean deleted;
-
-    @Column(name = "access_token", columnDefinition = "text")
-    private String accessToken;
-
-    @Column(name = "access_token_expired_at", columnDefinition = "date")
-    private LocalDate accessTokenExpiredAt;
-
-    @Column(name = "refresh_token", columnDefinition = "text")
-    private String refreshToken;
-
-    @Column(name = "refresh_token_expired_at", columnDefinition = "date")
-    private LocalDate refreshTokenExpiredAt;
 
     @Column(name = "user_cur_diary_nums", columnDefinition = "int")
     private Integer userCurDiaryNums;
@@ -96,5 +72,13 @@ public class User {
     public void minusUserNumCount() {
         userCurDiaryNums--;
         userLetterNums--;
+    }
+
+    public void setLetterAlarm(Boolean letterAlarm) {
+        this.letterAlarm = letterAlarm;
+    }
+
+    public void setUserLetterNums(int nums) {
+        this.userLetterNums = nums;
     }
 }

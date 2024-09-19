@@ -16,8 +16,8 @@ public class QuddyTI extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "kakao_id", nullable = false, columnDefinition = "bigint")
-    private Long kakaoId;
+    @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
+    private Long userId;
 
     /** 감정 갯수 **/
     @Column(name = "happiness_count", columnDefinition = "int")

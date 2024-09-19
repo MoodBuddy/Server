@@ -3,7 +3,6 @@ package moodbuddy.moodbuddy.domain.profile.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
 @Entity
@@ -21,8 +20,8 @@ public class Profile extends BaseEntity {
     @Column(name = "profile_comment", columnDefinition = "varchar(255)")
     private String profileComment;
 
-    @Column(name = "kakao_id", columnDefinition = "bigint")
-    private Long kakaoId;
+    @Column(name = "user_id", columnDefinition = "bigint")
+    private Long userId;
 
     protected Profile() {}
 }

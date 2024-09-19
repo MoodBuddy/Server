@@ -89,7 +89,7 @@ public class UserApiController {
     })
     public ResponseEntity<?> getDiaryNums
     (@RequestParam("year") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate year) {
-        List<DiaryNumsDto> diaryNumsDtos = userService.getDiaryNums(year);
+        List<UserDiaryNumsDTO> userDiaryNumsDTOS = userService.getDiaryNums(year);
         return ResponseEntity.ok(userService.getDiaryNums(year));
     }
 
@@ -99,7 +99,7 @@ public class UserApiController {
     @Operation(summary = "감정 횟수 조회", description = "감정 횟수를 보여줍니다")
     public ResponseEntity<?> getEmotionNums()
     {
-        List<EmotionStaticDto> emotionNums = userService.getEmotionNums();
+        List<UserEmotionStaticDTO> emotionNums = userService.getEmotionNums();
         return ResponseEntity.ok(emotionNums);
     }
 
@@ -108,7 +108,7 @@ public class UserApiController {
     @Operation(summary = "프로필 조회")
     public ResponseEntity<?> getProfile()
     {
-        UserProfileDto profile = userService.getUserProfile();
+        UserResProfileDTO profile = userService.getUserProfile();
         return ResponseEntity.ok(profile);
     }
 
@@ -119,7 +119,7 @@ public class UserApiController {
     public ResponseEntity<?> updateProfile(@ModelAttribute UserProfileUpdateDto updateDto) throws IOException
     {
         Long kakaoId = JwtUtil.getUserId();
-        UserProfileDto updateProfile = userService.updateProfile(updateDto);
+        UserResProfileDTO updateProfile = userService.updateProfile(updateDto);
         userService.scheduleUserMessage(kakaoId);
         return ResponseEntity.ok(updateProfile);
     }

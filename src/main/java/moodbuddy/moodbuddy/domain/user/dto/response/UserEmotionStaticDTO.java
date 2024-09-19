@@ -9,7 +9,7 @@ import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
 @Builder
 @Getter
 @Setter
-public class EmotionStaticDto {
+public class UserEmotionStaticDTO {
     @Schema(description = "일기의 감정")
     private DiaryEmotion diaryEmotion;
     @Schema(description = "감정 횟수")

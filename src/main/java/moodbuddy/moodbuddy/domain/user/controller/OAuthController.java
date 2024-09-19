@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
-import moodbuddy.moodbuddy.domain.user.dto.response.LoginResponseDto;
+import moodbuddy.moodbuddy.domain.user.dto.response.UserResLoginDTO;
 
 @Slf4j
 @RestController
@@ -39,7 +39,7 @@ public class OAuthController {
     // kakao id가 있다면 -> login
     // kakao id가 없다면 -> signup
     @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<LoginResponseDto> kakaoLogin(HttpServletRequest request) {
+    public ResponseEntity<UserResLoginDTO> kakaoLogin(HttpServletRequest request) {
 
         String code = request.getParameter("code");
 
