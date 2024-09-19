@@ -139,18 +139,6 @@ public class JwtUtil {
         return body.get("id", Long.class);
     }
 
-//    public static String getNickName() {
-//        String token = JwtUtil.getAccessToken();
-//
-//        Claims body = Jwts.parserBuilder()
-//                .setSigningKey(JWT_SECRET_KEY)
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody();
-//
-//        return body.get("nickname", String.class);
-//    }
-
     public static String getAccessToken() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
