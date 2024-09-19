@@ -30,14 +30,14 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Override
     @Transactional
     public BookMarkResToggleDTO toggle(Long diaryId) {
-        final Long kakaoId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
 
-        final User findUser = userService.findUserByKakaoId(kakaoId);
+        final User findUser = userService.getUser_Id(userId);
         final Diary findDiary = diaryFindService.findDiaryById(diaryId);
 
-        diaryFindService.validateDiaryAccess(findDiary, kakaoId);
+        diaryFindService.validateDiaryAccess(findDiary, userId);
 
-        Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserAndDiary(findUser, findDiary);
+        Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserIdAndDiary(findUser.getUserId(), findDiary);
 
         if(optionalBookMark.isPresent()) { // 북마크가 존재한다면,
             // 북마크 취소
@@ -47,7 +47,7 @@ public class BookMarkServiceImpl implements BookMarkService {
         } else { // 북마크가 존재하지 않는다면,
             // 북마크 저장
             BookMark newBookMark = BookMark.builder()
-                    .user(findUser)
+                    .userId(findUser.getUserId())
                     .diary(findDiary)
                     .build();
             findDiary.setDiaryBookMarkCheck(true);
@@ -58,8 +58,8 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     public Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable) {
-        final Long kakaoId = JwtUtil.getUserId();
-        final User findUser = userService.findUserByKakaoId(kakaoId);
+        final Long userId = JwtUtil.getUserId();
+        final User findUser = userService.getUser_Id(userId);
 
         return bookMarkRepository.bookMarkFindAllWithPageable(findUser, pageable);
     }

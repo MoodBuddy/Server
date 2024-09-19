@@ -1,7 +1,6 @@
 package moodbuddy.moodbuddy.domain.quddyTI.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,9 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@Builder
 public class QuddyTIResDetailDTO {
-
-    @Schema(description = "사용자 고유 식별자(kakaoId)", example = "2")
-    private Long kakaoId;
+    @Schema(description = "사용자 고유 식별자(userId)", example = "2")
+    private Long userId;
     @Schema(description = "Happiness 갯수", example = "2")
     private Integer happinessCount;
     @Schema(description = "Anger 갯수", example = "2")

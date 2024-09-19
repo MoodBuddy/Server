@@ -33,13 +33,13 @@ public class JwtUtil {
         JWT_SECRET_KEY = key;
     }
 
-    public static String createJwt(Long kakaoId) {
+    public static String createJwt(Long userId) {
         Date now = new Date();
 
         Date expiredDate = new Date(now.getTime() + EXPIRATION_TIME);
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("id", kakaoId);
+        claims.put("id", userId);
 
         return Jwts.builder()
                 .setClaims(claims)
