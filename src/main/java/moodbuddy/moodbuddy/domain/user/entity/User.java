@@ -4,22 +4,15 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
-
-
 import lombok.*;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
+@Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
     @Id
