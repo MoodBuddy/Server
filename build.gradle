@@ -81,7 +81,7 @@ dependencies {
     implementation 'net.nurigo:sdk:4.3.0'
     implementation 'net.nurigo:javaSDK:2.2'
 
-    //slack
+    // slack
     implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
 //    implementation platform('com.google.firebase:firebase-bom:33.1.1')
@@ -90,6 +90,8 @@ dependencies {
 //    // Elasticsearch
 //    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
+    // actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 }
 
 tasks.named('test') {
@@ -98,18 +100,6 @@ tasks.named('test') {
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << '-parameters'
-}
-
-// === ⭐ QueryDsl 빌드 옵션 (선택) ===
-def querydslDir = "/generated/querydsl"
-
-sourceSets {
-    main.java.srcDirs += [ querydslDir ]
-}
-
-
-clean.doLast {
-    file(querydslDir).deleteDir()
 }
 
 jar {
