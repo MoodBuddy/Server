@@ -48,24 +48,7 @@ public class LetterApiController {
             @Parameter(description = "사용자가 작성한 고민 편지와 답장 형식을 담고 있는 DTO")
             @RequestBody LetterReqDTO letterReqDTO
     ) {
-        Long kakaoId = JwtUtil.getUserId();
-        LetterResSaveDTO letterResSaveDTO = letterService.letterSave(kakaoId, letterReqDTO);
-
-        // 30초 후에 letterAnswerSave 호출 예약
-        scheduleLetterAnswerSave(kakaoId, letterResSaveDTO);
-
-        return ResponseEntity.ok(letterResSaveDTO);
-    }
-
-    private void scheduleLetterAnswerSave(Long kakaoId, LetterResSaveDTO letterResSaveDTO) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // 30초 후에 실행할 작업
-                letterService.letterAnswerSave(kakaoId, letterResSaveDTO);
-            }
-        }, 25000); // 25초 지연
+        return ResponseEntity.ok(letterService.letterSave(letterReqDTO));
     }
 
     @GetMapping("/details/{letterId}")

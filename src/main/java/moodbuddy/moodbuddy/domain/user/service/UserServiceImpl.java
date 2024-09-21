@@ -5,13 +5,14 @@ import moodbuddy.moodbuddy.domain.diary.entity.Diary;
 import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
-import moodbuddy.moodbuddy.domain.diaryImage.service.DiaryImageServiceImpl;
+import moodbuddy.moodbuddy.domain.diaryImage.service.DiaryImageService;
 import moodbuddy.moodbuddy.domain.monthcomment.entity.MonthComment;
 import moodbuddy.moodbuddy.domain.monthcomment.repository.MonthCommentRepository;
 import moodbuddy.moodbuddy.domain.profile.entity.Profile;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.profileImage.entity.ProfileImage;
 import moodbuddy.moodbuddy.domain.profileImage.repository.ProfileImageRepository;
+import moodbuddy.moodbuddy.domain.sms.service.SmsService;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
@@ -55,15 +56,9 @@ public class UserServiceImpl implements UserService{
     private final ProfileImageRepository profileImageRepository;
     private final DiaryRepository diaryRepository;
     private final MonthCommentRepository monthCommentRepository;
-    private final DiaryImageServiceImpl diaryImageService;
+    private final DiaryImageService diaryImageService;
     private final ScheduledExecutorService scheduledExecutorService;
-
-    @Value("${coolsms.api-key}")
-    private String smsApiKey;
-    @Value("${coolsms.api-secret}")
-    private String smsApiSecretKey;
-    @Value("${coolsms.sender-phone}")
-    private String senderPhone;
+    private final SmsService smsService;
 
     /** =========================================================  재민  ========================================================= **/
 
@@ -493,25 +488,8 @@ public class UserServiceImpl implements UserService{
     }
 
     private void sendUserMessage(User user){
-        try{
-            DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecretKey, "https://api.coolsms.co.kr");
-
-            Message message = new Message();
-            message.setFrom(senderPhone);
-            message.setTo(user.getPhoneNumber());
-            message.setText("[moodbuddy] 일기를 작성할 시간이에요! 오늘의 소중한 순간을 쿼디와 함께 기록해볼까요?");
-
-            try {
-                messageService.send(message);
-            } catch (NurigoMessageNotReceivedException exception) {
-                // 발송에 실패한 메시지 목록을 확인
-                System.out.println(exception.getFailedMessageList());
-                System.out.println(exception.getMessage());
-            } catch (Exception exception) {
-                System.out.println(exception.getMessage());
-            }
-        } catch (Exception e){
-            log.error("[UserService] sendUserMessage error",e);
+        if (user.getLetterAlarm() && !user.getPhoneNumber().isEmpty()) {
+            smsService.sendMessage(user.getPhoneNumber(),"USER");
         }
     }
 
