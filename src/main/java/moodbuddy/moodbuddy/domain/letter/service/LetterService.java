@@ -17,11 +17,11 @@ public interface LetterService {
     LetterResUpdateDTO updateLetterAlarm(LetterReqUpdateDTO letterReqUpdateDTO);
 
     // 고민 편지 작성
-    LetterResSaveDTO letterSave(Long userId, LetterReqDTO letterReqDTO);
+    LetterResSaveDTO letterSave(LetterReqDTO letterReqDTO);
 
     // 고민 편지 내용
     LetterResDetailsDTO letterDetails(Long letterId);
 
     // 연동한 GPT API로 고민에 대한 답장을 받은 후 저장
-    void letterAnswerSave(Long userId, LetterResSaveDTO letterResSaveDTO);
+    void letterAnswerSave(Long kakaoId, LetterResSaveDTO letterResSaveDTO);
 }
