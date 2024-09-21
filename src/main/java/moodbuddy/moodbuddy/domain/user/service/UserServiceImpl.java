@@ -60,13 +60,6 @@ public class UserServiceImpl implements UserService{
     private final ScheduledExecutorService scheduledExecutorService;
     private final SmsService smsService;
 
-    @Value("${coolsms.api-key}")
-    private String smsApiKey;
-    @Value("${coolsms.api-secret}")
-    private String smsApiSecretKey;
-    @Value("${coolsms.sender-phone}")
-    private String senderPhone;
-
     /** =========================================================  재민  ========================================================= **/
 
     @Override

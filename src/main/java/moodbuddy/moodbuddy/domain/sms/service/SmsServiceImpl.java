@@ -8,22 +8,19 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @Slf4j
 public class SmsServiceImpl implements SmsService{
-    @Value("${coolsms.api-key}")
-    private String smsApiKey;
-    @Value("${coolsms.api-secret}")
-    private String smsApiSecretKey;
-    @Value("${coolsms.sender-phone}")
-    private String senderPhone;
-
     private final DefaultMessageService messageService;
     private static final String USER_MESSAGE = "[moodbuddy] 일기를 작성할 시간이에요! 오늘의 소중한 순간을 쿼디와 함께 기록해볼까요?";
     private static final String LETTER_MESSAGE = "[moodbuddy] 쿼디의 고민 편지 답장이 도착했어요! 어서 확인해보세요 :)";
+    private final String senderPhone;
 
-    public SmsServiceImpl(){
+    public SmsServiceImpl(@Value("${coolsms.api-key}")String smsApiKey, @Value("${coolsms.api-secret}") String smsApiSecretKey,
+                          @Value("${coolsms.sender-phone}") String senderPhone) {
         this.messageService = NurigoApp.INSTANCE.initialize(smsApiKey, smsApiSecretKey, "https://api.coolsms.co.kr");
+        this.senderPhone = senderPhone;
     }
 
     @Override
