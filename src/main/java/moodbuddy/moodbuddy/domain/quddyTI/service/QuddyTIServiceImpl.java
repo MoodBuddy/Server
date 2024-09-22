@@ -19,7 +19,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,12 +31,6 @@ public class QuddyTIServiceImpl implements QuddyTIService {
 
     private final QuddyTIRepository quddyTIRepository;
     private final DiaryCountService diaryCountService;
-
-    @Override
-    @Transactional
-    public void saveQuddyTI(QuddyTI quddyTI) {
-        quddyTIRepository.save(quddyTI);
-    }
 
     @Override
     @Transactional
@@ -52,13 +48,19 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     }
 
     @Override
-    public QuddyTIResDetailDTO findAll() {
-        final Long userId = JwtUtil.getUserId();
-        final QuddyTI findQuddyTI = getQuddyTI(userId);
-        return QuddyTIMapper.toQuddyTIResDetailDTO(findQuddyTI);
+    @Transactional
+    public void saveQuddyTI(QuddyTI quddyTI) {
+        quddyTIRepository.save(quddyTI);
     }
 
-    private QuddyTI getQuddyTI(Long userId) {
+    @Override
+    public List<QuddyTIResDetailDTO> findAll() {
+        return getQuddyTIList(JwtUtil.getUserId()).stream()
+                .map(QuddyTIMapper::toQuddyTIResDetailDTO)
+                .collect(Collectors.toList());
+    }
+
+    private List<QuddyTI> getQuddyTIList(Long userId) {
         return quddyTIRepository.findByUserId(userId)
                 .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.NOT_FOUND_QUDDYTI));
     }

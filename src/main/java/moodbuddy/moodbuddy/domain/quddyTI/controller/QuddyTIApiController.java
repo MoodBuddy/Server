@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/member/quddyTI")
 @Tag(name = "QuddyTI", description = "쿼디티아이 관련 API")
@@ -22,7 +24,7 @@ public class QuddyTIApiController {
     /** 구현 완료 **/
     @GetMapping("/findAll")
     @Operation(summary = "쿼디티아이 조회", description = "쿼디티아이 관련 내용을 모두 조회합니다.")
-    public ResponseEntity<QuddyTIResDetailDTO> findAll() {
+    public ResponseEntity<List<QuddyTIResDetailDTO>> findAll() {
         return ResponseEntity.ok().body(quddyTIService.findAll());
     }
 }
