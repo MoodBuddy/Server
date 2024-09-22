@@ -11,7 +11,7 @@ VALUES
     ('일기 9', '2024-07-09', '오늘은 기분이 좀 처졌다.', 'RAIN', 'SADNESS', 'PUBLISHED', 'EMOTION', '9일차 요약', 1, 0, 'MEETME', 'PX30', NOW(), NOW()),
     ('일기 10', '2024-07-10', '오랜만에 휴식을 취한 날이었다.', 'CLEAR', 'HAPPINESS', 'PUBLISHED', 'TRAVEL', '10일차 요약', 1, 0, 'INTER', 'PX24', NOW(), NOW()),
     ('일기 11', '2024-07-11', '계획한 일을 다 하지 못해 아쉬웠다.', 'CLOUDY', 'DISGUST', 'PUBLISHED', 'DAILY', '11일차 요약', 1, 0, 'MEETME', 'PX28', NOW(), NOW()),
-    ('일기 12', '2024-07-12', '성장을 느낄 수 있었던 하루.', 'RAIN', 'GROWTH', 'PUBLISHED', 'GROWTH', '12일차 요약', 1, 0, 'INTER', 'PX30', NOW(), NOW()),
+    ('일기 12', '2024-07-12', '성장을 느낄 수 있었던 하루.', 'RAIN', 'HAPPINESS', 'PUBLISHED', 'GROWTH', '12일차 요약', 1, 0, 'INTER', 'PX30', NOW(), NOW()),
     ('일기 13', '2024-07-13', '오늘은 그저 평범한 하루였다.', 'CLEAR', 'NEUTRAL', 'PUBLISHED', 'DAILY', '13일차 요약', 1, 0, 'MEETME', 'PX24', NOW(), NOW()),
     ('일기 14', '2024-07-14', '회사에서 생각보다 일이 잘 풀렸다.', 'SNOW', 'SURPRISE', 'PUBLISHED', 'EMOTION', '14일차 요약', 1, 0, 'INTER', 'PX28', NOW(), NOW()),
     ('일기 15', '2024-07-15', '오랜만에 가족들과 시간을 보냈다.', 'CLEAR', 'HAPPINESS', 'PUBLISHED', 'TRAVEL', '15일차 요약', 1, 0, 'MEETME', 'PX30', NOW(), NOW()),
