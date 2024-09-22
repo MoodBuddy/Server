@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface QuddyTIService {
     void aggregateAndSaveDiaryData();
-    void saveQuddyTI(QuddyTI quddyTI);
     List<QuddyTIResDetailDTO> findAll();
 }

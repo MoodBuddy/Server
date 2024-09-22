@@ -7,6 +7,7 @@ import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryCountService;
 import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
 import moodbuddy.moodbuddy.domain.quddyTI.entity.QuddyTI;
+import moodbuddy.moodbuddy.domain.quddyTI.entity.QuddyTIStatus;
 import moodbuddy.moodbuddy.domain.quddyTI.mapper.QuddyTIMapper;
 import moodbuddy.moodbuddy.domain.quddyTI.repository.QuddyTIRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
@@ -16,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -32,27 +33,7 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     private final QuddyTIRepository quddyTIRepository;
     private final DiaryCountService diaryCountService;
 
-    @Override
-    @Transactional
-    public void aggregateAndSaveDiaryData() {
-        final Long userId = JwtUtil.getUserId();
-        LocalDate[] lastMonthRange = getLastMonthDateTimeRange();
-
-        Map<DiaryEmotion, Long> emotionCounts = getDiaryEmotionCounts(lastMonthRange[0], lastMonthRange[1]);
-        Map<DiarySubject, Long> subjectCounts = getDiarySubjectCounts(lastMonthRange[0], lastMonthRange[1]);
-
-        final String quddyTIType = determineQuddyTIType(emotionCounts, subjectCounts);
-
-        final QuddyTI quddyTI = QuddyTIMapper.toQuddyTI(userId, emotionCounts, subjectCounts, quddyTIType);
-        saveQuddyTI(quddyTI);
-    }
-
-    @Override
-    @Transactional
-    public void saveQuddyTI(QuddyTI quddyTI) {
-        quddyTIRepository.save(quddyTI);
-    }
-
+    /** QuddyTI 월 별 조회 **/
     @Override
     public List<QuddyTIResDetailDTO> findAll() {
         return getQuddyTIList(JwtUtil.getUserId()).stream()
@@ -65,28 +46,82 @@ public class QuddyTIServiceImpl implements QuddyTIService {
                 .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.NOT_FOUND_QUDDYTI));
     }
 
-    private LocalDate[] getLastMonthDateTimeRange() {
-        LocalDate now = LocalDate.now();
-        YearMonth lastMonth = YearMonth.from(now).minusMonths(1);
-        LocalDate startOfLastMonth = lastMonth.atDay(1);
-        LocalDate endOfLastMonth = lastMonth.atEndOfMonth();
-        return new LocalDate[]{startOfLastMonth, endOfLastMonth};
+    /** QuddyTI 저장(스케줄링) **/
+    @Override
+    @Transactional
+    public void aggregateAndSaveDiaryData() {
+        final Long userId = JwtUtil.getUserId();
+        LocalDate[] lastMonthRange = getLastMonthDateRange();
+        LocalDate firstDayOfCurrentMonth = LocalDate.now().withDayOfMonth(1);
+
+        // 현재 월의 QuddyTI 생성
+        createNewMonthQuddyTI(userId, firstDayOfCurrentMonth);
+
+        // 이전 월의 QuddyTI 업데이트
+        updateLastMonthQuddyTI(userId, lastMonthRange[0], lastMonthRange[1]);
+    }
+
+    private void createNewMonthQuddyTI(Long userId, LocalDate currentMonth) {
+        String yearMonth = formatYearMonth(currentMonth);
+        quddyTIRepository.save(QuddyTIMapper.toQuddyTIEntity(userId, yearMonth));
+    }
+
+    private void updateLastMonthQuddyTI(Long userId, LocalDate start, LocalDate end) {
+        String yearMonth = formatYearMonth(start);
+
+        QuddyTI lastMonthQuddyTI = getLastMonthQuddyTI(userId, yearMonth);
+
+        Map<DiaryEmotion, Long> emotionCounts = getDiaryEmotionCounts(start, end);
+        Map<DiarySubject, Long> subjectCounts = getDiarySubjectCounts(start, end);
+        String quddyTIType = determineQuddyTIType(emotionCounts, subjectCounts);
+
+        lastMonthQuddyTI.updateQuddyTI(emotionCounts, subjectCounts, quddyTIType);
+    }
+
+    private LocalDate[] getLastMonthDateRange() {
+        YearMonth lastMonth = YearMonth.now().minusMonths(1);
+        return new LocalDate[]{lastMonth.atDay(1), lastMonth.atEndOfMonth()};
+    }
+
+    private String formatYearMonth(LocalDate date) {
+        return date.getYear() + "-" + String.format("%02d", date.getMonthValue());
     }
 
     private Map<DiaryEmotion, Long> getDiaryEmotionCounts(LocalDate start, LocalDate end) {
-        Map<DiaryEmotion, Long> emotionCounts = new EnumMap<>(DiaryEmotion.class);
-        for (DiaryEmotion emotion : DiaryEmotion.values()) {
-            emotionCounts.put(emotion, diaryCountService.getDiaryEmotionCount(emotion, start, end));
-        }
-        return emotionCounts;
+        return Arrays.stream(DiaryEmotion.values())
+                .collect(Collectors.toMap(
+                        emotion -> emotion,
+                        emotion -> diaryCountService.getDiaryEmotionCount(emotion, start, end),
+                        (a, b) -> b,
+                        () -> new EnumMap<>(DiaryEmotion.class)
+                ));
     }
 
     private Map<DiarySubject, Long> getDiarySubjectCounts(LocalDate start, LocalDate end) {
-        Map<DiarySubject, Long> subjectCounts = new EnumMap<>(DiarySubject.class);
-        for (DiarySubject subject : DiarySubject.values()) {
-            subjectCounts.put(subject, diaryCountService.getDiarySubjectCount(subject, start, end));
-        }
-        return subjectCounts;
+        return Arrays.stream(DiarySubject.values())
+                .collect(Collectors.toMap(
+                        subject -> subject,
+                        subject -> diaryCountService.getDiarySubjectCount(subject, start, end),
+                        (a, b) -> b,
+                        () -> new EnumMap<>(DiarySubject.class)
+                ));
+    }
+
+    private String determineQuddyTIType(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
+        long totalDiaryCount = emotionCounts.values().stream().mapToLong(Long::longValue).sum();
+        String diaryType = totalDiaryCount >= 15 ? "J" : "P";
+
+        String mostFrequentSubject = subjectCounts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(entry -> entry.getKey().name().substring(0, 1))
+                .orElse("D");
+
+        String mostFrequentEmotion = emotionCounts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(entry -> getEmotionAbbreviation(entry.getKey()))
+                .orElse("H");
+
+        return diaryType + mostFrequentSubject + mostFrequentEmotion;
     }
 
     private String getEmotionAbbreviation(DiaryEmotion emotion) {
@@ -101,24 +136,8 @@ public class QuddyTIServiceImpl implements QuddyTIService {
         };
     }
 
-    private String determineQuddyTIType(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
-        long totalDiaryCount = emotionCounts.values().stream().mapToLong(Long::longValue).sum();
-        String diaryType = totalDiaryCount >= 15 ? "J" : "P";
-
-        String mostFrequentSubject = subjectCounts.entrySet().stream()
-                .sorted(Map.Entry.<DiarySubject, Long>comparingByValue().reversed()
-                        .thenComparing(entry -> entry.getKey().name()))
-                .map(entry -> entry.getKey().name().substring(0, 1))
-                .findFirst()
-                .orElse("D");
-
-        String mostFrequentEmotion = emotionCounts.entrySet().stream()
-                .sorted(Map.Entry.<DiaryEmotion, Long>comparingByValue().reversed()
-                        .thenComparing(entry -> entry.getKey().name()))
-                .map(entry -> getEmotionAbbreviation(entry.getKey()))
-                .findFirst()
-                .orElse("H");
-
-        return diaryType + mostFrequentSubject + mostFrequentEmotion;
+    private QuddyTI getLastMonthQuddyTI(Long userId, String yearMonth) {
+        return quddyTIRepository.findByUserIdAndQuddyTIYearMonth(userId, yearMonth)
+                .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.NOT_FOUND_QUDDYTI));
     }
 }
