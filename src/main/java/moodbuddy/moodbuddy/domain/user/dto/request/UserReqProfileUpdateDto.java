@@ -1,14 +1,8 @@
 package moodbuddy.moodbuddy.domain.user.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 
 
 @AllArgsConstructor
@@ -16,7 +10,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class UserProfileUpdateDto {
+public class UserReqProfileUpdateDto {
     String profileComment;
     Boolean alarm;
     @Schema(description = "알림, HH:mm 형식")

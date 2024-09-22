@@ -34,7 +34,7 @@ public interface UserService {
     UserResProfileDTO getUserProfile();
 
     //프로필 수정
-    UserResProfileDTO updateProfile(UserProfileUpdateDto dto) throws IOException;
+    UserResProfileDTO updateProfile(UserReqProfileUpdateDto dto) throws IOException;
 
     // 사용자가 설정한 알림 시간에 문자 보내기
     void scheduleUserMessage(Long userId);

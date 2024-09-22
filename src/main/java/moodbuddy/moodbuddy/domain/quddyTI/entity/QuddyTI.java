@@ -19,6 +19,10 @@ public class QuddyTI extends BaseEntity {
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
+    /** 월 **/
+    @Column(name = "quddy_ti_year_month", columnDefinition = "varchar(7)")
+    private String quddyTIYearMonth;
+
     /** 일기 작성 빈도수 **/
     @Column(name = "diary_frequency", columnDefinition = "int")
     private Integer diaryFrequency;

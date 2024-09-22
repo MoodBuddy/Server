@@ -26,11 +26,6 @@ import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundException;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -42,8 +37,6 @@ import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static moodbuddy.moodbuddy.global.common.config.MapperConfig.modelMapper;
 
 @Service
 @Transactional(readOnly = true)
@@ -415,7 +408,7 @@ public class UserServiceImpl implements UserService{
     //프로필 이미지 s3에 저장 -> url setter로 변경
     @Override
     @Transactional
-    public UserResProfileDTO updateProfile(UserProfileUpdateDto dto) throws IOException {
+    public UserResProfileDTO updateProfile(UserReqProfileUpdateDto dto) throws IOException {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(

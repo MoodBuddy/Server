@@ -116,7 +116,7 @@ public class UserApiController {
     //프로필 수정
     @PostMapping ("/main/profile-edit")
     @Operation(summary = "프로필 수정", description = "alarmTime(str) -> HH:mm 형식,birthday(str) -> YYYY-mm-dd 형식 ")
-    public ResponseEntity<?> updateProfile(@ModelAttribute UserProfileUpdateDto updateDto) throws IOException
+    public ResponseEntity<?> updateProfile(@ModelAttribute UserReqProfileUpdateDto updateDto) throws IOException
     {
         Long kakaoId = JwtUtil.getUserId();
         UserResProfileDTO updateProfile = userService.updateProfile(updateDto);
