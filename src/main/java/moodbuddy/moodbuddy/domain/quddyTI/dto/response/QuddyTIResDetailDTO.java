@@ -1,10 +1,10 @@
 package moodbuddy.moodbuddy.domain.quddyTI.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import moodbuddy.moodbuddy.domain.quddyTI.entity.QuddyTIStatus;
 
 @Data
 @NoArgsConstructor
@@ -26,4 +26,5 @@ public class QuddyTIResDetailDTO {
     private Integer emotionCount;
     private Integer travelCount;
     private String quddyTIType ;
+    private QuddyTIStatus quddyTIStatus;
 }
