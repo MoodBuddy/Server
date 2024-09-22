@@ -2,10 +2,15 @@ package moodbuddy.moodbuddy.domain.quddyTI.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+
+import java.util.Map;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -61,4 +66,23 @@ public class QuddyTI extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "quddy_ti_status")
     private QuddyTIStatus quddyTIStatus;
+
+    public void updateQuddyTI(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts, String quddyTIType) {
+        this.happinessCount = emotionCounts.getOrDefault(DiaryEmotion.HAPPINESS, 0L).intValue();
+        this.angerCount = emotionCounts.getOrDefault(DiaryEmotion.ANGER, 0L).intValue();
+        this.disgustCount = emotionCounts.getOrDefault(DiaryEmotion.DISGUST, 0L).intValue();
+        this.fearCount = emotionCounts.getOrDefault(DiaryEmotion.FEAR, 0L).intValue();
+        this.neutralCount = emotionCounts.getOrDefault(DiaryEmotion.NEUTRAL, 0L).intValue();
+        this.sadnessCount = emotionCounts.getOrDefault(DiaryEmotion.SADNESS, 0L).intValue();
+        this.surpriseCount = emotionCounts.getOrDefault(DiaryEmotion.SURPRISE, 0L).intValue();
+        this.dailyCount = subjectCounts.getOrDefault(DiarySubject.DAILY, 0L).intValue();
+        this.growthCount = subjectCounts.getOrDefault(DiarySubject.GROWTH, 0L).intValue();
+        this.emotionCount = subjectCounts.getOrDefault(DiarySubject.EMOTION, 0L).intValue();
+        this.travelCount = subjectCounts.getOrDefault(DiarySubject.TRAVEL, 0L).intValue();
+        this.quddyTIType = quddyTIType;
+        this.quddyTIStatus = QuddyTIStatus.FINISH;
+
+        // 다이어리 빈도 계산
+        this.diaryFrequency = (int) emotionCounts.values().stream().mapToLong(Long::longValue).sum();
+    }
 }
