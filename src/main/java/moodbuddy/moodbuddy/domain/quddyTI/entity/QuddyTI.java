@@ -19,7 +19,21 @@ public class QuddyTI extends BaseEntity {
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
-    /** 감정 갯수 **/
+    /** 일기 작성 빈도수 **/
+    @Column(name = "diary_frequency", columnDefinition = "int")
+    private Integer diaryFrequency;
+
+    /** 일기 주제 **/
+    @Column(name = "daily_count", columnDefinition = "int")
+    private Integer dailyCount;
+    @Column(name = "growth_count", columnDefinition = "int")
+    private Integer growthCount;
+    @Column(name = "emotion_count", columnDefinition = "int")
+    private Integer emotionCount;
+    @Column(name = "travel_count", columnDefinition = "int")
+    private Integer travelCount;
+
+    /** 감정 **/
     @Column(name = "happiness_count", columnDefinition = "int")
     private Integer happinessCount;
     @Column(name = "anger_count", columnDefinition = "int")
@@ -35,16 +49,7 @@ public class QuddyTI extends BaseEntity {
     @Column(name = "surprise_count", columnDefinition = "int")
     private Integer surpriseCount;
 
-    /** 주제 갯수 **/
-    @Column(name = "daily_count", columnDefinition = "int")
-    private Integer dailyCount;
-    @Column(name = "growth_count", columnDefinition = "int")
-    private Integer growthCount;
-    @Column(name = "emotion_count", columnDefinition = "int")
-    private Integer emotionCount;
-    @Column(name = "travel_count", columnDefinition = "int")
-    private Integer travelCount;
-
+    /** 쿼디티아이 **/
     @Column(name = "quddy_ti_type", columnDefinition = "varchar(10)")
     private String quddyTIType ;
 }
