@@ -56,4 +56,9 @@ public class QuddyTI extends BaseEntity {
     /** 쿼디티아이 **/
     @Column(name = "quddy_ti_type", columnDefinition = "varchar(10)")
     private String quddyTIType ;
+
+    /** 쿼디티아이 상태 **/
+    @Enumerated(EnumType.STRING)
+    @Column(name = "quddy_ti_status")
+    private QuddyTIStatus quddyTIStatus;
 }
