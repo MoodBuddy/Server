@@ -39,8 +39,11 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    // Postgresql
+    // MySQL
     runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // redis
+//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // 시큐리티
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -54,9 +57,6 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-
-    // redis
-//    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // JWT 추가
     implementation 'com.auth0:java-jwt:3.18.1' //
