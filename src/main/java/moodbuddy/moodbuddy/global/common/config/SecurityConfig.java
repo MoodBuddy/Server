@@ -40,7 +40,14 @@ public class SecurityConfig {
                 .cors(c -> {
                     CorsConfigurationSource source = request -> {
                         CorsConfiguration config = new CorsConfiguration();
-                        config.setAllowedOrigins(Arrays.asList("http://react-app:3000","http://localhost:5173","http://localhost:3000","http://moodbuddy:8080","https://moodbuddy.site","http://moodbuddy.site","https://neon-cat-f70a98.netlify.app"));
+                        config.setAllowedOrigins(Arrays.asList(
+                                "http://react-app:3000",
+                                "http://localhost:5173",
+                                "http://localhost:3000",
+                                "http://moodbuddy:8080",
+                                "https://moodbuddy.site",
+                                "http://moodbuddy.site",
+                                "https://neon-cat-f70a98.netlify.app"));
                         config.setAllowedHeaders(List.of("*"));
                         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                         config.setAllowCredentials(true);
@@ -50,6 +57,7 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
+                                "/actuator/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html/**",
                                 "/swagger-resources/**",
