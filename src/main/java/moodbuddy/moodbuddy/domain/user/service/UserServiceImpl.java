@@ -345,14 +345,13 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList());
     }
 
-    //감정 횟수 조회(해당 년도)
+    // 현재까지 감정보기 - 감정 횟수 조회(해당 년도)
     @Override
     @Transactional(readOnly = true)
-    public List<UserEmotionStaticDTO> getEmotionNums() {
-
+    public List<UserEmotionStaticDTO> getEmotionNums(LocalDate month) {
         Long userId = JwtUtil.getUserId();
 
-        List<Diary> diaries = diaryRepository.findDiaryEmotionAllByUserId(userId);
+        List<Diary> diaries = diaryRepository.findDiaryEmotionAllByUserIdAndMonth(userId, month); // 일기를 가져올 때부터 그 month에 해당하는 일기만 가져옴
 
         log.info("일기들", diaries);
 
