@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.sms.service;
+package moodbuddy.moodbuddy.global.common.sms.service;
 
 public interface SmsService {
     void sendMessage(String to, String messageType);

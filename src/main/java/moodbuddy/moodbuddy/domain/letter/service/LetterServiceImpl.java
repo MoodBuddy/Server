@@ -10,7 +10,7 @@ import moodbuddy.moodbuddy.domain.profile.entity.Profile;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.profileImage.entity.ProfileImage;
 import moodbuddy.moodbuddy.domain.profileImage.repository.ProfileImageRepository;
-import moodbuddy.moodbuddy.domain.sms.service.SmsService;
+import moodbuddy.moodbuddy.global.common.sms.service.SmsService;
 import moodbuddy.moodbuddy.domain.user.entity.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;

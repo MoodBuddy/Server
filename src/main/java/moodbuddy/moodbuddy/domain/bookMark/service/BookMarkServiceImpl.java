@@ -59,9 +59,8 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Override
     public Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
-        final User findUser = userService.getUser_Id(userId);
 
-        return bookMarkRepository.bookMarkFindAllWithPageable(findUser, pageable);
+        return bookMarkRepository.bookMarkFindAllWithPageable(userId, pageable);
     }
 
     @Override
