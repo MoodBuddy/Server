@@ -15,7 +15,7 @@
 - `JDK 1.8.0 이상`
 - **IDE** : IntelliJ IDEA
 - **Framework** : Springboot(3.2.6)
-- **Database** : MySQL
+- **Database** : MySQL
 - **ORM** : Hibernate (Spring Data JPA 사용)
 
 ## 🧑‍🤝‍🧑 멤버 구성
@@ -43,21 +43,7 @@
     - Refactor: 코드 리팩토링
     - Test: 테스트 코드, 리팩토링 테스트 코드 추가
     - Chore: 빌드 업무 수정, 패키지 매니저 수정
-<br>
 
-- `issue 규칙`
-    - 템플릿
-        - issue 제목
-            - 예시: **feat: 이슈 정리**
-        - issue 템플릿
-            ```markdown
-            ## 📋 이슈 내용
-            
-            ## ✅ 체크리스트
-            
-            ## 📚 레퍼런스
-            
-            ```
 <br>
 
 - `branch 규칙`
