@@ -12,7 +12,7 @@ import moodbuddy.moodbuddy.domain.profile.entity.Profile;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.profileImage.entity.ProfileImage;
 import moodbuddy.moodbuddy.domain.profileImage.repository.ProfileImageRepository;
-import moodbuddy.moodbuddy.domain.sms.service.SmsService;
+import moodbuddy.moodbuddy.global.common.sms.service.SmsService;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;

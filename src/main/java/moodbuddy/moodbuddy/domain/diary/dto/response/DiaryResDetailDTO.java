@@ -2,6 +2,7 @@ package moodbuddy.moodbuddy.domain.diary.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class DiaryResDetailDTO {
     @Schema(description = "일기 고유 식별자(diaryId)", example = "1")
@@ -36,15 +38,14 @@ public class DiaryResDetailDTO {
     private DiarySubject diarySubject;
     @Schema(description = "일기 북마크 여부", example = "ture")
     private Boolean diaryBookMarkCheck; // 일기 북마크 여부
-
-    @JsonInclude(JsonInclude.Include.NON_NULL) // 굳이 필요하지 않은 경우가 있음.
-    @Schema(description = "일기 이미지 List", example = "[이미지 URL, 이미지 URL]")
-    private List<String> diaryImgList;
-
     @Schema(description = "일기 폰트", example = "INTER")
     private DiaryFont diaryFont;
     @Schema(description = "일기 폰트 사이즈", example = "PX30")
     private DiaryFontSize diaryFontSize;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL) // 굳이 필요하지 않은 경우가 있음.
+    @Schema(description = "일기 이미지 List", example = "[이미지 URL, 이미지 URL]")
+    private List<String> diaryImgList;
 
 
     public DiaryResDetailDTO(Long diaryId, Long userId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, DiaryStatus diaryStatus, String diarySummary, DiarySubject diarySubject, Boolean diaryBookMarkCheck, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {

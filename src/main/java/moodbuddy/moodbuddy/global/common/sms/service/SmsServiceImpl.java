@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.sms.service;
+package moodbuddy.moodbuddy.global.common.sms.service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;

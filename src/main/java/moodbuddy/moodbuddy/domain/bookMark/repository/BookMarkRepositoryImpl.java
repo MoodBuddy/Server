@@ -25,10 +25,10 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     }
 
     @Override
-    public Page<DiaryResDetailDTO> bookMarkFindAllWithPageable(User user, Pageable pageable) {
+    public Page<DiaryResDetailDTO> bookMarkFindAllWithPageable(Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
                 .join(bookMark).on(diary.id.eq(bookMark.diary.id))
-                .where(bookMark.userId.eq(user.getUserId())
+                .where(bookMark.userId.eq(userId)
                         .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)))
                 .orderBy(pageable.getSort().stream()
                         .map(order -> new OrderSpecifier(
@@ -48,6 +48,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
 
             return DiaryResDetailDTO.builder()
                     .diaryId(d.getId())
+                    .userId(d.getUserId())
                     .diaryTitle(d.getDiaryTitle())
                     .diaryDate(d.getDiaryDate())
                     .diaryContent(d.getDiaryContent())
@@ -55,14 +56,17 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                     .diaryEmotion(d.getDiaryEmotion())
                     .diaryStatus(d.getDiaryStatus())
                     .diarySummary(d.getDiarySummary())
-                    .userId(d.getUserId())
+                    .diarySubject(d.getDiarySubject())
+                    .diaryBookMarkCheck(d.getDiaryBookMarkCheck())
+                    .diaryFont(d.getDiaryFont())
+                    .diaryFontSize(d.getDiaryFontSize())
                     .diaryImgList(diaryImgList)
                     .build();
         }).collect(Collectors.toList());
 
         long total = queryFactory.selectFrom(diary)
                 .join(bookMark).on(diary.id.eq(bookMark.diary.id))
-                .where(bookMark.userId.eq(user.getUserId()))
+                .where(bookMark.userId.eq(userId))
                 .fetchCount();
 
         return new PageImpl<>(diaryList, pageable, total);
