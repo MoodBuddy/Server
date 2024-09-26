@@ -33,7 +33,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryReposi
     @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND YEAR(d.diaryDate) = :year AND d.diaryStatus = :status")
     List<Diary> findAllByYearAndDiaryStatus(@Param("userId") Long userId, @Param("year") int year, @Param("status") DiaryStatus status);
 
-    @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND d.diaryEmotion is not null")
-    List<Diary> findDiaryEmotionAllByUserId(@Param("userId") Long userId);
-
+    @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND DATE_FORMAT(d.diaryDate, '%Y-%m') = :month AND d.diaryEmotion is not null")
+    List<Diary> findDiaryEmotionAllByUserIdAndMonth(@Param("userId") Long userId, @Param("month") LocalDate month);
 }

@@ -28,7 +28,7 @@ public interface UserService {
     List<UserDiaryNumsDTO> getDiaryNums(LocalDate year);
 
     //연별 감정 횟수 조회
-    List<UserEmotionStaticDTO> getEmotionNums();
+    List<UserEmotionStaticDTO> getEmotionNums(LocalDate month);
 
     //프로필 조회
     UserResProfileDTO getUserProfile();
