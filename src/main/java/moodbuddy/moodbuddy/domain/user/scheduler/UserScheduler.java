@@ -1,7 +1,7 @@
 package moodbuddy.moodbuddy.domain.user.scheduler;
 
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.user.domain.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

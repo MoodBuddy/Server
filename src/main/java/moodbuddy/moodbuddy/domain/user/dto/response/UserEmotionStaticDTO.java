@@ -2,7 +2,7 @@ package moodbuddy.moodbuddy.domain.user.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
 
 @AllArgsConstructor
 @NoArgsConstructor

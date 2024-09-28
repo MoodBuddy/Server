@@ -2,14 +2,14 @@ package moodbuddy.moodbuddy.domain.diary.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 @Service
 @Transactional(readOnly = true)
 @Slf4j
