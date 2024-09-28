@@ -5,7 +5,7 @@ import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResMainPageDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
-import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.user.domain.User;
 
 import java.io.IOException;
 import java.time.LocalDate;

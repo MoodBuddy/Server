@@ -2,12 +2,11 @@ package moodbuddy.moodbuddy.domain.quddyTI.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryCountService;
 import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
-import moodbuddy.moodbuddy.domain.quddyTI.entity.QuddyTI;
-import moodbuddy.moodbuddy.domain.quddyTI.entity.QuddyTIStatus;
+import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTI;
 import moodbuddy.moodbuddy.domain.quddyTI.mapper.QuddyTIMapper;
 import moodbuddy.moodbuddy.domain.quddyTI.repository.QuddyTIRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
