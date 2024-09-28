@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static moodbuddy.moodbuddy.domain.bookMark.domain.QBookMark.bookMark;
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
-import static moodbuddy.moodbuddy.domain.diaryImage.entity.QDiaryImage.diaryImage;
+import static moodbuddy.moodbuddy.domain.diary.domain.QDiaryImage.diaryImage;
 
 public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     private final JPAQueryFactory queryFactory;
