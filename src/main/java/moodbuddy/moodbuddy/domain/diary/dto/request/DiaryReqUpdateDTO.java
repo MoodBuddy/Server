@@ -1,19 +1,17 @@
 package moodbuddy.moodbuddy.domain.diary.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryFontSize;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryWeather;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryFont;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryFontSize;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryWeather;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data

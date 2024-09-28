@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryFontSize;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryFont;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryFontSize;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
 
 import java.time.LocalDate;
 

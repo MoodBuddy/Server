@@ -13,8 +13,8 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindAllDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindOneDTO;
-import moodbuddy.moodbuddy.domain.diary.entity.*;
-import moodbuddy.moodbuddy.domain.diaryImage.entity.DiaryImage;
+import moodbuddy.moodbuddy.domain.diary.domain.*;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryImage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static moodbuddy.moodbuddy.domain.diary.entity.QDiary.diary;
+import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
 import static moodbuddy.moodbuddy.domain.diaryImage.entity.QDiaryImage.diaryImage;
 
 @Slf4j

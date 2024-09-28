@@ -1,6 +1,6 @@
 package moodbuddy.moodbuddy.domain.monthcomment.repository;
 
-import moodbuddy.moodbuddy.domain.monthcomment.entity.MonthComment;
+import moodbuddy.moodbuddy.domain.monthcomment.domain.MonthComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

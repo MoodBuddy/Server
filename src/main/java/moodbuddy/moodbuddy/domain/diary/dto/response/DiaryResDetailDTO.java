@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.entity.*;
+import moodbuddy.moodbuddy.domain.diary.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
