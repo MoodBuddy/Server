@@ -7,12 +7,12 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfigurat
 
 @Configuration
 public class ElasticSearchConfig extends ElasticsearchConfiguration {
-    @Value("${spring.data.elasticsearch.url}")
-    String url;
+//    @Value("${spring.elasticsearch.crest.uris}")
+//    String url;
     @Override
     public ClientConfiguration clientConfiguration() {
         return ClientConfiguration.builder()
-                .connectedTo(url)
+                .connectedTo("http://localhost:9200")
                 .build();
     }
 }
