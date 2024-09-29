@@ -10,6 +10,8 @@ import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
+import moodbuddy.moodbuddy.global.common.elasticSearch.mapper.DiaryDocumentMapper;
+import moodbuddy.moodbuddy.global.common.elasticSearch.repository.DiaryDocumentRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
+    private final DiaryDocumentRepository diaryDocumentRepository;
     private final DiaryImageService diaryImageService;
     private final DiaryFindService diaryFindService;
     private final BookMarkService bookMarkService;
@@ -51,6 +54,9 @@ public class DiaryServiceImpl implements DiaryService {
                 classifyDiaryContent(diaryReqSaveDTO.getDiaryContent()));
 
         diary = diaryRepository.save(diary);
+        diaryDocumentRepository.save(DiaryDocumentMapper.toDiaryDocument(diary));
+
+        // TODO 일기 내용 저장, 이미지 저장 API 분리하기
 
         diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
 

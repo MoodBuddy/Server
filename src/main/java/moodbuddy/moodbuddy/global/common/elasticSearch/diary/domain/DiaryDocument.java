@@ -1,14 +1,11 @@
 package moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain;
 
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.domain.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Document(indexName = "diary")
 @Getter
@@ -37,7 +34,7 @@ public class DiaryDocument {
     @Field(type = FieldType.Keyword)
     private String diaryStatus; // DiaryStatus enum
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Keyword)
     private String diarySubject; // DiarySubject enum
 
     @Field(type = FieldType.Text)
@@ -46,19 +43,12 @@ public class DiaryDocument {
     @Field(type = FieldType.Long)
     private Long userId;
 
-
     @Field(type = FieldType.Boolean)
     private Boolean diaryBookMarkCheck;
 
     @Field(type = FieldType.Keyword)
     private String diaryFont; // DiaryFont enum
 
-    @Field(type = FieldType.Integer)
-    private Integer diaryFontSize; // DiaryFontSize enum
-
-    @Field(type = FieldType.Date)
-    private LocalDateTime createdTime; // BaseEntity에서 가져온 필드
-
-    @Field(type = FieldType.Date)
-    private LocalDateTime updatedTime; // BaseEntity에서 가져온 필드
+    @Field(type = FieldType.Keyword)
+    private String diaryFontSize; // DiaryFontSize enum
 }

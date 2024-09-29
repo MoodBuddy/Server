@@ -6,8 +6,6 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.time.LocalDateTime;
-
 @Document(indexName = "diary_image")
 @Getter
 @Builder
@@ -22,11 +20,5 @@ public class DiaryImageDocument {
 
     @Field(type = FieldType.Text)
     private String diaryImgURL;
-
-    @Field(type = FieldType.Date)
-    private LocalDateTime createdTime; // BaseEntity에서 가져온 필드
-
-    @Field(type = FieldType.Date)
-    private LocalDateTime updatedTime; // BaseEntity에서 가져온 필드
 }
 

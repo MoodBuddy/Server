@@ -40,13 +40,7 @@
             "type": "keyword"
           },
           "diaryFontSize": {
-            "type": "integer"
-          },
-          "createdTime": {
-            "type": "date"
-          },
-          "updatedTime": {
-            "type": "date"
+            "type": "keyword"
           }
         }
       },
@@ -60,12 +54,6 @@
           },
           "diaryImgURL": {
             "type": "text"
-          },
-          "createdTime": {
-            "type": "date"
-          },
-          "updatedTime": {
-            "type": "date"
           }
         }
       }
