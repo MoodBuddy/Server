@@ -84,11 +84,8 @@ dependencies {
     // slack
     implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
-//    implementation platform('com.google.firebase:firebase-bom:33.1.1')
-//    implementation 'com.google.firebase:firebase-analytics'
-
-//    // Elasticsearch
-//    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    // Elasticsearch
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
     // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
