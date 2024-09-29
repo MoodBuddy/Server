@@ -1,8 +1,8 @@
 package moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain;
 
-import jakarta.persistence.Id;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
