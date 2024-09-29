@@ -1,7 +1,7 @@
-package moodbuddy.moodbuddy.domain.diaryImage.repository;
+package moodbuddy.moodbuddy.domain.diary.repository;
 
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.diaryImage.entity.DiaryImage;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResMainPageDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
-import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.user.domain.User;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ public interface UserService {
     List<UserDiaryNumsDTO> getDiaryNums(LocalDate year);
 
     //연별 감정 횟수 조회
-    List<UserEmotionStaticDTO> getEmotionNums();
+    List<UserEmotionStaticDTO> getEmotionNums(LocalDate month);
 
     //프로필 조회
     UserResProfileDTO getUserProfile();

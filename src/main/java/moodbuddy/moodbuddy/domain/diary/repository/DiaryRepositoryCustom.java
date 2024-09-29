@@ -3,8 +3,8 @@ package moodbuddy.moodbuddy.domain.diary.repository;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindAllDTO;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

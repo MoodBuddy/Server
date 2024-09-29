@@ -1,13 +1,13 @@
-package moodbuddy.moodbuddy.domain.diaryImage.service;
+package moodbuddy.moodbuddy.domain.diary.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.diaryImage.entity.DiaryImage;
-import moodbuddy.moodbuddy.domain.diaryImage.repository.DiaryImageRepository;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryImage;
+import moodbuddy.moodbuddy.domain.diary.repository.DiaryImageRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

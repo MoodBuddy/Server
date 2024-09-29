@@ -1,9 +1,8 @@
-package moodbuddy.moodbuddy.domain.bookMark.entity;
+package moodbuddy.moodbuddy.domain.bookMark.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
 @Entity

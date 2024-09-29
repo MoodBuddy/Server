@@ -1,17 +1,12 @@
 package moodbuddy.moodbuddy.domain.diary.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import moodbuddy.moodbuddy.domain.diary.dto.request.*;
 import moodbuddy.moodbuddy.domain.diary.dto.response.*;
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Map;
 
 public interface DiaryService {
     // 일기 저장
