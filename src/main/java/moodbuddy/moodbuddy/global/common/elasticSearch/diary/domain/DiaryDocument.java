@@ -8,52 +8,57 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@ToString
-@Builder
 @Document(indexName = "diary")
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DiaryDocument {
     @Id
-    @Field(name = "id", type = FieldType.Long)
     private Long id;
 
-    @Field(name = "diary_title", type = FieldType.Text)
+    @Field(type = FieldType.Text)
     private String diaryTitle;
 
-    @Field(name = "diary_date", type = FieldType.Date)
+    @Field(type = FieldType.Date)
     private LocalDate diaryDate;
 
-    @Field(name = "diary_content", type = FieldType.Text)
+    @Field(type = FieldType.Text)
     private String diaryContent;
 
-    @Field(name = "diary_weather", type = FieldType.Keyword)
-    private DiaryWeather diaryWeather;
+    @Field(type = FieldType.Keyword)
+    private String diaryWeather; // DiaryWeather enum
 
-    @Field(name = "diary_emotion", type = FieldType.Keyword)
-    private DiaryEmotion diaryEmotion;
+    @Field(type = FieldType.Keyword)
+    private String diaryEmotion; // DiaryEmotion enum
 
-    @Field(name = "diary_status", type = FieldType.Keyword)
-    private DiaryStatus diaryStatus;
+    @Field(type = FieldType.Keyword)
+    private String diaryStatus; // DiaryStatus enum
 
-    @Field(name = "diary_subject", type = FieldType.Keyword)
-    private DiarySubject diarySubject;
+    @Field(type = FieldType.Text)
+    private String diarySubject; // DiarySubject enum
 
-    @Field(name = "diary_summary", type = FieldType.Text)
+    @Field(type = FieldType.Text)
     private String diarySummary;
 
-    @Field(name = "user_id", type = FieldType.Long)
+    @Field(type = FieldType.Long)
     private Long userId;
 
-    @Field(name = "diary_book_mark_check", type = FieldType.Boolean)
-    private Boolean diaryBookMarkCheck; // 북마크 여부
 
-    /** 추가 칼럼 **/
-    @Field(name = "diary_font", type = FieldType.Keyword)
-    private DiaryFont diaryFont;
+    @Field(type = FieldType.Boolean)
+    private Boolean diaryBookMarkCheck;
 
-    @Field(name = "diary_font_size", type = FieldType.Keyword)
-    private DiaryFontSize diaryFontSize;
+    @Field(type = FieldType.Keyword)
+    private String diaryFont; // DiaryFont enum
+
+    @Field(type = FieldType.Integer)
+    private Integer diaryFontSize; // DiaryFontSize enum
+
+    @Field(type = FieldType.Date)
+    private LocalDateTime createdTime; // BaseEntity에서 가져온 필드
+
+    @Field(type = FieldType.Date)
+    private LocalDateTime updatedTime; // BaseEntity에서 가져온 필드
 }
