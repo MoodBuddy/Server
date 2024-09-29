@@ -96,10 +96,13 @@ public class UserApiController {
 
     //감정 횟수 조회
     @GetMapping("/main/emotion-nums")
-    @Operation(summary = "감정 횟수 조회", description = "감정 횟수를 보여줍니다")
-    public ResponseEntity<?> getEmotionNums()
+    @Operation(summary = "현재까지 감정보기", description = "현재까지 감정보기를 위한 각 감정에 따른 감정 횟수를 보여줍니다")
+    @Parameters({
+            @Parameter(name="month", description = "YYYY-MM 형식으로 입력하세요"),
+    })
+    public ResponseEntity<?> getEmotionNums(@RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") LocalDate month)
     {
-        List<UserEmotionStaticDTO> emotionNums = userService.getEmotionNums();
+        List<UserEmotionStaticDTO> emotionNums = userService.getEmotionNums(month);
         return ResponseEntity.ok(emotionNums);
     }
 

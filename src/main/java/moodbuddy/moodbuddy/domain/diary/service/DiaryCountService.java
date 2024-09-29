@@ -1,10 +1,9 @@
 package moodbuddy.moodbuddy.domain.diary.service;
 
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.entity.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public interface DiaryCountService {
     // 감정 갯수 검색

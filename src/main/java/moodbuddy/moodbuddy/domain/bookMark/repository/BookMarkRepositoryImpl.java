@@ -4,9 +4,9 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
-import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
+import moodbuddy.moodbuddy.domain.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static moodbuddy.moodbuddy.domain.bookMark.entity.QBookMark.bookMark;
-import static moodbuddy.moodbuddy.domain.diary.entity.QDiary.diary;
-import static moodbuddy.moodbuddy.domain.diaryImage.entity.QDiaryImage.diaryImage;
+import static moodbuddy.moodbuddy.domain.bookMark.domain.QBookMark.bookMark;
+import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
+import static moodbuddy.moodbuddy.domain.diary.domain.QDiaryImage.diaryImage;
 
 public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     private final JPAQueryFactory queryFactory;

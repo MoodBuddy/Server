@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.letter.entity;
+package moodbuddy.moodbuddy.domain.letter.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

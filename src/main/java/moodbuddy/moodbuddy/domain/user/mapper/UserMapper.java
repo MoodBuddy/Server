@@ -1,6 +1,6 @@
 package moodbuddy.moodbuddy.domain.user.mapper;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResLoginDTO;
-import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.user.domain.User;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.modelmapper.ModelMapper;
 

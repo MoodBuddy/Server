@@ -1,7 +1,7 @@
 package moodbuddy.moodbuddy.domain.diary.repository;
 
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,7 +33,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryReposi
     @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND YEAR(d.diaryDate) = :year AND d.diaryStatus = :status")
     List<Diary> findAllByYearAndDiaryStatus(@Param("userId") Long userId, @Param("year") int year, @Param("status") DiaryStatus status);
 
-    @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND d.diaryEmotion is not null")
-    List<Diary> findDiaryEmotionAllByUserId(@Param("userId") Long userId);
-
+    @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND DATE_FORMAT(d.diaryDate, '%Y-%m') = :month AND d.diaryEmotion is not null")
+    List<Diary> findDiaryEmotionAllByUserIdAndMonth(@Param("userId") Long userId, @Param("month") LocalDate month);
 }

@@ -1,17 +1,17 @@
 package moodbuddy.moodbuddy.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.entity.Diary;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.entity.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
-import moodbuddy.moodbuddy.domain.diaryImage.service.DiaryImageService;
-import moodbuddy.moodbuddy.domain.monthcomment.entity.MonthComment;
+import moodbuddy.moodbuddy.domain.diary.service.DiaryImageService;
+import moodbuddy.moodbuddy.domain.monthcomment.domain.MonthComment;
 import moodbuddy.moodbuddy.domain.monthcomment.repository.MonthCommentRepository;
-import moodbuddy.moodbuddy.domain.profile.entity.Profile;
+import moodbuddy.moodbuddy.domain.profile.domain.Profile;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
-import moodbuddy.moodbuddy.domain.profileImage.entity.ProfileImage;
-import moodbuddy.moodbuddy.domain.profileImage.repository.ProfileImageRepository;
+import moodbuddy.moodbuddy.domain.profile.domain.ProfileImage;
+import moodbuddy.moodbuddy.domain.profile.repository.ProfileImageRepository;
 import moodbuddy.moodbuddy.global.common.sms.service.SmsService;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthDTO;
@@ -19,7 +19,7 @@ import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResMainPageDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
-import moodbuddy.moodbuddy.domain.user.entity.User;
+import moodbuddy.moodbuddy.domain.user.domain.User;
 import moodbuddy.moodbuddy.domain.user.mapper.UserMapper;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
@@ -345,14 +345,13 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList());
     }
 
-    //감정 횟수 조회(해당 년도)
+    // 현재까지 감정보기 - 감정 횟수 조회(해당 년도)
     @Override
     @Transactional(readOnly = true)
-    public List<UserEmotionStaticDTO> getEmotionNums() {
-
+    public List<UserEmotionStaticDTO> getEmotionNums(LocalDate month) {
         Long userId = JwtUtil.getUserId();
 
-        List<Diary> diaries = diaryRepository.findDiaryEmotionAllByUserId(userId);
+        List<Diary> diaries = diaryRepository.findDiaryEmotionAllByUserIdAndMonth(userId, month); // 일기를 가져올 때부터 그 month에 해당하는 일기만 가져옴
 
         log.info("일기들", diaries);
 

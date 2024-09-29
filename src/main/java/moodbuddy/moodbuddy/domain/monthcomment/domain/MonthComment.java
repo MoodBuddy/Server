@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.monthcomment.entity;
+package moodbuddy.moodbuddy.domain.monthcomment.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
