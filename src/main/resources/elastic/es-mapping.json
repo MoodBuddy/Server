@@ -1,0 +1,74 @@
+{
+  "mappings": {
+    "properties": {
+      "diary": {
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+          "diaryTitle": {
+            "type": "text"
+          },
+          "diaryDate": {
+            "type": "date"
+          },
+          "diaryContent": {
+            "type": "text"
+          },
+          "diaryWeather": {
+            "type": "keyword"
+          },
+          "diaryEmotion": {
+            "type": "keyword"
+          },
+          "diaryStatus": {
+            "type": "keyword"
+          },
+          "diarySubject": {
+            "type": "text"
+          },
+          "diarySummary": {
+            "type": "text"
+          },
+          "userId": {
+            "type": "long"
+          },
+          "diaryBookMarkCheck": {
+            "type": "boolean"
+          },
+          "diaryFont": {
+            "type": "keyword"
+          },
+          "diaryFontSize": {
+            "type": "integer"
+          },
+          "createdTime": {
+            "type": "date"
+          },
+          "updatedTime": {
+            "type": "date"
+          }
+        }
+      },
+      "diary_image": {
+        "properties": {
+          "id": {
+            "type": "long"
+          },
+          "diaryId": {
+            "type": "long"
+          },
+          "diaryImgURL": {
+            "type": "text"
+          },
+          "createdTime": {
+            "type": "date"
+          },
+          "updatedTime": {
+            "type": "date"
+          }
+        }
+      }
+    }
+  }
+}
