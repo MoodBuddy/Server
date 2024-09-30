@@ -16,7 +16,12 @@ public enum ErrorCode {
     NOT_FOUND(400,"COMMON-ERR-400","PAGE NOT FOUND"),
     NOT_FOUND_DIARY(400, "DIARY-ERR-400", "일기를 찾을 수 없습니다."),
     NOT_FOUND_QUDDYTI(400, "QUDDYTI-ERR-400", "쿼디티아이를 찾을 수 없습니다."),
-    NOT_FOUND_USER(400, "USER-ERR-400", "아이디에 해당하는 회원을 찾을 수 없습니다."),
+    NOT_FOUND_USER(400, "USER-ERR-400", "userId에 해당하는 회원을 찾을 수 없습니다."),
+    NOT_FOUND_PROFILE(400, "PROFILE-ERR-400", "userId에 해당하는 프로필을 찾을 수 없습니다."),
+    NOT_FOUND_PROFILE_IMAGE(400, "PROFILE-IMAGE-ERR-400", "userId에 해당하는 프로필 이미지를 찾을 수 없습니다."),
+    LETTER_NOT_FOUND_BY_ID(400, "LETTER-ERR-400","letterId에 해당하는 편지를 찾을 수 없습니다."),
+    LETTER_NOT_FOUND_BY_ID_AND_USER_ID(400, "LETTER-ERR-400","letterId와 userId에 해당하는 회원을 찾을 수 없습니다."),
+    INVALID_LETTER_NUMS(400, "LETTER-ERR-400","userId에 해당하는 회원의 편지지가 없습니다."),
     NO_ACCESS_DIARY(403, "DIARY-ERR-403", "접근할 수 없는 일기입니다."),
     TODAY_EXISTING_DIARY(409, "DIARY-ERR-409", "오늘 이미 일기를 작성했습니다."),
 
