@@ -12,7 +12,11 @@ import moodbuddy.moodbuddy.domain.profile.domain.Profile;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.profile.domain.ProfileImage;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileImageRepository;
-import moodbuddy.moodbuddy.global.common.sms.service.SmsService;
+import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
+import moodbuddy.moodbuddy.global.common.exception.profile.ProfileImageNotFoundByUserIdException;
+import moodbuddy.moodbuddy.global.common.exception.profile.ProfileNotFoundByUserIdException;
+import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundByUserIdException;
+import moodbuddy.moodbuddy.global.common.sms.SmsService;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
@@ -22,9 +26,6 @@ import moodbuddy.moodbuddy.domain.user.dto.response.*;
 import moodbuddy.moodbuddy.domain.user.domain.User;
 import moodbuddy.moodbuddy.domain.user.mapper.UserMapper;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
-import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
-import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundException;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -380,27 +381,16 @@ public class UserServiceImpl implements UserService{
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new MemberIdNotFoundException(JwtUtil.getUserId())
+                () -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER)
         );
         Profile profile = profileRepository.findByUserId(userId).orElseThrow(
-                () -> new MemberIdNotFoundException(JwtUtil.getUserId())
+                () -> new ProfileNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE)
         );
         ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
-                () -> new MemberIdNotFoundException(JwtUtil.getUserId())
+                () -> new ProfileImageNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE_IMAGE)
         );
 
-        UserResProfileDTO profileDto = UserResProfileDTO.builder()
-                .url(profileImage.getProfileImgURL())
-                .profileComment(profile.getProfileComment())
-                .nickname(user.getNickname())
-                .alarm(user.getAlarm())
-                .alarmTime(user.getAlarmTime())
-                .phoneNumber(user.getPhoneNumber())
-                .gender(user.getGender())
-                .birthday(user.getBirthday())
-                .build();
-
-        return profileDto;
+        return createUserResProfileDTO(user, profile, profileImage);
     }
 
     //프로필 이미지 -> s3 사용
@@ -411,13 +401,13 @@ public class UserServiceImpl implements UserService{
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new MemberIdNotFoundException(JwtUtil.getUserId())
+                () -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER)
         );
         Profile profile = profileRepository.findByUserId(userId).orElseThrow(
-                () -> new MemberIdNotFoundException(JwtUtil.getUserId())
+                () -> new ProfileNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE)
         );
         ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
-                () -> new MemberIdNotFoundException(JwtUtil.getUserId())
+                () -> new ProfileImageNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE_IMAGE)
         );
 
         profile.setProfileComment(dto.getProfileComment());
@@ -438,18 +428,20 @@ public class UserServiceImpl implements UserService{
         }
 
         // 업데이트된 정보를 기반으로 UserResProfileDTO 객체를 생성하여 반환
-        UserResProfileDTO updateUserProfile = UserResProfileDTO.builder()
+        return createUserResProfileDTO(user, profile, profileImage);
+    }
+
+    private UserResProfileDTO createUserResProfileDTO(User user, Profile profile, ProfileImage profileImage) {
+        return UserResProfileDTO.builder()
                 .url(profileImage.getProfileImgURL())
                 .profileComment(profile.getProfileComment())
+                .nickname(user.getNickname())
                 .alarm(user.getAlarm())
                 .alarmTime(user.getAlarmTime())
                 .phoneNumber(user.getPhoneNumber())
-                .nickname(user.getNickname())
                 .gender(user.getGender())
                 .birthday(user.getBirthday())
                 .build();
-
-        return updateUserProfile;
     }
 
 
@@ -548,10 +540,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUser_Id(Long userId) {
-        final Optional<User> optionalUser = userRepository.findByUserId(userId);
-        if(!optionalUser.isPresent()) {
-            throw new UserNotFoundException(ErrorCode.NOT_FOUND_USER);
-        }
-        return optionalUser.get();
+        return userRepository.findById(userId)
+                .orElseThrow(()->new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER));
     }
 }
