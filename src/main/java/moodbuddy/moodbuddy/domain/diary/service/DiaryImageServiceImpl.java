@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryImageRepository;
+import moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain.DiaryImageDocument;
+import moodbuddy.moodbuddy.global.common.elasticSearch.repository.DiaryImageDocumentRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DiaryImageServiceImpl implements DiaryImageService {
     private final DiaryImageRepository diaryImageRepository;
+    private final DiaryImageDocumentRepository diaryImageDocumentRepository;
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -69,6 +72,22 @@ public class DiaryImageServiceImpl implements DiaryImageService {
                 .collect(Collectors.toList());
 
         diaryImageRepository.saveAll(diaryImages);
+
+        // Elasticsearch에 DiaryImageDocument 저장
+        saveDiaryImageDocuments(diaryImages, diary);
+    }
+
+    private void saveDiaryImageDocuments(List<DiaryImage> diaryImages, Diary diary) {
+        List<DiaryImageDocument> diaryImageDocuments = diaryImages.stream()
+                .map(diaryImage -> DiaryImageDocument.builder()
+                        .id(diaryImage.getId())
+                        .diaryId(diary.getId())
+                        .diaryImgURL(diaryImage.getDiaryImgURL())
+                        .build())
+                .collect(Collectors.toList());
+
+        // Elasticsearch에 저장
+        diaryImageDocumentRepository.saveAll(diaryImageDocuments);
     }
 
     @Override
