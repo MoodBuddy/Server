@@ -5,10 +5,15 @@ import moodbuddy.moodbuddy.global.common.exception.diary.DiaryInsufficientExcept
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
-import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
+import moodbuddy.moodbuddy.global.common.exception.letter.LetterNotFoundByIdAndUserIdException;
+import moodbuddy.moodbuddy.global.common.exception.letter.LetterNotFoundByIdException;
+import moodbuddy.moodbuddy.global.common.exception.letter.LetterNumsException;
+import moodbuddy.moodbuddy.global.common.exception.profile.ProfileImageNotFoundByUserIdException;
+import moodbuddy.moodbuddy.global.common.exception.profile.ProfileNotFoundByUserIdException;
 import moodbuddy.moodbuddy.global.common.exception.quddyTI.QuddyTINotFoundException;
-import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundException;
+import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundByUserIdException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,11 +30,13 @@ public class ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(MemberIdNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(MemberIdNotFoundException ex) {
-        ApiErrorResponse response = new ApiErrorResponse("MOD-002", "Member id not found: " + ex.getMessage());
-
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(UserNotFoundByUserIdException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(UserNotFoundByUserIdException ex) {
+        ErrorCode errorCode = ex.getErrorCode();
+        return new ResponseEntity<>(new ApiErrorResponse(
+                errorCode.getErrorCode(),
+                ex.getMessage() + " userId : " + ex.getUserId())
+                , HttpStatusCode.valueOf(errorCode.getStatus()));
     }
 
     @ExceptionHandler(DiaryTodayExistingException.class)
@@ -74,8 +81,8 @@ public class ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(UserNotFoundException ex) {
+    @ExceptionHandler(DiaryInsufficientException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(DiaryInsufficientException ex) {
         ErrorCode errorCode = ex.getErrorCode();
         return new ResponseEntity<>(
                 new ApiErrorResponse(
@@ -85,13 +92,58 @@ public class ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(DiaryInsufficientException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(DiaryInsufficientException ex) {
+
+    @ExceptionHandler(LetterNotFoundByIdException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(LetterNotFoundByIdException ex){
         ErrorCode errorCode = ex.getErrorCode();
         return new ResponseEntity<>(
                 new ApiErrorResponse(
                         errorCode.getErrorCode(),
-                        errorCode.getMessage()),
+                        ex.getMessage()+" letterId : " + ex.getLetterId()),
+                HttpStatus.valueOf(errorCode.getStatus())
+        );
+    }
+
+    @ExceptionHandler(LetterNotFoundByIdAndUserIdException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(LetterNotFoundByIdAndUserIdException ex){
+        ErrorCode errorCode = ex.getErrorCode();
+        return new ResponseEntity<>(
+                new ApiErrorResponse(
+                        errorCode.getErrorCode(),
+                        ex.getMessage()+" letterId : " + ex.getLetterId() + " userId : " + ex.getUserId()),
+                HttpStatus.valueOf(errorCode.getStatus())
+        );
+    }
+
+    @ExceptionHandler(LetterNumsException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(LetterNumsException ex){
+        ErrorCode errorCode = ex.getErrorCode();
+        return new ResponseEntity<>(
+                new ApiErrorResponse(
+                        errorCode.getErrorCode(),
+                        ex.getMessage()+" userId : " + ex.getUserId()),
+                HttpStatus.valueOf(errorCode.getStatus())
+        );
+    }
+
+    @ExceptionHandler(ProfileImageNotFoundByUserIdException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(ProfileImageNotFoundByUserIdException ex){
+        ErrorCode errorCode = ex.getErrorCode();
+        return new ResponseEntity<>(
+                new ApiErrorResponse(
+                        errorCode.getErrorCode(),
+                        ex.getMessage()+" userId : " + ex.getUserId()),
+                HttpStatus.valueOf(errorCode.getStatus())
+        );
+    }
+
+    @ExceptionHandler(ProfileNotFoundByUserIdException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(ProfileNotFoundByUserIdException ex){
+        ErrorCode errorCode = ex.getErrorCode();
+        return new ResponseEntity<>(
+                new ApiErrorResponse(
+                        errorCode.getErrorCode(),
+                        ex.getMessage()+" userId : " + ex.getUserId()),
                 HttpStatus.valueOf(errorCode.getStatus())
         );
     }
