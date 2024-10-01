@@ -12,11 +12,16 @@ import moodbuddy.moodbuddy.domain.profile.repository.ProfileImageRepository;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.user.domain.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
-import moodbuddy.moodbuddy.global.common.exception.member.MemberIdNotFoundException;
+import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
+import moodbuddy.moodbuddy.global.common.exception.letter.LetterNotFoundByIdAndUserIdException;
+import moodbuddy.moodbuddy.global.common.exception.letter.LetterNotFoundByIdException;
+import moodbuddy.moodbuddy.global.common.exception.letter.LetterNumsException;
+import moodbuddy.moodbuddy.global.common.exception.profile.ProfileNotFoundByUserIdException;
+import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundByUserIdException;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTMessageDTO;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
-import moodbuddy.moodbuddy.global.common.sms.service.SmsService;
+import moodbuddy.moodbuddy.global.common.sms.SmsService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,11 +50,10 @@ public class LetterServiceImpl implements LetterService {
     @Transactional(timeout = 30)
     public LetterResPageDTO letterPage() {
         log.info("[LetterService] letterPage");
+        final Long userId = JwtUtil.getUserId();
         try {
-            final Long userId = JwtUtil.getUserId();
-
             User user = getUserByUserId(userId);
-            updateLetterAlarmFromUser(user, userId);
+            initLetterAlarmFromUser(user, userId);
 
             return createLetterResPageDto(userId, user);
         } catch (Exception e) {
@@ -61,7 +65,7 @@ public class LetterServiceImpl implements LetterService {
 
     private Profile getProfileByUserId(Long userId){
         return profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoSuchElementException("프로필을 찾을 수 없습니다. userId: " + userId));
+                .orElseThrow(() -> new ProfileNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE));
     }
 
     private String getProfileImageUrlByUserId(Long userId){
@@ -89,7 +93,7 @@ public class LetterServiceImpl implements LetterService {
         return getLetterResPageDtoForLetterPage(user, profile, profileImageURL, letterResPageAnswerDTOList);
     }
 
-    private void updateLetterAlarmFromUser(User user, Long userId){
+    private void initLetterAlarmFromUser(User user, Long userId){
         if(user.getLetterAlarm()==null){
             userRepository.updateLetterAlarmByUserId(userId, false);
         }
@@ -157,7 +161,7 @@ public class LetterServiceImpl implements LetterService {
     private void validateUserLetterAvailability(User user){
         log.info("user.getUserLetterNums() : "+user.getUserLetterNums());
         if (user.getUserLetterNums() == null || user.getUserLetterNums() <= MIN_LETTER_NUMS) {
-            throw new IllegalArgumentException("편지지가 없습니다."); // 편지지가 없을 경우 예외 처리
+            throw new LetterNumsException(user.getUserId(), ErrorCode.INVALID_LETTER_NUMS); // 편지지가 없을 경우 예외 처리
         }
     }
 
@@ -218,7 +222,7 @@ public class LetterServiceImpl implements LetterService {
 
     private Letter getLetterById(Long letterId){
         return letterRepository.findById(letterId)
-                .orElseThrow(()->new IllegalArgumentException("letterId에 해당하는 편지가 없습니다"));
+                .orElseThrow(()->new LetterNotFoundByIdException(letterId, ErrorCode.LETTER_NOT_FOUND_BY_ID));
     }
 
     private GPTResponseDTO getGPTResponseDto(Letter letter){
@@ -264,12 +268,12 @@ public class LetterServiceImpl implements LetterService {
 
     private User getUserByUserId(Long userId){
         return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new NoSuchElementException("userId에 해당되는 User가 없습니다"));
+                .orElseThrow(() -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER));
     }
 
     private Letter getLetterByIdAndUserId(Long letterId, Long userId){
         return letterRepository.findByIdAndUserId(letterId, userId)
-                .orElseThrow(() -> new NoSuchElementException("letterId에 매핑되는 편지가 없습니다"));
+                .orElseThrow(() -> new LetterNotFoundByIdAndUserIdException(letterId ,userId , ErrorCode.LETTER_NOT_FOUND_BY_ID_AND_USER_ID));
     }
 
     private LetterResDetailsDTO getLetterResDetailsDtoForLetterDetails(User user, Letter letter){
@@ -285,7 +289,7 @@ public class LetterServiceImpl implements LetterService {
 
     private User getUserByUserIdWithPessimisticLock(Long userId){
         return userRepository.findByUserIdWithPessimisticLock(userId).orElseThrow(
-                () -> new MemberIdNotFoundException(JwtUtil.getUserId())
+                () -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER)
         );
     }
 

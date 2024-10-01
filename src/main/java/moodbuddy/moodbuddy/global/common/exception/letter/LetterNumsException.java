@@ -1,19 +1,18 @@
-package moodbuddy.moodbuddy.global.common.exception.user;
+package moodbuddy.moodbuddy.global.common.exception.letter;
 
 import lombok.Getter;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
+
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 @Getter
-public class UserNotFoundException extends RuntimeException {
+public class LetterNumsException extends RuntimeException {
     private final ErrorCode errorCode;
-    public UserNotFoundException(ErrorCode errorCode) {
+    private final Long userId;
+    public LetterNumsException(final Long userId, final ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
-    }
-
-    public ErrorCode getErrorCode() {
-        return errorCode;
+        this.userId = userId;
     }
 }

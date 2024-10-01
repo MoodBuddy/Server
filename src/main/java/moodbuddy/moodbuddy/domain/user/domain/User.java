@@ -74,10 +74,6 @@ public class User extends BaseEntity {
         userLetterNums--;
     }
 
-    public void setLetterAlarm(Boolean letterAlarm) {
-        this.letterAlarm = letterAlarm;
-    }
-
     public void setUserLetterNums(int nums) {
         this.userLetterNums = nums;
     }
