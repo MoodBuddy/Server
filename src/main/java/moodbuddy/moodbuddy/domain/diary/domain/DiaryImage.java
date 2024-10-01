@@ -13,7 +13,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DiaryImage extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diary_image_id")
     private Long id;
 
