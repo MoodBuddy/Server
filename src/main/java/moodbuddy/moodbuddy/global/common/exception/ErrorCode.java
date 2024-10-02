@@ -24,6 +24,7 @@ public enum ErrorCode {
     INVALID_LETTER_NUMS(400, "LETTER-ERR-400","userId에 해당하는 회원의 편지지가 없습니다."),
     NO_ACCESS_DIARY(403, "DIARY-ERR-403", "접근할 수 없는 일기입니다."),
     TODAY_EXISTING_DIARY(409, "DIARY-ERR-409", "오늘 이미 일기를 작성했습니다."),
+    GPT_PARSE_ERROR(422, "GPT-ERR-422", "Json 형태의 GPT 응답을 파싱하는 중 오류가 발생했습니다."),
 
     /** 5XX **/
     INTERNAL_SERVER_ERROR(500,"COMMON-ERR-500","INTER SERVER ERROR");

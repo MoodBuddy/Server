@@ -226,7 +226,7 @@ public class LetterServiceImpl implements LetterService {
     }
 
     private GPTResponseDTO getGPTResponseDto(Letter letter){
-        return gptService.letterAnswerSave(letter.getLetterWorryContent(), letter.getLetterFormat()).block();
+        return gptService.letterAnswerSave(letter.getLetterWorryContent(), letter.getLetterFormat());
     }
 
     private void updateAnswerFromGptResponse(GPTResponseDTO response, LetterResSaveDTO letterResSaveDTO){

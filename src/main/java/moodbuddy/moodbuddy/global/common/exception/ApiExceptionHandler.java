@@ -5,6 +5,7 @@ import moodbuddy.moodbuddy.global.common.exception.diary.DiaryInsufficientExcept
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
+import moodbuddy.moodbuddy.global.common.exception.gpt.ParsingContentException;
 import moodbuddy.moodbuddy.global.common.exception.letter.LetterNotFoundByIdAndUserIdException;
 import moodbuddy.moodbuddy.global.common.exception.letter.LetterNotFoundByIdException;
 import moodbuddy.moodbuddy.global.common.exception.letter.LetterNumsException;
@@ -99,7 +100,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(
                 new ApiErrorResponse(
                         errorCode.getErrorCode(),
-                        ex.getMessage()+" letterId : " + ex.getLetterId()),
+                        ex.getMessage() + " letterId : " + ex.getLetterId()),
                 HttpStatus.valueOf(errorCode.getStatus())
         );
     }
@@ -110,7 +111,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(
                 new ApiErrorResponse(
                         errorCode.getErrorCode(),
-                        ex.getMessage()+" letterId : " + ex.getLetterId() + " userId : " + ex.getUserId()),
+                        ex.getMessage() + " letterId : " + ex.getLetterId() + " userId : " + ex.getUserId()),
                 HttpStatus.valueOf(errorCode.getStatus())
         );
     }
@@ -121,7 +122,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(
                 new ApiErrorResponse(
                         errorCode.getErrorCode(),
-                        ex.getMessage()+" userId : " + ex.getUserId()),
+                        ex.getMessage() + " userId : " + ex.getUserId()),
                 HttpStatus.valueOf(errorCode.getStatus())
         );
     }
@@ -132,7 +133,7 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(
                 new ApiErrorResponse(
                         errorCode.getErrorCode(),
-                        ex.getMessage()+" userId : " + ex.getUserId()),
+                        ex.getMessage() + " userId : " + ex.getUserId()),
                 HttpStatus.valueOf(errorCode.getStatus())
         );
     }
@@ -143,7 +144,18 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(
                 new ApiErrorResponse(
                         errorCode.getErrorCode(),
-                        ex.getMessage()+" userId : " + ex.getUserId()),
+                        ex.getMessage() + "  userId : " + ex.getUserId()),
+                HttpStatus.valueOf(errorCode.getStatus())
+        );
+    }
+
+    @ExceptionHandler(ParsingContentException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(ParsingContentException ex){
+        ErrorCode errorCode = ex.getErrorCode();
+        return new ResponseEntity<>(
+                new ApiErrorResponse(
+                        errorCode.getErrorCode(),
+                        ex.getMessage() + " content : " + ex.getContent()),
                 HttpStatus.valueOf(errorCode.getStatus())
         );
     }

@@ -50,8 +50,9 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = DiaryMapper.toDiaryEntity(
                 diaryReqSaveDTO,
                 userId,
-                gptService.summarize(diaryReqSaveDTO.getDiaryContent()).block(),
-                classifyDiaryContent(diaryReqSaveDTO.getDiaryContent()));
+                gptService.analyzeDiaryContent(diaryReqSaveDTO.getDiaryContent()).get("summary"),
+                DiarySubject.valueOf(gptService.analyzeDiaryContent(diaryReqSaveDTO.getDiaryContent()).get("subject"))
+        );
 
         diary = diaryRepository.save(diary);
         diaryDocumentRepository.save(DiaryDocumentMapper.toDiaryDocument(diary));
@@ -79,8 +80,8 @@ public class DiaryServiceImpl implements DiaryService {
         Diary findDiary = diaryFindService.findDiaryById(diaryReqUpdateDTO.getDiaryId());
         diaryFindService.validateDiaryAccess(findDiary, userId);
 
-        String summary = gptService.summarize(diaryReqUpdateDTO.getDiaryContent()).block();
-        DiarySubject diarySubject = classifyDiaryContent(diaryReqUpdateDTO.getDiaryContent());
+        String summary = gptService.analyzeDiaryContent(diaryReqUpdateDTO.getDiaryContent()).get("summary");
+        DiarySubject diarySubject = DiarySubject.valueOf(gptService.analyzeDiaryContent(diaryReqUpdateDTO.getDiaryContent()).get("subject"));
 
         findDiary.updateDiary(diaryReqUpdateDTO, summary, diarySubject);
 
@@ -184,11 +185,6 @@ public class DiaryServiceImpl implements DiaryService {
         return diaryReqUpdateDTO.getDiaryStatus().equals(DiaryStatus.DRAFT);
     }
 
-    private DiarySubject classifyDiaryContent(String diaryContent) {
-        Mono<String> subjectMono = gptService.classifyDiaryContent(diaryContent);
-        String classifiedSubject = subjectMono.block();
-        return DiarySubject.valueOf(classifiedSubject);
-    }
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
         LocalDate today = LocalDate.now();
         if (diaryDate.isEqual(today)) {
