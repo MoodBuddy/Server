@@ -1,17 +1,15 @@
 package moodbuddy.moodbuddy.global.common.gpt.service;
 
+import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResEmotionDTO;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 public interface GptService {
+    Map<String, String> analyzeDiaryContent(String diaryContent);
 
-    Mono<String> classifyDiaryContent(String content);
+    DiaryResEmotionDTO analyzeEmotion();
 
-    Mono<String> summarize(String content);
-
-    Mono<String> descriptionContent(String content);
-
-    Mono<GPTResponseDTO> letterAnswerSave(String worryContent, Integer format);
-
-    Mono<String> emotionComment(String emotion);
+    GPTResponseDTO letterAnswerSave(String worryContent, Integer format);
 }
