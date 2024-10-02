@@ -55,6 +55,8 @@ public class DiaryServiceImpl implements DiaryService {
         );
 
         diary = diaryRepository.save(diary);
+
+        // Elasticsearch에서 문서 저장
         diaryDocumentRepository.save(DiaryDocumentMapper.toDiaryDocument(diary));
 
         // TODO 일기 내용 저장, 이미지 저장 API 분리하기
@@ -92,6 +94,9 @@ public class DiaryServiceImpl implements DiaryService {
 
         deleteDraftDiaries(diaryReqUpdateDTO.getDiaryDate(), userId);
 
+        // Elasticsearch에서 문서 수정
+        diaryDocumentRepository.save(DiaryDocumentMapper.toDiaryDocument(findDiary));
+
         return DiaryMapper.toDetailDTO(findDiary);
     }
 
@@ -106,6 +111,9 @@ public class DiaryServiceImpl implements DiaryService {
 
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAllDiaryImages(findDiary);
+
+        // Elasticsearch에서 문서 삭제
+        diaryDocumentRepository.deleteById(diaryId);
         diaryRepository.delete(findDiary);
     }
 
