@@ -13,7 +13,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DiaryImage extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "diary_image_id")
     private Long id;
 
@@ -23,4 +23,28 @@ public class DiaryImage extends BaseEntity {
 
     @Column(name = "diary_img_url")
     private String diaryImgURL;
+
+    @Enumerated(value = EnumType.STRING)
+    private DiaryImageStatus diaryImageStatus;
+
+    @Column(name = "diary_image_file_name")
+    private String diaryImgFileName;
+
+    @Column(name = "diary_img_width")
+    private Double diaryImgWidth;
+
+    @Column(name = "diary_img_height")
+    private Double diaryImgHeight;
+
+    @Column(name = "diary_img_thumb_file_name")
+    private String diaryImgThumbFileName;
+
+    @Column(name = "diary_img_thumb_url")
+    private String diaryImgThumbURL;
+
+    @Column(name = "diary_img_thumb_width")
+    private Double diaryImgThumbWidth;
+
+    @Column(name = "diary_img_thumb_height")
+    private Double diaryImgThumbHeight;
 }
