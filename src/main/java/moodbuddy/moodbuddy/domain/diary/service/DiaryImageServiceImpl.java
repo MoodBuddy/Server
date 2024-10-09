@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.DiaryImage;
+import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryImageResConnect;
+import moodbuddy.moodbuddy.domain.diary.mapper.DiaryImageMapper;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryImageRepository;
+import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain.DiaryImageDocument;
 import moodbuddy.moodbuddy.global.common.elasticSearch.repository.DiaryImageDocumentRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,113 +30,134 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class DiaryImageServiceImpl implements DiaryImageService {
+    private final DiaryRepository diaryRepository;
     private final DiaryImageRepository diaryImageRepository;
     private final DiaryImageDocumentRepository diaryImageDocumentRepository;
-    private final AmazonS3 amazonS3;
+//    private final AmazonS3 amazonS3;
+//
+//    @Value("${cloud.aws.s3.bucket}")
+//    private String bucket;
+//
+//    @Value("${cloud.aws.s3.imgFolder}")
+//    private String imgFolder;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
-    @Value("${cloud.aws.s3.imgFolder}")
-    private String imgFolder;
-
-    @Override
+//    @Override
+//    public void saveDiaryImages(List<MultipartFile> diaryImgList, Diary diary) throws IOException {
+//        if (diaryImgList != null && !diaryImgList.isEmpty()) {
+//            List<String> diaryUrlList = diaryImgList.stream()
+//                    .filter(imageFile -> imageFile != null && !imageFile.isEmpty())
+//                    .map(this::uploadImage)
+//                    .collect(Collectors.toList());
+//
+//            saveDiaryImageEntities(diaryUrlList, diary);
+//        }
+//    }
+//
+//    private String uploadImage(MultipartFile diaryImg) {
+//        try {
+//            String originalFilename = diaryImg.getOriginalFilename();
+//            String fileName = UUID.randomUUID().toString() + "_" + originalFilename;
+//            String filePath = imgFolder + "/" + fileName;
+//
+//            amazonS3.putObject(bucket, filePath, diaryImg.getInputStream(), new ObjectMetadata());
+//            return amazonS3.getUrl(bucket, filePath).toString();
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to upload image", e);
+//        }
+//    }
+//
+//    private void saveDiaryImageEntities(List<String> diaryUrlList, Diary diary) {
+//        List<DiaryImage> diaryImages = diaryUrlList.stream()
+//                .map(url -> DiaryImage.builder()
+//                        .diaryImgURL(url)
+//                        .diary(diary)
+//                        .build())
+//                .collect(Collectors.toList());
+//
+//        diaryImageRepository.saveAll(diaryImages);
+//
+//        // Elasticsearch에 DiaryImageDocument 저장
+//        saveDiaryImageDocuments(diaryImages, diary);
+//    }
+//
+//    private void saveDiaryImageDocuments(List<DiaryImage> diaryImages, Diary diary) {
+//        List<DiaryImageDocument> diaryImageDocuments = diaryImages.stream()
+//                .map(diaryImage -> DiaryImageDocument.builder()
+//                        .id(diaryImage.getId())
+//                        .diaryId(diary.getId())
+//                        .diaryImgURL(diaryImage.getDiaryImgURL())
+//                        .build())
+//                .collect(Collectors.toList());
+//
+//        // Elasticsearch에 저장
+//        diaryImageDocumentRepository.saveAll(diaryImageDocuments);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void deleteAllDiaryImages(Diary diary) throws IOException {
+//        List<DiaryImage> diaryImages = diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
+//        for (DiaryImage diaryImage : diaryImages) {
+//            deleteImageFromS3(diaryImage.getDiaryImgURL());
+//            diaryImageRepository.delete(diaryImage);
+//        }
+//    }
+//
+//    @Transactional
+//    public void deleteDiaryImage(DiaryImage diaryImage) throws IOException {
+//        deleteImageFromS3(diaryImage.getDiaryImgURL());
+//        diaryImageRepository.delete(diaryImage);
+//    }
+//
+//    private void deleteImageFromS3(String imageUrl) throws IOException {
+//        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+//        String filePath = imgFolder + "/" + fileName;
+//        amazonS3.deleteObject(new DeleteObjectRequest(bucket, filePath));
+//    }
+//
+//    @Override
+//    public List<DiaryImage> findImagesByDiary(Diary diary) {
+//        return diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
+//    }
+//
+//    @Override
+//    public String saveProfileImages(MultipartFile newProfileImg) throws IOException {
+//        return uploadImage(newProfileImg);
+//    }
+//
+//    @Transactional
+//    public void deleteExcludingImages(Diary diary, List<String> existingImgUrls) throws IOException {
+//        if (existingImgUrls == null) {
+//            existingImgUrls = new ArrayList<>();
+//        }
+//
+//        List<DiaryImage> diaryImages = findImagesByDiary(diary);
+//        for (DiaryImage diaryImage : diaryImages) {
+//            String imageUrl = diaryImage.getDiaryImgURL().trim();
+//            if (!existingImgUrls.contains(imageUrl)) {
+//                deleteDiaryImage(diaryImage);
+//            }
+//        }
+//    }
     @Transactional
-    public void saveDiaryImages(List<MultipartFile> diaryImgList, Diary diary) throws IOException {
-        if (diaryImgList != null && !diaryImgList.isEmpty()) {
-            List<String> diaryUrlList = diaryImgList.stream()
-                    .filter(imageFile -> imageFile != null && !imageFile.isEmpty())
-                    .map(this::uploadImage)
-                    .collect(Collectors.toList());
-
-            saveDiaryImageEntities(diaryUrlList, diary);
-        }
+    public long saveEmptyImage(Long diaryId) {
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow();
+        return diaryImageRepository.save(DiaryImageMapper.toDiaryImageEntity(findDiary)).getId();
     }
 
-    private String uploadImage(MultipartFile diaryImg) {
-        try {
-            String originalFilename = diaryImg.getOriginalFilename();
-            String fileName = UUID.randomUUID().toString() + "_" + originalFilename;
-            String filePath = imgFolder + "/" + fileName;
-
-            amazonS3.putObject(bucket, filePath, diaryImg.getInputStream(), new ObjectMetadata());
-            return amazonS3.getUrl(bucket, filePath).toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload image", e);
-        }
-    }
-
-    private void saveDiaryImageEntities(List<String> diaryUrlList, Diary diary) {
-        List<DiaryImage> diaryImages = diaryUrlList.stream()
-                .map(url -> DiaryImage.builder()
-                        .diaryImgURL(url)
-                        .diary(diary)
-                        .build())
-                .collect(Collectors.toList());
-
-        diaryImageRepository.saveAll(diaryImages);
-
-        // Elasticsearch에 DiaryImageDocument 저장
-        saveDiaryImageDocuments(diaryImages, diary);
-    }
-
-    private void saveDiaryImageDocuments(List<DiaryImage> diaryImages, Diary diary) {
-        List<DiaryImageDocument> diaryImageDocuments = diaryImages.stream()
-                .map(diaryImage -> DiaryImageDocument.builder()
-                        .id(diaryImage.getId())
-                        .diaryId(diary.getId())
-                        .diaryImgURL(diaryImage.getDiaryImgURL())
-                        .build())
-                .collect(Collectors.toList());
-
-        // Elasticsearch에 저장
-        diaryImageDocumentRepository.saveAll(diaryImageDocuments);
-    }
-
-    @Override
-    @Transactional
-    public void deleteAllDiaryImages(Diary diary) throws IOException {
-        List<DiaryImage> diaryImages = diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
-        for (DiaryImage diaryImage : diaryImages) {
-            deleteImageFromS3(diaryImage.getDiaryImgURL());
-            diaryImageRepository.delete(diaryImage);
-        }
-    }
-
-    @Transactional
-    public void deleteDiaryImage(DiaryImage diaryImage) throws IOException {
-        deleteImageFromS3(diaryImage.getDiaryImgURL());
-        diaryImageRepository.delete(diaryImage);
-    }
-
-    private void deleteImageFromS3(String imageUrl) throws IOException {
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-        String filePath = imgFolder + "/" + fileName;
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, filePath));
-    }
-
-    @Override
-    public List<DiaryImage> findImagesByDiary(Diary diary) {
-        return diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
-    }
-
-    @Override
-    public String saveProfileImages(MultipartFile newProfileImg) throws IOException {
-        return uploadImage(newProfileImg);
-    }
-
-    @Transactional
-    public void deleteExcludingImages(Diary diary, List<String> existingImgUrls) throws IOException {
-        if (existingImgUrls == null) {
-            existingImgUrls = new ArrayList<>();
-        }
-
-        List<DiaryImage> diaryImages = findImagesByDiary(diary);
-        for (DiaryImage diaryImage : diaryImages) {
-            String imageUrl = diaryImage.getDiaryImgURL().trim();
-            if (!existingImgUrls.contains(imageUrl)) {
-                deleteDiaryImage(diaryImage);
-            }
-        }
-    }
+//    @Transactional
+//    public DiaryImageResConnect connectImage(long id, StorageImageDto imageDto) {
+//        return userWalkCountImageRepository.findById(id)
+//                .map(image -> {
+//                    userWalkCountImageRepository.findByUserWalkCountIdAndStatus(image.getUserWalkCount().getId(), PetAroundImageStatus.ACTIVE)
+//                            .forEach(UserWalkCountImage::disactive);
+//                    image.connectImageUrl(imageDto, storageProperties.cdn());
+//                    return new StorageImageResponse(
+//                            image.getId(),
+//                            image.getThumbUrl(),
+//                            image.getThumbWidth(),
+//                            image.getThumbHeight()
+//                    );
+//                }).orElseThrow();
+//    }
 }

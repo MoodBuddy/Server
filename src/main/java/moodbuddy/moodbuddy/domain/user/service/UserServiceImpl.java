@@ -422,9 +422,10 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
 
         if (dto.getNewProfileImg() != null) {
-            String url = diaryImageService.saveProfileImages(dto.getNewProfileImg());
-            profileImage.setProfileImgURL(url);
-            profileImageRepository.save(profileImage);
+            // TODO 이 부분 주석 풀어야 함!!
+//            String url = diaryImageService.saveProfileImages(dto.getNewProfileImg());
+//            profileImage.setProfileImgURL(url);
+//            profileImageRepository.save(profileImage);
         }
 
         // 업데이트된 정보를 기반으로 UserResProfileDTO 객체를 생성하여 반환

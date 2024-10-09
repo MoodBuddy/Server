@@ -31,10 +31,10 @@ public class DiaryImage extends BaseEntity {
     private String diaryImgFileName;
 
     @Column(name = "diary_img_width")
-    private Double diaryImgWidth;
+    private double diaryImgWidth;
 
     @Column(name = "diary_img_height")
-    private Double diaryImgHeight;
+    private double diaryImgHeight;
 
     @Column(name = "diary_img_thumb_file_name")
     private String diaryImgThumbFileName;
@@ -43,8 +43,8 @@ public class DiaryImage extends BaseEntity {
     private String diaryImgThumbURL;
 
     @Column(name = "diary_img_thumb_width")
-    private Double diaryImgThumbWidth;
+    private double diaryImgThumbWidth;
 
     @Column(name = "diary_img_thumb_height")
-    private Double diaryImgThumbHeight;
+    private double diaryImgThumbHeight;
 }

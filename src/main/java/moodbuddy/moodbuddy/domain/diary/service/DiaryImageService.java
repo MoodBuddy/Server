@@ -8,11 +8,11 @@ import java.io.IOException;
 import java.util.List;
 
 public interface DiaryImageService {
-    void saveDiaryImages(List<MultipartFile> diaryImgList, Diary diary) throws IOException;
-    void deleteAllDiaryImages(Diary diary) throws IOException;
-    List<DiaryImage> findImagesByDiary(Diary diary);
-    String saveProfileImages(MultipartFile newProfileImg) throws IOException;
-    void deleteDiaryImage(DiaryImage diaryImage) throws IOException;
-    void deleteExcludingImages(Diary findDiary, List<String> existingDiaryImgList) throws IOException;
+//    void saveDiaryImages(List<MultipartFile> diaryImgList, Diary diary) throws IOException;
+//    void deleteAllDiaryImages(Diary diary) throws IOException;
+//    List<DiaryImage> findImagesByDiary(Diary diary);
+//    String saveProfileImages(MultipartFile newProfileImg) throws IOException;
+//    void deleteDiaryImage(DiaryImage diaryImage) throws IOException;
+//    void deleteExcludingImages(Diary findDiary, List<String> existingDiaryImgList) throws IOException;
 }
 

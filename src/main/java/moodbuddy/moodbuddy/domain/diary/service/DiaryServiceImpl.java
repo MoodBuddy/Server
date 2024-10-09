@@ -61,7 +61,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         // TODO 일기 내용 저장, 이미지 저장 API 분리하기
 
-        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
+//        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
 
         checkTodayDiary(diaryReqSaveDTO.getDiaryDate(), userId, false);
         deleteDraftDiaries(diaryReqSaveDTO.getDiaryDate(), userId);
@@ -87,10 +87,10 @@ public class DiaryServiceImpl implements DiaryService {
 
         findDiary.updateDiary(diaryReqUpdateDTO, summary, diarySubject);
 
-        // 기존 이미지 삭제
-        diaryImageService.deleteExcludingImages(findDiary, diaryReqUpdateDTO.getExistingDiaryImgList());
-        // 새로운 이미지 저장
-        diaryImageService.saveDiaryImages(diaryReqUpdateDTO.getDiaryImgList(), findDiary);
+//        // 기존 이미지 삭제
+//        diaryImageService.deleteExcludingImages(findDiary, diaryReqUpdateDTO.getExistingDiaryImgList());
+//        // 새로운 이미지 저장
+//        diaryImageService.saveDiaryImages(diaryReqUpdateDTO.getDiaryImgList(), findDiary);
 
         deleteDraftDiaries(diaryReqUpdateDTO.getDiaryDate(), userId);
 
@@ -110,7 +110,7 @@ public class DiaryServiceImpl implements DiaryService {
         checkTodayDiary(findDiary.getDiaryDate(), userId, true);
 
         bookMarkService.deleteByDiaryId(diaryId);
-        diaryImageService.deleteAllDiaryImages(findDiary);
+//        diaryImageService.deleteAllDiaryImages(findDiary);
 
         // Elasticsearch에서 문서 삭제
         diaryDocumentRepository.deleteById(diaryId);
@@ -125,7 +125,7 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = DiaryMapper.toDraftEntity(diaryReqSaveDTO, userId);
         diary = diaryRepository.save(diary);
 
-        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
+//        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
 
         return DiaryMapper.toDetailDTO(diary);
     }
@@ -145,14 +145,14 @@ public class DiaryServiceImpl implements DiaryService {
                 .peek(diary -> diaryFindService.validateDiaryAccess(diary, userId)) // 접근 권한 확인
                 .collect(Collectors.toList());
 
-        diariesToDelete.forEach(diary -> {
-            try {
-                diaryImageService.deleteAllDiaryImages(diary);
-            } catch (IOException e) {
-                log.error("Error deleting diary images", e);
-                throw new RuntimeException(e);  // 필요에 따라 적절한 예외 처리
-            }
-        });
+//        diariesToDelete.forEach(diary -> {
+//            try {
+//                diaryImageService.deleteAllDiaryImages(diary);
+//            } catch (IOException e) {
+//                log.error("Error deleting diary images", e);
+//                throw new RuntimeException(e);  // 필요에 따라 적절한 예외 처리
+//            }
+//        });
 
         diaryRepository.deleteAll(diariesToDelete);
     }
