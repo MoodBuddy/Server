@@ -1,7 +1,8 @@
-# 📔 MoodBuddy - Server 입니다 📔
+# 📔 MoodBuddy - Server
 
 ## 🖥️ 프로젝트 소개
-사용자의 공간에서 쿼디와 함께 하루의 기록과 고민을 편리하게 작성할 수 있는 감정 일기 웹 서비스
+사용자가 쿼디와 함께 하루의 기록과 고민을 편리하게 작성할 수 있는 감정 일기 웹 서비스입니다.
+
 <div style="display: flex; flex-wrap: wrap; gap: 10px;">
   <img src="https://github.com/user-attachments/assets/61b83563-2496-4d61-aa91-29e4392e656f" width="30%">
   <img src="https://github.com/user-attachments/assets/5c030d7a-882c-4ad2-af45-4086d8b97561" width="30%">
@@ -26,11 +27,17 @@
   <img src="https://github.com/user-attachments/assets/5ecc9021-4309-44a1-bf54-f585b7707b3d" width="30%">
 </div>
 
+<br>
+
 ## 🎥 시연 영상
 ![GIFMaker_me](https://github.com/user-attachments/assets/2a61f871-a1ca-402a-98a2-3643112e5b53)
 
+<br>
+
 ## 🕰️ 개발 기간
 * 24.03.01일 - 진행중
+
+<br>
 
 ## ⚙️ 개발 환경
 - `Java 17`
@@ -38,6 +45,8 @@
 - **Framework** : Springboot(3.2.6)
 - **Database** : MySQL
 - **ORM** : Hibernate (Spring Data JPA 사용)
+
+<br>
 
 ## 🧑‍🤝‍🧑 멤버 구성
 <p>
@@ -52,11 +61,16 @@
     </a>
 </p>
 
-## 🛠️아키텍처 구조
-![Slide 16_9 - 524](https://github.com/user-attachments/assets/13de24d9-5fd4-43c7-a5da-e324f6b4d867)
+<br>
+
+## 🛠️ 아키텍처 구조
+<img src="https://github.com/user-attachments/assets/13de24d9-5fd4-43c7-a5da-e324f6b4d867" alt="아키텍처 구조" width="50%">
+
+<br>
 
 ## 📝 규칙
-- `커밋 컨벤션`
+
+- **커밋 컨벤션**
     - Feat: 새로운 기능 추가
     - Fix: 버그 수정
     - Docs: 문서 수정
@@ -67,24 +81,23 @@
 
 <br>
 
-- `branch 규칙`
+- **Branch 규칙**
     - 각자의 깃 닉네임을 딴 branch 명을 사용한다.
     - 예시
         - git checkout -b mung
 
 <br>
 
-- `commit message 규칙`
+- **Commit message 규칙**
     - 종류: 메시지
     - 예시
         - feat: 커밋 내용 - #브랜치명
         - feat: 로그인 구현 - #mung
+
 <br>
 
-- `DTO 규칙`
+- **DTO 규칙**
     - 엔티티명 + Res/Req + 역할 + DTO
     - 예시
         - UserResSaveDTO
         - PostReqSaveDTO
-
----
