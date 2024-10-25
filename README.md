@@ -1,18 +1,39 @@
-# 📔 MoodBuddy 입니다 📔
+# 📔 MoodBuddy - Server 입니다 📔
 
 ## 🖥️ 프로젝트 소개
 사용자의 공간에서 쿼디와 함께 하루의 기록과 고민을 편리하게 작성할 수 있는 감정 일기 웹 서비스
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <img src="https://github.com/user-attachments/assets/61b83563-2496-4d61-aa91-29e4392e656f" width="30%">
+  <img src="https://github.com/user-attachments/assets/5c030d7a-882c-4ad2-af45-4086d8b97561" width="30%">
+  <img src="https://github.com/user-attachments/assets/dc002fed-dc2c-4511-816c-e321090d119d" width="30%">
+  <img src="https://github.com/user-attachments/assets/26d15186-8bcf-4c3a-91a8-b3cd98b69e89" width="30%">
+</div>
+
 <br>
+
+## 📺 무드버디 실제 화면
+<div style="display: flex; flex-wrap: wrap; gap: 10px;">
+  <img src="https://github.com/user-attachments/assets/dc521e90-b4fd-4cd2-94e2-1e2d2a93dbbb" width="30%">
+  <img src="https://github.com/user-attachments/assets/8db0dbf0-0c61-420b-9bb1-497f80b802dc" width="30%">
+  <img src="https://github.com/user-attachments/assets/fe4a279c-d872-48eb-ab29-2de2627d7631" width="30%">
+  <img src="https://github.com/user-attachments/assets/1d4a8bdc-5dc6-4015-861a-9f135cf07273" width="30%">
+  <img src="https://github.com/user-attachments/assets/b91aeb51-91fe-4059-a2ca-01e257a7f166" width="30%">
+  <img src="https://github.com/user-attachments/assets/3ec5da46-63de-4b67-99a3-aea10dd2477f" width="30%">
+  <img src="https://github.com/user-attachments/assets/7e1354f8-dbb5-47f8-925a-f3e44304e068" width="30%">
+  <img src="https://github.com/user-attachments/assets/73ad1b66-6ce5-4dc1-b5fd-f6b69f26f562" width="30%">
+  <img src="https://github.com/user-attachments/assets/9e3b67a0-2eee-443f-ad79-c42af3acaad7" width="30%">
+  <img src="https://github.com/user-attachments/assets/3d6159c0-b8f8-4f61-a8cf-dea0c27aa423" width="30%">
+  <img src="https://github.com/user-attachments/assets/5ecc9021-4309-44a1-bf54-f585b7707b3d" width="30%">
+</div>
 
 ## 🎥 시연 영상
 ![GIFMaker_me](https://github.com/user-attachments/assets/2a61f871-a1ca-402a-98a2-3643112e5b53)
 
 ## 🕰️ 개발 기간
-* 24.04.01일 - 진행중
+* 24.03.01일 - 진행중
 
 ## ⚙️ 개발 환경
 - `Java 17`
-- `JDK 1.8.0 이상`
 - **IDE** : IntelliJ IDEA
 - **Framework** : Springboot(3.2.6)
 - **Database** : MySQL
@@ -31,8 +52,8 @@
     </a>
 </p>
 
-## 🛠️아키텍처 구조도
-![아키텍처 구조도_3](https://github.com/user-attachments/assets/402eedcc-b640-4d14-9b0b-d02c5a2feac9)
+## 🛠️아키텍처 구조
+![Slide 16_9 - 524](https://github.com/user-attachments/assets/13de24d9-5fd4-43c7-a5da-e324f6b4d867)
 
 ## 📝 규칙
 - `커밋 컨벤션`
@@ -65,8 +86,5 @@
     - 예시
         - UserResSaveDTO
         - PostReqSaveDTO
-
-## 📌 API 명세서
-https://vagabond-cheque-7c0.notion.site/Moodbuddy-f9c25277ca2d4ec89c7ea272f96fb773?pvs=4
 
 ---
