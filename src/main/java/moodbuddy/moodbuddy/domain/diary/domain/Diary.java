@@ -63,15 +63,15 @@ public class Diary extends BaseEntity {
     private DiaryFontSize diaryFontSize;
 
     public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, String diarySummary, DiarySubject diarySubject) {
-        this.diaryTitle = diaryReqUpdateDTO.getDiaryTitle();
-        this.diaryDate = diaryReqUpdateDTO.getDiaryDate();
-        this.diaryContent = diaryReqUpdateDTO.getDiaryContent();
-        this.diaryWeather = diaryReqUpdateDTO.getDiaryWeather();
+        this.diaryTitle = diaryReqUpdateDTO.diaryTitle();
+        this.diaryDate = diaryReqUpdateDTO.diaryDate();
+        this.diaryContent = diaryReqUpdateDTO.diaryContent();
+        this.diaryWeather = diaryReqUpdateDTO.diaryWeather();
         this.diarySummary = diarySummary;
         this.diaryStatus = DiaryStatus.PUBLISHED;
         this.diarySubject = diarySubject;
-        this.diaryFont = diaryReqUpdateDTO.getDiaryFont();
-        this.diaryFontSize = diaryReqUpdateDTO.getDiaryFontSize();
+        this.diaryFont = diaryReqUpdateDTO.diaryFont();
+        this.diaryFontSize = diaryReqUpdateDTO.diaryFontSize();
     }
 
     public void setDiaryEmotion(DiaryEmotion diaryEmotion) {
