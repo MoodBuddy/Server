@@ -3,46 +3,30 @@ package moodbuddy.moodbuddy.domain.diary.mapper;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.*;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
-import org.modelmapper.ModelMapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-public class DiaryMapper {
+public interface DiaryMapper {
+    DiaryMapper INSTANCE = Mappers.getMapper(DiaryMapper.class);
 
-    private static final ModelMapper modelMapper = new ModelMapper();
+    @Mapping(target = "diaryStatus", constant = "PUBLISHED")
+    @Mapping(target = "diarySummary", source = "summary")
+    @Mapping(target = "diarySubject", source = "diarySubject")
+    @Mapping(target = "userId", source = "userId")
+    Diary toDiaryEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId, String summary, DiarySubject diarySubject);
 
-    public static Diary toDiaryEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId, String summary, DiarySubject diarySubject) {
-        return Diary.builder()
-                .diaryTitle(diaryReqSaveDTO.diaryTitle())
-                .diaryDate(diaryReqSaveDTO.diaryDate())
-                .diaryContent(diaryReqSaveDTO.diaryContent())
-                .diaryWeather(diaryReqSaveDTO.diaryWeather())
-                .diaryStatus(DiaryStatus.PUBLISHED)
-                .diarySummary(summary)
-                .diarySubject(diarySubject)
-                .userId(userId)
-                .diaryBookMarkCheck(false)
-                .diaryFont(diaryReqSaveDTO.diaryFont())
-                .diaryFontSize(diaryReqSaveDTO.diaryFontSize())
-                .build();
-    }
+    @Mapping(target = "diaryStatus", constant = "DRAFT")
+    @Mapping(target = "userId", source = "userId")
+    @Mapping(target = "diaryBookMarkCheck", constant = "false")
+    Diary toDraftEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId);
 
-    public static Diary toDraftEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId) {
-        return Diary.builder()
-                .diaryTitle(diaryReqSaveDTO.diaryTitle())
-                .diaryDate(diaryReqSaveDTO.diaryDate())
-                .diaryContent(diaryReqSaveDTO.diaryContent())
-                .diaryWeather(diaryReqSaveDTO.diaryWeather())
-                .diaryStatus(DiaryStatus.DRAFT)
-                .userId(userId)
-                .diaryBookMarkCheck(false)
-                .diaryFont(diaryReqSaveDTO.diaryFont())
-                .diaryFontSize(diaryReqSaveDTO.diaryFontSize())
-                .build();
-    }
+    DiaryResDetailDTO toResDetailDTO(Diary diary);
 
-    public static DiaryResDetailDTO toDetailDTO(Diary diary) {
-        return modelMapper.map(diary, DiaryResDetailDTO.class);
-    }
+    DiaryResDraftFindOneDTO toResDraftFindOneDTO(Diary diary);
 
+    @Mapping(source = "emotion", target = "emotion")
+    @Mapping(source = "diaryDate", target = "diaryDate")
+    @Mapping(source = "comment", target = "comment")
+    DiaryResEmotionDTO toResEmotionDTO(Diary diary);
 }
