@@ -45,13 +45,13 @@ public class DiaryServiceImpl implements DiaryService {
     public DiaryResDetailDTO save(DiaryReqSaveDTO diaryReqSaveDTO) throws IOException {
         final Long userId = JwtUtil.getUserId();
 
-        validateExistingDiary(diaryRepository, diaryReqSaveDTO.getDiaryDate(), userId);
+        validateExistingDiary(diaryRepository, diaryReqSaveDTO.diaryDate(), userId);
 
         Diary diary = DiaryMapper.toDiaryEntity(
                 diaryReqSaveDTO,
                 userId,
-                gptService.analyzeDiaryContent(diaryReqSaveDTO.getDiaryContent()).get("summary"),
-                DiarySubject.valueOf(gptService.analyzeDiaryContent(diaryReqSaveDTO.getDiaryContent()).get("subject"))
+                gptService.analyzeDiaryContent(diaryReqSaveDTO.diaryContent()).get("summary"),
+                DiarySubject.valueOf(gptService.analyzeDiaryContent(diaryReqSaveDTO.diaryContent()).get("subject"))
         );
 
         diary = diaryRepository.save(diary);
@@ -61,10 +61,10 @@ public class DiaryServiceImpl implements DiaryService {
 
         // TODO 일기 내용 저장, 이미지 저장 API 분리하기
 
-        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
+        diaryImageService.saveDiaryImages(diaryReqSaveDTO.diaryImgList(), diary);
 
-        checkTodayDiary(diaryReqSaveDTO.getDiaryDate(), userId, false);
-        deleteDraftDiaries(diaryReqSaveDTO.getDiaryDate(), userId);
+        checkTodayDiary(diaryReqSaveDTO.diaryDate(), userId, false);
+        deleteDraftDiaries(diaryReqSaveDTO.diaryDate(), userId);
 
         return DiaryMapper.toDetailDTO(diary);
     }
@@ -75,24 +75,24 @@ public class DiaryServiceImpl implements DiaryService {
         final Long userId = JwtUtil.getUserId();
 
         if (isDraftToPublished(diaryReqUpdateDTO)) {
-            validateExistingDiary(diaryRepository, diaryReqUpdateDTO.getDiaryDate(), userId);
-            checkTodayDiary(diaryReqUpdateDTO.getDiaryDate(), userId, false);
+            validateExistingDiary(diaryRepository, diaryReqUpdateDTO.diaryDate(), userId);
+            checkTodayDiary(diaryReqUpdateDTO.diaryDate(), userId, false);
         }
 
-        Diary findDiary = diaryFindService.findDiaryById(diaryReqUpdateDTO.getDiaryId());
+        Diary findDiary = diaryFindService.findDiaryById(diaryReqUpdateDTO.diaryId());
         diaryFindService.validateDiaryAccess(findDiary, userId);
 
-        String summary = gptService.analyzeDiaryContent(diaryReqUpdateDTO.getDiaryContent()).get("summary");
-        DiarySubject diarySubject = DiarySubject.valueOf(gptService.analyzeDiaryContent(diaryReqUpdateDTO.getDiaryContent()).get("subject"));
+        String summary = gptService.analyzeDiaryContent(diaryReqUpdateDTO.diaryContent()).get("summary");
+        DiarySubject diarySubject = DiarySubject.valueOf(gptService.analyzeDiaryContent(diaryReqUpdateDTO.diaryContent()).get("subject"));
 
         findDiary.updateDiary(diaryReqUpdateDTO, summary, diarySubject);
 
         // 기존 이미지 삭제
-        diaryImageService.deleteExcludingImages(findDiary, diaryReqUpdateDTO.getExistingDiaryImgList());
+        diaryImageService.deleteExcludingImages(findDiary, diaryReqUpdateDTO.existingDiaryImgList());
         // 새로운 이미지 저장
-        diaryImageService.saveDiaryImages(diaryReqUpdateDTO.getDiaryImgList(), findDiary);
+        diaryImageService.saveDiaryImages(diaryReqUpdateDTO.diaryImgList(), findDiary);
 
-        deleteDraftDiaries(diaryReqUpdateDTO.getDiaryDate(), userId);
+        deleteDraftDiaries(diaryReqUpdateDTO.diaryDate(), userId);
 
         // Elasticsearch에서 문서 수정
         diaryDocumentRepository.save(DiaryDocumentMapper.toDiaryDocument(findDiary));
@@ -125,7 +125,7 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = DiaryMapper.toDraftEntity(diaryReqSaveDTO, userId);
         diary = diaryRepository.save(diary);
 
-        diaryImageService.saveDiaryImages(diaryReqSaveDTO.getDiaryImgList(), diary);
+        diaryImageService.saveDiaryImages(diaryReqSaveDTO.diaryImgList(), diary);
 
         return DiaryMapper.toDetailDTO(diary);
     }
@@ -141,7 +141,7 @@ public class DiaryServiceImpl implements DiaryService {
     public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO diaryReqDraftSelectDeleteDTO) {
         final Long userId = JwtUtil.getUserId();
 
-        List<Diary> diariesToDelete = diaryRepository.findAllById(diaryReqDraftSelectDeleteDTO.getDiaryIdList()).stream()
+        List<Diary> diariesToDelete = diaryRepository.findAllById(diaryReqDraftSelectDeleteDTO.diaryIdList()).stream()
                 .peek(diary -> diaryFindService.validateDiaryAccess(diary, userId)) // 접근 권한 확인
                 .collect(Collectors.toList());
 
@@ -190,7 +190,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     private boolean isDraftToPublished(DiaryReqUpdateDTO diaryReqUpdateDTO) {
-        return diaryReqUpdateDTO.getDiaryStatus().equals(DiaryStatus.DRAFT);
+        return diaryReqUpdateDTO.diaryStatus().equals(DiaryStatus.DRAFT);
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {

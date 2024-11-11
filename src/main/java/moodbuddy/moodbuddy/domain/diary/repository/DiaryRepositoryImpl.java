@@ -185,26 +185,26 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(diary.userId.eq(userId));
 
-        if (filterDTO.getYear() != null) {
-            startDate = LocalDate.of(filterDTO.getYear(), 1, 1);
+        if (filterDTO.year() != null) {
+            startDate = LocalDate.of(filterDTO.year(), 1, 1);
             endDate = startDate.plusYears(1);
             builder.and(betweenDates(startDate, endDate));
         }
 
-        if (filterDTO.getMonth() != null) {
-            builder.and(monthMatches(filterDTO.getMonth()));
+        if (filterDTO.month() != null) {
+            builder.and(monthMatches(filterDTO.month()));
         }
 
-        if (filterDTO.getKeyWord() != null && !filterDTO.getKeyWord().isEmpty()) {
-            builder.and(containsKeyword(filterDTO.getKeyWord()));
+        if (filterDTO.keyWord() != null && !filterDTO.keyWord().isEmpty()) {
+            builder.and(containsKeyword(filterDTO.keyWord()));
         }
 
-        if (filterDTO.getDiaryEmotion() != null) {
-            builder.and(diaryEmotionEq(filterDTO.getDiaryEmotion()));
+        if (filterDTO.diaryEmotion() != null) {
+            builder.and(diaryEmotionEq(filterDTO.diaryEmotion()));
         }
 
-        if (filterDTO.getDiarySubject() != null) {
-            builder.and(diarySubjectEq(filterDTO.getDiarySubject()));
+        if (filterDTO.diarySubject() != null) {
+            builder.and(diarySubjectEq(filterDTO.diarySubject()));
         }
 
         List<Diary> results = queryFactory.selectFrom(diary)

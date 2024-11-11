@@ -13,31 +13,31 @@ public class DiaryMapper {
 
     public static Diary toDiaryEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId, String summary, DiarySubject diarySubject) {
         return Diary.builder()
-                .diaryTitle(diaryReqSaveDTO.getDiaryTitle())
-                .diaryDate(diaryReqSaveDTO.getDiaryDate())
-                .diaryContent(diaryReqSaveDTO.getDiaryContent())
-                .diaryWeather(diaryReqSaveDTO.getDiaryWeather())
+                .diaryTitle(diaryReqSaveDTO.diaryTitle())
+                .diaryDate(diaryReqSaveDTO.diaryDate())
+                .diaryContent(diaryReqSaveDTO.diaryContent())
+                .diaryWeather(diaryReqSaveDTO.diaryWeather())
                 .diaryStatus(DiaryStatus.PUBLISHED)
                 .diarySummary(summary)
                 .diarySubject(diarySubject)
                 .userId(userId)
                 .diaryBookMarkCheck(false)
-                .diaryFont(diaryReqSaveDTO.getDiaryFont())
-                .diaryFontSize(diaryReqSaveDTO.getDiaryFontSize())
+                .diaryFont(diaryReqSaveDTO.diaryFont())
+                .diaryFontSize(diaryReqSaveDTO.diaryFontSize())
                 .build();
     }
 
     public static Diary toDraftEntity(DiaryReqSaveDTO diaryReqSaveDTO, Long userId) {
         return Diary.builder()
-                .diaryTitle(diaryReqSaveDTO.getDiaryTitle())
-                .diaryDate(diaryReqSaveDTO.getDiaryDate())
-                .diaryContent(diaryReqSaveDTO.getDiaryContent())
-                .diaryWeather(diaryReqSaveDTO.getDiaryWeather())
+                .diaryTitle(diaryReqSaveDTO.diaryTitle())
+                .diaryDate(diaryReqSaveDTO.diaryDate())
+                .diaryContent(diaryReqSaveDTO.diaryContent())
+                .diaryWeather(diaryReqSaveDTO.diaryWeather())
                 .diaryStatus(DiaryStatus.DRAFT)
                 .userId(userId)
                 .diaryBookMarkCheck(false)
-                .diaryFont(diaryReqSaveDTO.getDiaryFont())
-                .diaryFontSize(diaryReqSaveDTO.getDiaryFontSize())
+                .diaryFont(diaryReqSaveDTO.diaryFont())
+                .diaryFontSize(diaryReqSaveDTO.diaryFontSize())
                 .build();
     }
 
