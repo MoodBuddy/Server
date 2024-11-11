@@ -8,10 +8,8 @@ import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResEmotionDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.database.DatabaseNullOrEmptyException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.gpt.ParsingContentException;
-import moodbuddy.moodbuddy.global.common.gpt.dto.GPTMessageDTO;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTRequestDTO;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
@@ -19,7 +17,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
@@ -73,7 +70,7 @@ public class GptServiceImpl implements GptService{
         List<String> keys = List.of("emotion", "comment");
         Map<String, String> responseMap = getGPTResponseMap(new GPTRequestDTO(model, diary.getDiaryContent() + EMOTION_ANALYSIS_PROMPT), keys);
 
-        diary.setDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("emotion")));
+        diary.updateDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("emotion")));
         diaryRepository.save(diary);
 
         return DiaryResEmotionDTO.builder()

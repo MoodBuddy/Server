@@ -42,7 +42,7 @@ public class BookMarkServiceImpl implements BookMarkService {
         if(optionalBookMark.isPresent()) { // 북마크가 존재한다면,
             // 북마크 취소
             bookMarkRepository.delete(optionalBookMark.get());
-            findDiary.setDiaryBookMarkCheck(false);
+            findDiary.updateDiaryBookMarkCheck(false);
             return new BookMarkResToggleDTO(false);
         } else { // 북마크가 존재하지 않는다면,
             // 북마크 저장
@@ -50,7 +50,7 @@ public class BookMarkServiceImpl implements BookMarkService {
                     .userId(findUser.getUserId())
                     .diary(findDiary)
                     .build();
-            findDiary.setDiaryBookMarkCheck(true);
+            findDiary.updateDiaryBookMarkCheck(true);
             bookMarkRepository.save(newBookMark);
             return new BookMarkResToggleDTO(true);
         }
