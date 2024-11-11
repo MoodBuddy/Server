@@ -1,10 +1,6 @@
 package moodbuddy.moodbuddy.domain.diary.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.DiaryFont;
 import moodbuddy.moodbuddy.domain.diary.domain.DiaryFontSize;
 import moodbuddy.moodbuddy.domain.diary.domain.DiaryWeather;
