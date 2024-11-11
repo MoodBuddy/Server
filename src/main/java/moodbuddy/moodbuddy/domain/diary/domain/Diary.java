@@ -74,8 +74,8 @@ public class Diary extends BaseEntity {
         this.diaryFontSize = diaryReqUpdateDTO.diaryFontSize();
     }
 
-    public void setDiaryEmotion(DiaryEmotion diaryEmotion) {
+    public void updateDiaryEmotion(DiaryEmotion diaryEmotion) {
         this.diaryEmotion = diaryEmotion;
     }
-    public void setDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.diaryBookMarkCheck = diaryBookMarkCheck; }
+    public void updateDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.diaryBookMarkCheck = diaryBookMarkCheck; }
 }

@@ -4,9 +4,11 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.*;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+@Mapper(componentModel = "spring")
 public interface DiaryMapper {
     DiaryMapper INSTANCE = Mappers.getMapper(DiaryMapper.class);
 
