@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
@@ -39,6 +39,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final BookMarkService bookMarkService;
     private final UserService userService;
     private final GptService gptService;
+    private final DiaryMapper diaryMapper;
 
     @Override
     @Transactional
@@ -47,7 +48,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         validateExistingDiary(diaryRepository, diaryReqSaveDTO.diaryDate(), userId);
 
-        Diary diary = DiaryMapper.toDiaryEntity(
+        Diary diary = diaryMapper.toDiaryEntity(
                 diaryReqSaveDTO,
                 userId,
                 gptService.analyzeDiaryContent(diaryReqSaveDTO.diaryContent()).get("summary"),
@@ -66,7 +67,7 @@ public class DiaryServiceImpl implements DiaryService {
         checkTodayDiary(diaryReqSaveDTO.diaryDate(), userId, false);
         deleteDraftDiaries(diaryReqSaveDTO.diaryDate(), userId);
 
-        return DiaryMapper.toDetailDTO(diary);
+        return diaryMapper.toResDetailDTO(diary);
     }
 
     @Override
@@ -97,7 +98,7 @@ public class DiaryServiceImpl implements DiaryService {
         // Elasticsearch에서 문서 수정
         diaryDocumentRepository.save(DiaryDocumentMapper.toDiaryDocument(findDiary));
 
-        return DiaryMapper.toDetailDTO(findDiary);
+        return diaryMapper.toResDetailDTO(findDiary);
     }
 
     @Override
@@ -122,12 +123,12 @@ public class DiaryServiceImpl implements DiaryService {
     public DiaryResDetailDTO draftSave(DiaryReqSaveDTO diaryReqSaveDTO) throws IOException {
         final Long userId = JwtUtil.getUserId();
 
-        Diary diary = DiaryMapper.toDraftEntity(diaryReqSaveDTO, userId);
+        Diary diary = diaryMapper.toDraftEntity(diaryReqSaveDTO, userId);
         diary = diaryRepository.save(diary);
 
         diaryImageService.saveDiaryImages(diaryReqSaveDTO.diaryImgList(), diary);
 
-        return DiaryMapper.toDetailDTO(diary);
+        return diaryMapper.toResDetailDTO(diary);
     }
 
     @Override
