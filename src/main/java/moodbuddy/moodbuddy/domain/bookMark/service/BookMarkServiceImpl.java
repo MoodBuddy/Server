@@ -27,24 +27,38 @@ public class BookMarkServiceImpl implements BookMarkService {
     private final BookMarkRepository bookMarkRepository;
     private final BookMarkMapper bookMarkMapper;
 
-
     @Transactional
     public BookMarkResToggleDTO toggle(Diary diary, final Long userId) {
         Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserIdAndDiary(userId, diary);
-        if (optionalBookMark.isPresent()) { // 북마크가 존재한다면, 북마크 취소
-            bookMarkRepository.delete(optionalBookMark.get());
-            diary.updateDiaryBookMarkCheck(false);
-            return bookMarkMapper.toResToggleDTO(optionalBookMark.get());
-        } else { // 북마크가 존재하지 않는다면, 북마크 저장
-            diary.updateDiaryBookMarkCheck(true);
-            BookMark newBookmark = BookMark.of(userId, diary);
-            bookMarkRepository.save(newBookmark);
-            return bookMarkMapper.toResToggleDTO(newBookmark);
+        if(optionalBookMark.isPresent()) {
+            return cancelToggle(diary, optionalBookMark.get());
         }
+        return saveToggle(diary, userId);
+    }
+
+    private BookMarkResToggleDTO saveToggle(Diary diary, Long userId) {
+        diary.updateDiaryBookMarkCheck(true);
+        BookMark newBookmark = BookMark.of(userId, diary);
+        bookMarkRepository.save(newBookmark);
+        return bookMarkMapper.toResToggleDTO(true);
+    }
+
+    private BookMarkResToggleDTO cancelToggle(Diary diary, BookMark bookMark) {
+        bookMarkRepository.delete(bookMark);
+        diary.updateDiaryBookMarkCheck(false);
+        return bookMarkMapper.toResToggleDTO(false);
     }
 
     @Override
     public Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable, final Long userId) {
         return bookMarkRepository.bookMarkFindAllWithPageable(userId, pageable);
+    }
+
+    @Override
+    public void deleteByDiaryId(Long diaryId) {
+        Optional<BookMark> optionalBookMark = bookMarkRepository.findByDiaryId(diaryId);
+        if(optionalBookMark.isPresent()) {
+            bookMarkRepository.deleteByDiaryId(diaryId);
+        }
     }
 }
