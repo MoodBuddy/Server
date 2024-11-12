@@ -6,8 +6,8 @@ import java.time.LocalDate;
 
 @Builder
 public record DiaryResEmotionDTO (
-        String emotion,
+        String diaryEmotion,
         LocalDate diaryDate,
-        String comment
+        String diaryComment
 ){
 }

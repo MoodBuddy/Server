@@ -27,7 +27,7 @@ public class QBookMark extends EntityPathBase<BookMark> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdTime = _super.createdTime;
 
-    public final moodbuddy.moodbuddy.domain.diary.domain.QDiary diary;
+    public final moodbuddy.moodbuddy.domain.diary.domain.base.QDiary diary;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -54,7 +54,7 @@ public class QBookMark extends EntityPathBase<BookMark> {
 
     public QBookMark(Class<? extends BookMark> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.diary = inits.isInitialized("diary") ? new moodbuddy.moodbuddy.domain.diary.domain.QDiary(forProperty("diary")) : null;
+        this.diary = inits.isInitialized("diary") ? new moodbuddy.moodbuddy.domain.diary.domain.base.QDiary(forProperty("diary")) : null;
     }
 
 }
