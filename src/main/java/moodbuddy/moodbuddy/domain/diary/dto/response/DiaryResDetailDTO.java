@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.domain.*;
+import moodbuddy.moodbuddy.domain.diary.domain.base.*;
 
 import java.time.LocalDate;
 import java.util.List;
