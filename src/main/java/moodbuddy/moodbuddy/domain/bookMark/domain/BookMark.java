@@ -23,4 +23,11 @@ public class BookMark extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;
+
+    public static BookMark of(Long userId, Diary diary) {
+        return BookMark.builder()
+                .userId(userId)
+                .diary(diary)
+                .build();
+    }
 }

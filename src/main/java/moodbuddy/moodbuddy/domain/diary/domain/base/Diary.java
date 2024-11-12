@@ -68,25 +68,6 @@ public class Diary extends BaseEntity {
     @Column(name = "mood_buddy_status")
     private MoodBuddyStatus moodBuddyStatus;
 
-    public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, Map<String, String> gptResults) {
-        this.diaryTitle = diaryReqUpdateDTO.diaryTitle();
-        this.diaryDate = diaryReqUpdateDTO.diaryDate();
-        this.diaryContent = diaryReqUpdateDTO.diaryContent();
-        this.diaryWeather = diaryReqUpdateDTO.diaryWeather();
-        this.diarySummary = gptResults.get("summary");
-        this.diaryStatus = DiaryStatus.PUBLISHED;
-        this.diarySubject = DiarySubject.valueOf(gptResults.get("subject"));
-        this.diaryFont = diaryReqUpdateDTO.diaryFont();
-        this.diaryFontSize = diaryReqUpdateDTO.diaryFontSize();
-        this.moodBuddyStatus = MoodBuddyStatus.valueOf(gptResults.get("status"));
-    }
-
-    public void updateDiaryEmotion(DiaryEmotion diaryEmotion) {
-        this.diaryEmotion = diaryEmotion;
-    }
-    public void updateDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.diaryBookMarkCheck = diaryBookMarkCheck; }
-    public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
-
     public static Diary ofPublished(DiaryReqSaveDTO diaryReqSaveDTO, Long userId, String diarySummary, DiarySubject diarySubject) {
         return Diary.builder()
                 .diaryTitle(diaryReqSaveDTO.diaryTitle())
@@ -118,4 +99,23 @@ public class Diary extends BaseEntity {
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();
     }
+
+    public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, Map<String, String> gptResults) {
+        this.diaryTitle = diaryReqUpdateDTO.diaryTitle();
+        this.diaryDate = diaryReqUpdateDTO.diaryDate();
+        this.diaryContent = diaryReqUpdateDTO.diaryContent();
+        this.diaryWeather = diaryReqUpdateDTO.diaryWeather();
+        this.diarySummary = gptResults.get("summary");
+        this.diaryStatus = DiaryStatus.PUBLISHED;
+        this.diarySubject = DiarySubject.valueOf(gptResults.get("subject"));
+        this.diaryFont = diaryReqUpdateDTO.diaryFont();
+        this.diaryFontSize = diaryReqUpdateDTO.diaryFontSize();
+        this.moodBuddyStatus = MoodBuddyStatus.valueOf(gptResults.get("status"));
+    }
+
+    public void updateDiaryEmotion(DiaryEmotion diaryEmotion) {
+        this.diaryEmotion = diaryEmotion;
+    }
+    public void updateDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.diaryBookMarkCheck = diaryBookMarkCheck; }
+    public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
 }

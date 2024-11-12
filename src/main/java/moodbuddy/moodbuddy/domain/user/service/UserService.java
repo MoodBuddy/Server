@@ -59,5 +59,5 @@ public interface UserService {
     /** 테스트 (로그인 / 회원가입) **/
     UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO);
     UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO);
-    User getUser_Id(Long userId);
+    User getUserById(Long userId);
 }

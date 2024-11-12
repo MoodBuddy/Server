@@ -23,7 +23,6 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;

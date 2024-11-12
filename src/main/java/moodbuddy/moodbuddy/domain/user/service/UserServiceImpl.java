@@ -496,7 +496,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void changeCount(Long userId, boolean increment) {
         try {
-            User user = getUser_Id(userId);
+            User user = getUserById(userId);
 
             if (!increment) {
                 user.plusUserNumCount();
@@ -515,20 +515,20 @@ public class UserServiceImpl implements UserService{
         Long userId = JwtUtil.getUserId();
         return UserResCheckTodayDiaryDTO.builder()
                 .userId(userId)
-                .checkTodayDairy(getUser_Id(userId).getCheckTodayDairy())
+                .checkTodayDairy(getUserById(userId).getCheckTodayDairy())
                 .build();
     }
 
     @Override
     public void setUserCheckTodayDairy(Long userId, Boolean check) {
-        User findUser = getUser_Id(userId);
+        User findUser = getUserById(userId);
         findUser.setCheckTodayDiary(check);
     }
 
     /** 테스트를 위한 임시 자체 로그인 **/
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
-        return UserMapper.toUserResLoginDTO(getUser_Id(userReqLoginDTO.getUserId()));
+        return UserMapper.toUserResLoginDTO(getUserById(userReqLoginDTO.getUserId()));
     }
 
     /** 테스트를 위한 임시 자체 회원가입 **/
@@ -539,7 +539,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUser_Id(Long userId) {
+    public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER));
     }

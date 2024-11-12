@@ -45,14 +45,14 @@ public class DiaryFindServiceImpl implements DiaryFindService {
         return diaryRepository.findAllByFilterWithPageable(requestDTO, userId, pageable);
     }
 
+    private Diary findDiaryById(Long diaryId) {
+        return diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
+    }
+
     private void validateDiaryAccess(Diary findDiary, Long userId) {
         if (!findDiary.getUserId().equals(userId)) {
             throw new DiaryNoAccessException(ErrorCode.NO_ACCESS_DIARY);
         }
-    }
-
-    private Diary findDiaryById(Long diaryId) {
-        return diaryRepository.findById(diaryId)
-                .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
     }
 }
