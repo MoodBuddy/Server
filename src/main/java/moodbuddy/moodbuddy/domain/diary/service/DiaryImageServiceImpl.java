@@ -8,8 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryImageRepository;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain.DiaryImageDocument;
-import moodbuddy.moodbuddy.global.common.elasticSearch.repository.DiaryImageDocumentRepository;
+import moodbuddy.moodbuddy.global.common.elasticSearch.diary.repository.DiaryImageDocumentRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,24 +93,11 @@ public class DiaryImageServiceImpl implements DiaryImageService {
 
     @Override
     @Transactional
-    public void deleteAllDiaryImages(Diary diary) throws IOException {
+    public void deleteAllDiaryImages(Diary diary) {
         List<DiaryImage> diaryImages = diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
         for (DiaryImage diaryImage : diaryImages) {
-            deleteImageFromS3(diaryImage.getDiaryImgURL());
-            diaryImageRepository.delete(diaryImage);
+            diaryImage.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         }
-    }
-
-    @Transactional
-    public void deleteDiaryImage(DiaryImage diaryImage) throws IOException {
-        deleteImageFromS3(diaryImage.getDiaryImgURL());
-        diaryImageRepository.delete(diaryImage);
-    }
-
-    private void deleteImageFromS3(String imageUrl) throws IOException {
-        String fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
-        String filePath = imgFolder + "/" + fileName;
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, filePath));
     }
 
     @Override
@@ -120,20 +108,5 @@ public class DiaryImageServiceImpl implements DiaryImageService {
     @Override
     public String saveProfileImages(MultipartFile newProfileImg) throws IOException {
         return uploadImage(newProfileImg);
-    }
-
-    @Transactional
-    public void deleteExcludingImages(Diary diary, List<String> existingImgUrls) throws IOException {
-        if (existingImgUrls == null) {
-            existingImgUrls = new ArrayList<>();
-        }
-
-        List<DiaryImage> diaryImages = findImagesByDiary(diary);
-        for (DiaryImage diaryImage : diaryImages) {
-            String imageUrl = diaryImage.getDiaryImgURL().trim();
-            if (!existingImgUrls.contains(imageUrl)) {
-                deleteDiaryImage(diaryImage);
-            }
-        }
     }
 }
