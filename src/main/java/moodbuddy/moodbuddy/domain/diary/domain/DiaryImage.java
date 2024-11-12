@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 
 @Entity
 @Getter
@@ -47,4 +48,10 @@ public class DiaryImage extends BaseEntity {
 
     @Column(name = "diary_img_thumb_height")
     private Double diaryImgThumbHeight;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mood_buddy_status")
+    private MoodBuddyStatus moodBuddyStatus;
+
+    public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
 }

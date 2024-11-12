@@ -7,7 +7,7 @@ import moodbuddy.moodbuddy.domain.bookMark.domain.BookMark;
 import moodbuddy.moodbuddy.domain.bookMark.repository.BookMarkRepository;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.service.DiaryFindService;
+import moodbuddy.moodbuddy.domain.diary.service.diary.DiaryService;
 import moodbuddy.moodbuddy.domain.user.domain.User;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
@@ -25,7 +25,7 @@ import java.util.Optional;
 public class BookMarkServiceImpl implements BookMarkService {
     private final BookMarkRepository bookMarkRepository;
     private final UserService userService;
-    private final DiaryFindService diaryFindService;
+    private final DiaryService diaryService;
 
     @Override
     @Transactional
@@ -33,9 +33,9 @@ public class BookMarkServiceImpl implements BookMarkService {
         final Long userId = JwtUtil.getUserId();
 
         final User findUser = userService.getUser_Id(userId);
-        final Diary findDiary = diaryFindService.findDiaryById(diaryId);
+        final Diary findDiary = diaryService.findDiaryById(diaryId);
 
-        diaryFindService.validateDiaryAccess(findDiary, userId);
+        diaryService.validateDiaryAccess(findDiary, userId);
 
         Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserIdAndDiary(findUser.getUserId(), findDiary);
 

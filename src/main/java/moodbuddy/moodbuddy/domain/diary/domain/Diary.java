@@ -2,10 +2,13 @@ package moodbuddy.moodbuddy.domain.diary.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -51,9 +54,8 @@ public class Diary extends BaseEntity {
     private Long userId;
 
     @Column(name = "diary_book_mark_check")
-    private Boolean diaryBookMarkCheck; // 북마크 여부
+    private Boolean diaryBookMarkCheck;
 
-    /** 추가 칼럼 **/
     @Enumerated(EnumType.STRING)
     @Column(name = "diary_font")
     private DiaryFont diaryFont;
@@ -62,20 +64,58 @@ public class Diary extends BaseEntity {
     @Column(name = "diary_font_size")
     private DiaryFontSize diaryFontSize;
 
-    public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, String diarySummary, DiarySubject diarySubject) {
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mood_buddy_status")
+    private MoodBuddyStatus moodBuddyStatus;
+
+    public void updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, Map<String, String> gptResults) {
         this.diaryTitle = diaryReqUpdateDTO.diaryTitle();
         this.diaryDate = diaryReqUpdateDTO.diaryDate();
         this.diaryContent = diaryReqUpdateDTO.diaryContent();
         this.diaryWeather = diaryReqUpdateDTO.diaryWeather();
-        this.diarySummary = diarySummary;
+        this.diarySummary = gptResults.get("summary");
         this.diaryStatus = DiaryStatus.PUBLISHED;
-        this.diarySubject = diarySubject;
+        this.diarySubject = DiarySubject.valueOf(gptResults.get("subject"));
         this.diaryFont = diaryReqUpdateDTO.diaryFont();
         this.diaryFontSize = diaryReqUpdateDTO.diaryFontSize();
+        this.moodBuddyStatus = MoodBuddyStatus.valueOf(gptResults.get("status"));
     }
 
     public void updateDiaryEmotion(DiaryEmotion diaryEmotion) {
         this.diaryEmotion = diaryEmotion;
     }
     public void updateDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.diaryBookMarkCheck = diaryBookMarkCheck; }
+    public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
+
+    public static Diary ofPublished(DiaryReqSaveDTO diaryReqSaveDTO, Long userId, String diarySummary, DiarySubject diarySubject) {
+        return Diary.builder()
+                .diaryTitle(diaryReqSaveDTO.diaryTitle())
+                .diaryDate(diaryReqSaveDTO.diaryDate())
+                .diaryContent(diaryReqSaveDTO.diaryContent())
+                .diaryWeather(diaryReqSaveDTO.diaryWeather())
+                .diaryStatus(DiaryStatus.PUBLISHED)
+                .diarySummary(diarySummary)
+                .diarySubject(diarySubject)
+                .userId(userId)
+                .diaryBookMarkCheck(false)
+                .diaryFont(diaryReqSaveDTO.diaryFont())
+                .diaryFontSize(diaryReqSaveDTO.diaryFontSize())
+                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
+                .build();
+    }
+
+    public static Diary ofDraft(DiaryReqSaveDTO diaryReqSaveDTO, Long userId) {
+        return Diary.builder()
+                .diaryTitle(diaryReqSaveDTO.diaryTitle())
+                .diaryDate(diaryReqSaveDTO.diaryDate())
+                .diaryContent(diaryReqSaveDTO.diaryContent())
+                .diaryWeather(diaryReqSaveDTO.diaryWeather())
+                .diaryStatus(DiaryStatus.PUBLISHED)
+                .userId(userId)
+                .diaryBookMarkCheck(false)
+                .diaryFont(diaryReqSaveDTO.diaryFont())
+                .diaryFontSize(diaryReqSaveDTO.diaryFontSize())
+                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
+                .build();
+    }
 }

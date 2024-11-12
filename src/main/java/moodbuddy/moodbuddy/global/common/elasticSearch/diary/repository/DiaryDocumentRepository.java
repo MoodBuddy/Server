@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.global.common.elasticSearch.repository;
+package moodbuddy.moodbuddy.global.common.elasticSearch.diary.repository;
 
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain.DiaryDocument;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
