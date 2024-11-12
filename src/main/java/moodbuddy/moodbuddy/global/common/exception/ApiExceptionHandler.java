@@ -1,5 +1,6 @@
 package moodbuddy.moodbuddy.global.common.exception;
 
+import moodbuddy.moodbuddy.global.common.exception.bookMark.BookMarkNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.database.DatabaseNullOrEmptyException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryInsufficientException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
@@ -50,6 +51,7 @@ public class ApiExceptionHandler {
                 HttpStatus.valueOf(errorCode.getStatus())
         );
     }
+
     @ExceptionHandler(DiaryNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleException(DiaryNotFoundException ex) {
         ErrorCode errorCode = ex.getErrorCode();
@@ -62,6 +64,17 @@ public class ApiExceptionHandler {
     }
     @ExceptionHandler(DiaryNoAccessException.class)
     public ResponseEntity<ApiErrorResponse> handleException(DiaryNoAccessException ex) {
+        ErrorCode errorCode = ex.getErrorCode();
+        return new ResponseEntity<>(
+                new ApiErrorResponse(
+                        errorCode.getErrorCode(),
+                        errorCode.getMessage()),
+                HttpStatus.valueOf(errorCode.getStatus())
+        );
+    }
+
+    @ExceptionHandler(BookMarkNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleException(BookMarkNotFoundException ex) {
         ErrorCode errorCode = ex.getErrorCode();
         return new ResponseEntity<>(
                 new ApiErrorResponse(
