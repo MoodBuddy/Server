@@ -10,9 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableJpaAuditing
 public class MoodBuddyApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(MoodBuddyApplication.class, args);
     }
-
 }

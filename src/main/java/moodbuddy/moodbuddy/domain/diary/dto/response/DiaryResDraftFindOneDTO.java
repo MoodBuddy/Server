@@ -1,12 +1,9 @@
 package moodbuddy.moodbuddy.domain.diary.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryFontSize;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFont;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFontSize;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
 
 import java.time.LocalDate;
 

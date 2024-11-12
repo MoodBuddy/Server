@@ -1,10 +1,10 @@
 package moodbuddy.moodbuddy.domain.diary.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryFontSize;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryWeather;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFont;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFontSize;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryWeather;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.List;

@@ -1,13 +1,8 @@
 package moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
-import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
+import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
