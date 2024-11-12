@@ -47,7 +47,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public Diary update(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults, final Long userId) {
-        Diary findDiary = findDiaryById(requestDTO.diaryId());
+        Diary findDiary = getDiaryById(requestDTO.diaryId());
         validateDiaryAccess(findDiary, userId);
         findDiary.updateDiary(requestDTO, gptResults);
         deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
@@ -57,7 +57,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public Diary delete(Long diaryId, Long userId) {
-        final Diary findDiary = findDiaryById(diaryId);
+        final Diary findDiary = getDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         return findDiary;
@@ -109,7 +109,8 @@ public class DiaryServiceImpl implements DiaryService {
         }
     }
 
-    private Diary findDiaryById(Long diaryId) {
+    @Override
+    public Diary getDiaryById(Long diaryId) {
         return diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
     }
