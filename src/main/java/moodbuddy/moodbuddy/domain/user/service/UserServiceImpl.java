@@ -1,11 +1,11 @@
 package moodbuddy.moodbuddy.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
-import moodbuddy.moodbuddy.domain.diary.service.DiaryImageService;
+import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.repository.base.DiaryRepository;
+import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.monthcomment.domain.MonthComment;
 import moodbuddy.moodbuddy.domain.monthcomment.repository.MonthCommentRepository;
 import moodbuddy.moodbuddy.domain.profile.domain.Profile;
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService{
     // 각 emotion의 횟수를 세는 메소드
     public Map<DiaryEmotion,Integer> emotionNum(List<Diary> diaryList){
         try{
-            // 각 Diary의 emotion을 통해 한 달의 emotion 횟수를 세기 위한 Map
+            // 각 Diary의 emotion을 통해 한 달의 diaryEmotion 횟수를 세기 위한 Map
             Map<DiaryEmotion,Integer> emotionNum = new HashMap<>();
             for(Diary d : diaryList){
                 // emotionNum에 현재 Diary의 key가 없다면, key의 value를 1로 설정
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService{
                 emotionNum.merge(d.getDiaryEmotion(), 1, Integer::sum);
             }
             log.info("emotionNum : "+emotionNum);
-            // emotion 개수 중 최댓값 찾기
+            // diaryEmotion 개수 중 최댓값 찾기
             return getMaxEmotion(emotionNum);
         } catch (Exception e){
             log.error("[UserService] emotionNum error",e);
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    // emotion 횟수의 최댓값을 찾기 위한 메소드
+    // diaryEmotion 횟수의 최댓값을 찾기 위한 메소드
     public Map<DiaryEmotion, Integer> getMaxEmotion(Map<DiaryEmotion, Integer> emotionNum) {
         try{
             int maxValue = 0;
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService{
 
             log.info("maxKey : "+maxKey);
             log.info("maxValue : "+maxValue);
-            // emotion 개수 중 최댓값의 emotion과 그 값을 저장할 Map
+            // diaryEmotion 개수 중 최댓값의 emotion과 그 값을 저장할 Map
             Map<DiaryEmotion,Integer> maxEmotion = new HashMap<>();
             if(maxKey != null){
                 maxEmotion.put(maxKey, maxValue);
@@ -496,7 +496,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void changeCount(Long userId, boolean increment) {
         try {
-            User user = getUser_Id(userId);
+            User user = getUserById(userId);
 
             if (!increment) {
                 user.plusUserNumCount();
@@ -515,20 +515,20 @@ public class UserServiceImpl implements UserService{
         Long userId = JwtUtil.getUserId();
         return UserResCheckTodayDiaryDTO.builder()
                 .userId(userId)
-                .checkTodayDairy(getUser_Id(userId).getCheckTodayDairy())
+                .checkTodayDairy(getUserById(userId).getCheckTodayDairy())
                 .build();
     }
 
     @Override
     public void setUserCheckTodayDairy(Long userId, Boolean check) {
-        User findUser = getUser_Id(userId);
+        User findUser = getUserById(userId);
         findUser.setCheckTodayDiary(check);
     }
 
     /** 테스트를 위한 임시 자체 로그인 **/
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
-        return UserMapper.toUserResLoginDTO(getUser_Id(userReqLoginDTO.getUserId()));
+        return UserMapper.toUserResLoginDTO(getUserById(userReqLoginDTO.getUserId()));
     }
 
     /** 테스트를 위한 임시 자체 회원가입 **/
@@ -539,7 +539,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUser_Id(Long userId) {
+    public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(()->new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER));
     }
