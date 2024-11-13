@@ -22,16 +22,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
-    @ExceptionHandler(DatabaseNullOrEmptyException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(DatabaseNullOrEmptyException ex){
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        "MOD-001",
-                        ex.getMessage()),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
-    }
-
     @ExceptionHandler(MoodBuddyException.class)
     public ResponseEntity<ApiErrorResponse> handleDateRoadException(final MoodBuddyException e) {
         return ResponseEntity.status(e.getErrorCode().getStatus()).body(ApiErrorResponse.from(e));
