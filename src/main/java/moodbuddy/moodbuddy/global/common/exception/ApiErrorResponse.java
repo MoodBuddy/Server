@@ -3,16 +3,18 @@ package moodbuddy.moodbuddy.global.common.exception;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
-@Setter
 public class ApiErrorResponse {
     private String error;
     private String message;
+    private LocalDateTime timestamp;
 
-    public ApiErrorResponse(String error,String message) {
-        super();
+    public ApiErrorResponse(String error, String message) {
         this.error = error;
         this.message = message;
+        this.timestamp = LocalDateTime.now();
     }
 
     public static ApiErrorResponse from(MoodBuddyException e) {
