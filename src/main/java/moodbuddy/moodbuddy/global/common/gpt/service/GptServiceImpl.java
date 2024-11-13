@@ -102,7 +102,7 @@ public class GptServiceImpl implements GptService{
                 responseMap.put(key, jsonNode.path(key).asText());
             }
         } catch (Exception e) {
-            throw new ParsingContentException(ErrorCode.GPT_PARSE_ERROR, content);
+            throw new ParsingContentException(ErrorCode.GPT_PARSE_ERROR);
         }
         return responseMap;
     }

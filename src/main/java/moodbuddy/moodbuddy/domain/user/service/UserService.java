@@ -22,7 +22,7 @@ public interface UserService {
     UserResCalendarSummaryDTO summary(UserReqCalendarSummaryDTO calendarSummaryDTO);
 
     //월별 통계 보기
-    UserResStatisticsMonthDTO getMonthStatic(LocalDate month);
+    UserResStatisticsMonthDTO getMonthStatic(LocalDate month, final Long userId);
 
     //내 활동 _ 일기 횟수 조회 , 년 + 해당하는 월
     List<UserDiaryNumsDTO> getDiaryNums(LocalDate year);
