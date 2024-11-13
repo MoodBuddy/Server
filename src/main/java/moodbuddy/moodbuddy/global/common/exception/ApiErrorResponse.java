@@ -14,4 +14,8 @@ public class ApiErrorResponse {
         this.error = error;
         this.message = message;
     }
+
+    public static ApiErrorResponse from(MoodBuddyException e) {
+        return new ApiErrorResponse(e.getErrorCode().getErrorCode(), e.getErrorCode().getMessage());
+    }
 }
