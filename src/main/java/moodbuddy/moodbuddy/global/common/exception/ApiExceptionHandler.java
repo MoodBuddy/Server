@@ -32,146 +32,151 @@ public class ApiExceptionHandler {
         );
     }
 
-    @ExceptionHandler(UserNotFoundByUserIdException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(UserNotFoundByUserIdException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(new ApiErrorResponse(
-                errorCode.getErrorCode(),
-                ex.getMessage() + " userId : " + ex.getUserId())
-                , HttpStatusCode.valueOf(errorCode.getStatus()));
+    @ExceptionHandler(MoodBuddyException.class)
+    public ResponseEntity<ApiErrorResponse> handleDateRoadException(final MoodBuddyException e) {
+        return ResponseEntity.status(e.getErrorCode().getStatus()).body(ApiErrorResponse.from(e));
     }
 
-    @ExceptionHandler(DiaryTodayExistingException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(DiaryTodayExistingException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        errorCode.getMessage()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(DiaryNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(DiaryNotFoundException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        errorCode.getMessage()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-    @ExceptionHandler(DiaryNoAccessException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(DiaryNoAccessException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        errorCode.getMessage()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(BookMarkNotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(BookMarkNotFoundException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        errorCode.getMessage()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(QuddyTINotFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(QuddyTINotFoundException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        errorCode.getMessage()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(DiaryInsufficientException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(DiaryInsufficientException ex) {
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        errorCode.getMessage()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-
-    @ExceptionHandler(LetterNotFoundByIdException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(LetterNotFoundByIdException ex){
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        ex.getMessage() + " letterId : " + ex.getLetterId()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(LetterNotFoundByIdAndUserIdException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(LetterNotFoundByIdAndUserIdException ex){
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        ex.getMessage() + " letterId : " + ex.getLetterId() + " userId : " + ex.getUserId()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(LetterNumsException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(LetterNumsException ex){
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        ex.getMessage() + " userId : " + ex.getUserId()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(ProfileImageNotFoundByUserIdException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(ProfileImageNotFoundByUserIdException ex){
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        ex.getMessage() + " userId : " + ex.getUserId()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(ProfileNotFoundByUserIdException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(ProfileNotFoundByUserIdException ex){
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        ex.getMessage() + "  userId : " + ex.getUserId()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
-
-    @ExceptionHandler(ParsingContentException.class)
-    public ResponseEntity<ApiErrorResponse> handleException(ParsingContentException ex){
-        ErrorCode errorCode = ex.getErrorCode();
-        return new ResponseEntity<>(
-                new ApiErrorResponse(
-                        errorCode.getErrorCode(),
-                        ex.getMessage() + " content : " + ex.getContent()),
-                HttpStatus.valueOf(errorCode.getStatus())
-        );
-    }
+//    @ExceptionHandler(UserNotFoundByUserIdException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(UserNotFoundByUserIdException ex) {
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(new ApiErrorResponse(
+//                errorCode.getErrorCode(),
+//                ex.getMessage() + " userId : " + ex.getUserId())
+//                , HttpStatusCode.valueOf(errorCode.getStatus()));
+//    }
+//
+//    @ExceptionHandler(DiaryTodayExistingException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(DiaryTodayExistingException ex) {
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        errorCode.getMessage()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(DiaryNotFoundException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(DiaryNotFoundException ex) {
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        errorCode.getMessage()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//    @ExceptionHandler(DiaryNoAccessException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(DiaryNoAccessException ex) {
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        errorCode.getMessage()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(BookMarkNotFoundException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(BookMarkNotFoundException ex) {
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        errorCode.getMessage()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(QuddyTINotFoundException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(QuddyTINotFoundException ex) {
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        errorCode.getMessage()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(DiaryInsufficientException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(DiaryInsufficientException ex) {
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        errorCode.getMessage()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//
+//    @ExceptionHandler(LetterNotFoundByIdException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(LetterNotFoundByIdException ex){
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        ex.getMessage() + " letterId : " + ex.getLetterId()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(LetterNotFoundByIdAndUserIdException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(LetterNotFoundByIdAndUserIdException ex){
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        ex.getMessage() + " letterId : " + ex.getLetterId() + " userId : " + ex.getUserId()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(LetterNumsException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(LetterNumsException ex){
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        ex.getMessage() + " userId : " + ex.getUserId()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(ProfileImageNotFoundByUserIdException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(ProfileImageNotFoundByUserIdException ex){
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        ex.getMessage() + " userId : " + ex.getUserId()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(ProfileNotFoundByUserIdException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(ProfileNotFoundByUserIdException ex){
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        ex.getMessage() + "  userId : " + ex.getUserId()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
+//
+//    @ExceptionHandler(ParsingContentException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(ParsingContentException ex){
+//        ErrorCode errorCode = ex.getErrorCode();
+//        return new ResponseEntity<>(
+//                new ApiErrorResponse(
+//                        errorCode.getErrorCode(),
+//                        ex.getMessage() + " content : " + ex.getContent()),
+//                HttpStatus.valueOf(errorCode.getStatus())
+//        );
+//    }
 }
 
 
