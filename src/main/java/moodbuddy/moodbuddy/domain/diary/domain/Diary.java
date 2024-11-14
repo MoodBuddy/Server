@@ -1,7 +1,8 @@
-package moodbuddy.moodbuddy.domain.diary.domain.base;
+package moodbuddy.moodbuddy.domain.diary.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import moodbuddy.moodbuddy.domain.diary.domain.type.*;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;

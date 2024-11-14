@@ -2,7 +2,7 @@ package moodbuddy.moodbuddy.domain.diary.facade.find;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.service.find.DiaryFindService;

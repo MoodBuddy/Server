@@ -1,7 +1,7 @@
-package moodbuddy.moodbuddy.domain.diary.repository.base;
+package moodbuddy.moodbuddy.domain.diary.repository;
 
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

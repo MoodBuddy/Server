@@ -1,7 +1,8 @@
 package moodbuddy.moodbuddy.domain.diary.mapper;
 
 import moodbuddy.moodbuddy.domain.diary.dto.response.*;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindOneDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

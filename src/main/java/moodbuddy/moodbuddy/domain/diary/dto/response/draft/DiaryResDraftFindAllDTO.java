@@ -1,6 +1,7 @@
-package moodbuddy.moodbuddy.domain.diary.dto.response;
+package moodbuddy.moodbuddy.domain.diary.dto.response.draft;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.List;
 
 public record DiaryResDraftFindAllDTO (

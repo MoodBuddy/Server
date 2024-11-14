@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResEmotionDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.emotion.DiaryResEmotionDTO;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

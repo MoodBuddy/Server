@@ -1,17 +1,16 @@
-package moodbuddy.moodbuddy.domain.diary.facade.base;
+package moodbuddy.moodbuddy.domain.diary.facade;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqDraftSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindAllDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindAllDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
-import moodbuddy.moodbuddy.domain.diary.service.base.DiaryService;
+import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
@@ -19,7 +18,6 @@ import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -79,27 +77,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
         Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryDocumentService.save(diary);
         return diaryMapper.toResDetailDTO(diary);
-    }
-
-    @Override
-    @Transactional
-    public DiaryResDetailDTO saveDraftDiary(DiaryReqSaveDTO requestDTO) {
-        final Long userId = JwtUtil.getUserId();
-        Diary diary = diaryService.draftSave(requestDTO, userId);
-        return diaryMapper.toResDetailDTO(diary);
-    }
-
-    @Override
-    public DiaryResDraftFindAllDTO draftFindAll() {
-        final Long userId = JwtUtil.getUserId();
-        return diaryService.draftFindAll(userId);
-    }
-
-    @Override
-    @Transactional
-    public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO) {
-        final Long userId = JwtUtil.getUserId();
-        diaryService.draftSelectDelete(requestDTO, userId);
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
