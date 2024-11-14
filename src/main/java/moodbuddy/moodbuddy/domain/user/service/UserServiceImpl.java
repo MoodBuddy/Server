@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService{
 
             List<UserResCalendarMonthDTO> diaryResCalendarMonthDTOList = monthlyDiaryList.stream()
                     .map(diary -> UserResCalendarMonthDTO.builder()
-                            .diaryId(diary.getId())
+                            .diaryId(diary.getDiaryId())
                             .diaryDate(diary.getDiaryDate())
                             .diaryEmotion(diary.getDiaryEmotion())
                             .build())
@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService{
 
             // summaryDiary가 존재하면 그에 맞게 DTO를 build하여 반환하고, 그렇지 않으면 빈 DTO를 반환한다.
             return summaryDiary.map(diary -> UserResCalendarSummaryDTO.builder()
-                            .diaryId(diary.getId())
+                            .diaryId(diary.getDiaryId())
                             .diaryTitle(diary.getDiaryTitle())
                             .diarySummary(diary.getDiarySummary())
                             .build())

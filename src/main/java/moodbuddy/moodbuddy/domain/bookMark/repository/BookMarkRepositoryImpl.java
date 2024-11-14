@@ -25,7 +25,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     @Override
     public Page<DiaryResDetailDTO> bookMarkFindAllWithPageable(Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
-                .join(bookMark).on(diary.id.eq(bookMark.diary.id))
+                .join(bookMark).on(diary.diaryId.eq(bookMark.diary.diaryId))
                 .where(bookMark.userId.eq(userId)
                         .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)))
                 .orderBy(pageable.getSort().stream()
@@ -41,11 +41,11 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
         List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
-                    .where(diaryImage.diary.id.eq(d.getId()))
+                    .where(diaryImage.diary.diaryId.eq(d.getDiaryId()))
                     .fetch();
 
             return DiaryResDetailDTO.builder()
-                    .diaryId(d.getId())
+                    .diaryId(d.getDiaryId())
                     .userId(d.getUserId())
                     .diaryTitle(d.getDiaryTitle())
                     .diaryDate(d.getDiaryDate())
@@ -63,7 +63,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
         }).collect(Collectors.toList());
 
         long total = queryFactory.selectFrom(diary)
-                .join(bookMark).on(diary.id.eq(bookMark.diary.id))
+                .join(bookMark).on(diary.diaryId.eq(bookMark.diary.diaryId))
                 .where(bookMark.userId.eq(userId))
                 .fetchCount();
 
