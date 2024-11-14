@@ -25,7 +25,8 @@ public class DiaryApiController {
     @Operation(summary = "일기 작성", description = "새로운 일기를 작성합니다.")
     public ResponseEntity<DiaryResDetailDTO> save(@Parameter(description = "일기 정보를 담고 있는 DTO")
                                                       @RequestBody DiaryReqSaveDTO requestDTO) {
-        return ResponseEntity.ok().body(diaryFacade.saveDiary(requestDTO));
+        DiaryResDetailDTO res = diaryFacade.saveDiary(requestDTO);
+        return ResponseEntity.ok().body(res);
     }
 
     /** 구현 완료 **/
