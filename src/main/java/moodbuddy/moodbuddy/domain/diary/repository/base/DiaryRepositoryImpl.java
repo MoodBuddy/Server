@@ -15,6 +15,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindAllDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,7 +47,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.DRAFT)))
+                        .and(diary.diaryStatus.eq(DiaryStatus.DRAFT).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .fetch()
                 .stream()
                 .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.userId(), d.diaryDate(), d.diaryStatus()))
@@ -74,7 +75,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         diary.moodBuddyStatus
                 ))
                 .from(diary)
-                .where(diary.diaryId.eq(diaryId))
+                .where(diary.diaryId.eq(diaryId).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
 
         List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
@@ -91,7 +92,9 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     public Page<DiaryResDetailDTO> findAllByUserIdWithPageable(Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)))
+                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)
+                ))
                 .orderBy(pageable.getSort().stream()
                         .map(order -> new OrderSpecifier(
                                 order.isAscending() ? Order.ASC : Order.DESC,
@@ -137,7 +140,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     @Override
     public Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
-                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId)))
+                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -222,7 +225,8 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
 
         Map<Long, List<String>> diaryImagesMap = queryFactory
                 .selectFrom(diaryImage)
-                .where(diaryImage.diary.diaryId.in(diaryIds))
+                .where(diaryImage.diary.diaryId.in(diaryIds)
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch()
                 .stream()
                 .collect(Collectors.groupingBy(
