@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,8 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
         List<Diary> diaries = queryFactory.selectFrom(diary)
                 .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
                 .where(bookMark.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)))
+                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .orderBy(pageable.getSort().stream()
                         .map(order -> new OrderSpecifier(
                                 order.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC,
