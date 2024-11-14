@@ -96,9 +96,10 @@ public class DiaryFacadeImpl implements DiaryFacade {
     }
 
     @Override
+    @Transactional
     public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        List<Diary> diaries = diaryService.draftSelectDelete(requestDTO, userId);
+        diaryService.draftSelectDelete(requestDTO, userId);
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {

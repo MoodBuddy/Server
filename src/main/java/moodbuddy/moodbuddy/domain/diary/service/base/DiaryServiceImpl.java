@@ -77,12 +77,10 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public List<Diary> draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, final Long userId) {
-        List<Diary> diaries = diaryRepository.findAllById(requestDTO.diaryIdList());
-        for (Diary diary : diaries) {
-            diary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
+    public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, final Long userId) {
+        for (int i=0; i<requestDTO.diaryIdList().size(); i++) {
+            getDiaryById(requestDTO.diaryIdList().get(i)).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         }
-        return diaries;
     }
 
     @Override

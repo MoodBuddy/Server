@@ -38,7 +38,7 @@ public class DiaryApiController {
     }
 
     /** 구현 완료 **/
-    @DeleteMapping("/delete/{diaryId}")
+    @PostMapping("/delete/{diaryId}")
     @Operation(summary = "일기 삭제", description = "기존 일기를 삭제합니다.")
     public ResponseEntity<?> delete(@Parameter(description = "일기 고유 식별자")
                                         @PathVariable("diaryId") Long diaryId) {
@@ -62,7 +62,7 @@ public class DiaryApiController {
     }
 
     /** 구현 완료 **/
-    @DeleteMapping("/draftSelectDelete")
+    @PostMapping("/draftSelectDelete")
     @Operation(summary = "임시 저장 일기 선택 삭제", description = "임시 저장 일기를 선택해서 삭제합니다.")
     public ResponseEntity<?> draftSelectDelete(@Parameter(description = "삭제할 임시 저장 일기 고유 식별자를 담고 있는 DTO")
                                                    @RequestBody DiaryReqDraftSelectDeleteDTO requestDTO) {
