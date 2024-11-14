@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-14T14:02:21+0900",
+    date = "2024-11-14T14:19:25+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.13 (Homebrew)"
 )
 @Component
@@ -27,6 +27,7 @@ public class DiaryMapperImpl implements DiaryMapper {
         DiaryResDetailDTO.DiaryResDetailDTOBuilder diaryResDetailDTO = DiaryResDetailDTO.builder();
 
         diaryResDetailDTO.diaryId( diary.getDiaryId() );
+        diaryResDetailDTO.moodBuddyStatus( diary.getMoodBuddyStatus() );
         diaryResDetailDTO.userId( diary.getUserId() );
         diaryResDetailDTO.diaryTitle( diary.getDiaryTitle() );
         diaryResDetailDTO.diaryDate( diary.getDiaryDate() );

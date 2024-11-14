@@ -22,10 +22,6 @@ public record DiaryReqUpdateDTO (
         DiaryWeather diaryWeather,
         @Schema(description = "수정할 일기 상태(DRAFT, PUBLISHED)", example = "DRAFT")
         DiaryStatus diaryStatus,
-        @Schema(description = "수정할 일기 이미지 List", example = "[\"image1.png\", \"image2.png\"]")
-        List<MultipartFile> diaryImgList,
-        @Schema(description = "유지할 일기 이미지 List", example = "[\"이미지 URL\", \"이미지 URL\"]")
-        List<String> existingDiaryImgList,
         @Schema(description = "일기 폰트", example = "INTER")
         DiaryFont diaryFont,
         @Schema(description = "일기 폰트 사이즈", example = "PX30")

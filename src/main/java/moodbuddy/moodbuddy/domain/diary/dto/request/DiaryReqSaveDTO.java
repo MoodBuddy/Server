@@ -18,8 +18,6 @@ public record DiaryReqSaveDTO (
         String diaryContent,
         @Schema(description = "일기 날씨(CLEAR, CLOUDY, RAIN, SNOW)", example = "CLEAR")
         DiaryWeather diaryWeather,
-        @Schema(description = "일기 이미지 List", example = "[\"image1.png\", \"image2.png\"]")
-        List<MultipartFile> diaryImgList,
         @Schema(description = "일기 폰트", example = "INTER")
         DiaryFont diaryFont,
         @Schema(description = "일기 폰트 사이즈", example = "PX30")
