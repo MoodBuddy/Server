@@ -33,7 +33,6 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public Diary save(DiaryReqSaveDTO requestDTO, Map<String, String> gptResults, final Long userId) {
-        validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryRepository.save(Diary.ofPublished(
                 requestDTO,
                 userId,

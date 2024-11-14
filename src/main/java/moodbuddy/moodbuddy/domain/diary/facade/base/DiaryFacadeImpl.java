@@ -37,6 +37,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     @Transactional
     public DiaryResDetailDTO saveDiary(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
+        diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
