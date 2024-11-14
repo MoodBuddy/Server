@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
-import moodbuddy.moodbuddy.domain.user.facade.UserFacade;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,9 +19,10 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v2/member")
+@RequestMapping("/api/v1/member")
 @Slf4j
 public class UserApiController {
+
     private final UserService userService;
 
     @GetMapping("/main")
@@ -35,7 +35,8 @@ public class UserApiController {
     @Operation(summary = "캘린더 달 이동", description = "캘린더의 달을 이동시킵니다.")
     public ResponseEntity<?> monthlyCalendar(
             @Parameter(description = "캘린더에서 이동할 년, 월을 담고 있는 DTO")
-            @RequestBody UserReqCalendarMonthDTO calendarMonthDTO) {
+            @RequestBody UserReqCalendarMonthDTO calendarMonthDTO
+    ){
         return ResponseEntity.ok(userService.monthlyCalendar(calendarMonthDTO));
     }
 
@@ -43,16 +44,19 @@ public class UserApiController {
     @Operation(summary = "일기 한 줄 요약", description = "사용자가 선택한 날짜의 일기를 한 줄 요약한 결과를 보여줍니다.")
     public ResponseEntity<?> summary(
             @Parameter(description = "사용자가 선택한 날짜를 담고 있는 DTO")
-            @RequestBody UserReqCalendarSummaryDTO calendarSummaryDTO) {
+            @RequestBody UserReqCalendarSummaryDTO calendarSummaryDTO
+    ){
         return ResponseEntity.ok(userService.summary(calendarSummaryDTO));
     }
 
     //월별 통계 보기
     @GetMapping("/main/month-static")
     @Operation(summary = "월별 통계 보기", description = "사용자가 선택한 월의 통계(감정 리스트, 짧은 한 마디) 를 보여줍니다.")
-    @Parameters(@Parameter(name="month", description = "YYYY-MM-DD 형식으로 입력하세요"))
-    public ResponseEntity<?> getMonthStatic(
-            @RequestParam("month") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate month) {
+    @Parameters({
+            @Parameter(name="month", description = "YYYY-MM-DD 형식으로 입력하세요"),
+    })
+    public ResponseEntity<?> getMonthStatic
+    (@RequestParam("month") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate month) {
         return ResponseEntity.ok(userService.getMonthStatic(month));
     }
 
@@ -61,7 +65,8 @@ public class UserApiController {
     @Operation(summary = "다음 달 나에게 짧은 한 마디")
     public ResponseEntity<?> monthComment(
             @Parameter(description = "월별 통계의 달과 한 마디를 받아오는 DTO")
-            @RequestBody UserReqMonthCommentDTO userReqMonthCommentDTO) {
+            @RequestBody UserReqMonthCommentDTO userReqMonthCommentDTO
+    ){
         return ResponseEntity.ok(userService.monthComment(userReqMonthCommentDTO));
     }
 
@@ -70,7 +75,8 @@ public class UserApiController {
     @Operation(summary = "다음 달 나에게 짧은 한 마디 수정")
     public ResponseEntity<?> monthCommentUpdate(
             @Parameter(description = "월별 통계의 달과 수정할 한 마디를 받아오는 DTO")
-            @RequestBody UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO) {
+            @RequestBody UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO
+    ){
         return ResponseEntity.ok(userService.monthCommentUpdate(userReqMonthCommentUpdateDTO));
     }
 
@@ -79,9 +85,11 @@ public class UserApiController {
     @GetMapping("/main/diary-nums")
     @Operation(summary = "현재까지 작성한 일기 횟수", description = "해당 년도의 월별로 작성한 일기 횟수를 보여줍니다.")
     @Parameters({
-            @Parameter(name="year", description = "YYYY-MM-DD 형식으로 입력하세요"),})
-    public ResponseEntity<?> getDiaryNums(
-            @RequestParam("year") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate year) {
+            @Parameter(name="year", description = "YYYY-MM-DD 형식으로 입력하세요"),
+    })
+    public ResponseEntity<?> getDiaryNums
+    (@RequestParam("year") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate year) {
+        List<UserDiaryNumsDTO> userDiaryNumsDTOS = userService.getDiaryNums(year);
         return ResponseEntity.ok(userService.getDiaryNums(year));
     }
 
@@ -92,27 +100,31 @@ public class UserApiController {
     @Parameters({
             @Parameter(name="month", description = "YYYY-MM 형식으로 입력하세요"),
     })
-    public ResponseEntity<?> getEmotionNums(
-            @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") LocalDate month) {
-        return ResponseEntity.ok(userService.getEmotionNums(month));
+    public ResponseEntity<?> getEmotionNums(@RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") LocalDate month)
+    {
+        List<UserEmotionStaticDTO> emotionNums = userService.getEmotionNums(month);
+        return ResponseEntity.ok(emotionNums);
     }
 
     //프로필 조회
     @GetMapping("/main/profile")
     @Operation(summary = "프로필 조회")
-    public ResponseEntity<?> getProfile() {
-        return ResponseEntity.ok(userService.getUserProfile());
+    public ResponseEntity<?> getProfile()
+    {
+        UserResProfileDTO profile = userService.getUserProfile();
+        return ResponseEntity.ok(profile);
     }
 
 
     //프로필 수정
     @PostMapping ("/main/profile-edit")
     @Operation(summary = "프로필 수정", description = "alarmTime(str) -> HH:mm 형식,birthday(str) -> YYYY-mm-dd 형식 ")
-    public ResponseEntity<?> updateProfile(
-            @ModelAttribute UserReqProfileUpdateDto updateDto) throws IOException {
+    public ResponseEntity<?> updateProfile(@ModelAttribute UserReqProfileUpdateDto updateDto) throws IOException
+    {
         Long kakaoId = JwtUtil.getUserId();
+        UserResProfileDTO updateProfile = userService.updateProfile(updateDto);
         userService.scheduleUserMessage(kakaoId);
-        return ResponseEntity.ok(userService.updateProfile(updateDto));
+        return ResponseEntity.ok(updateProfile);
     }
 
     /** 테스트를 위한 임시 자체 로그인 **/
@@ -120,7 +132,8 @@ public class UserApiController {
     @Operation(summary = "자체 로그인")
     public ResponseEntity<?> login(
             @Parameter(description = "자체 로그인 회원 정보를 받아오는 DTO")
-            @RequestBody UserReqLoginDTO userReqLoginDTO) {
+            @RequestBody UserReqLoginDTO userReqLoginDTO
+    ){
         return ResponseEntity.ok().body(userService.login(userReqLoginDTO));
     }
 

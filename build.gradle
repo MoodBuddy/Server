@@ -80,12 +80,8 @@ dependencies {
     // https://mvnrepository.com/artifact/net.coobird/thumbnailator
     implementation("net.coobird:thumbnailator:0.4.20")
 
-    // modelmapper
+    // mapper
     implementation 'org.modelmapper:modelmapper:2.4.4'
-
-    // mapstruct
-    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
     // WebClient
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.3.1'
@@ -103,9 +99,6 @@ dependencies {
 
     // actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-    // devtools
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
 tasks.named('test') {

@@ -2,8 +2,8 @@ package moodbuddy.moodbuddy.domain.quddyTI.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiarySubject;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
 import java.util.Map;

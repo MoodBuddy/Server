@@ -1,21 +1,22 @@
 package moodbuddy.moodbuddy.domain.bookMark.repository;
-
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
+import moodbuddy.moodbuddy.domain.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
 import static moodbuddy.moodbuddy.domain.bookMark.domain.QBookMark.bookMark;
-import static moodbuddy.moodbuddy.domain.diary.domain.base.QDiary.diary;
-import static moodbuddy.moodbuddy.domain.diary.domain.image.QDiaryImage.diaryImage;
+import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
+import static moodbuddy.moodbuddy.domain.diary.domain.QDiaryImage.diaryImage;
 
 public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -26,10 +27,9 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     @Override
     public Page<DiaryResDetailDTO> bookMarkFindAllWithPageable(Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
-                .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
+                .join(bookMark).on(diary.id.eq(bookMark.diary.id))
                 .where(bookMark.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
-                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)))
                 .orderBy(pageable.getSort().stream()
                         .map(order -> new OrderSpecifier(
                                 order.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC,
@@ -43,11 +43,11 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
         List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
-                    .where(diaryImage.diary.diaryId.eq(d.getDiaryId()))
+                    .where(diaryImage.diary.id.eq(d.getId()))
                     .fetch();
 
             return DiaryResDetailDTO.builder()
-                    .diaryId(d.getDiaryId())
+                    .diaryId(d.getId())
                     .userId(d.getUserId())
                     .diaryTitle(d.getDiaryTitle())
                     .diaryDate(d.getDiaryDate())
@@ -65,7 +65,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
         }).collect(Collectors.toList());
 
         long total = queryFactory.selectFrom(diary)
-                .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
+                .join(bookMark).on(diary.id.eq(bookMark.diary.id))
                 .where(bookMark.userId.eq(userId))
                 .fetchCount();
 

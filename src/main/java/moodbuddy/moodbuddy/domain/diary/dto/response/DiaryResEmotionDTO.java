@@ -1,13 +1,16 @@
 package moodbuddy.moodbuddy.domain.diary.dto.response;
 
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public record DiaryResEmotionDTO (
-        String diaryEmotion,
-        LocalDate diaryDate,
-        String diaryComment
-){
+@Getter
+@Setter
+public class DiaryResEmotionDTO {
+    private String emotion;
+    private LocalDate diaryDate;
+    private String comment;
 }

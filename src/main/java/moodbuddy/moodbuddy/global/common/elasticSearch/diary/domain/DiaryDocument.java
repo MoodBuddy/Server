@@ -1,9 +1,6 @@
 package moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain;
 
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -29,16 +26,16 @@ public class DiaryDocument {
     private String diaryContent;
 
     @Field(type = FieldType.Keyword)
-    private String diaryWeather;
+    private String diaryWeather; // DiaryWeather enum
 
     @Field(type = FieldType.Keyword)
-    private String diaryEmotion;
+    private String diaryEmotion; // DiaryEmotion enum
 
     @Field(type = FieldType.Keyword)
-    private String diaryStatus;
+    private String diaryStatus; // DiaryStatus enum
 
     @Field(type = FieldType.Keyword)
-    private String diarySubject;
+    private String diarySubject; // DiarySubject enum
 
     @Field(type = FieldType.Text)
     private String diarySummary;
@@ -50,32 +47,8 @@ public class DiaryDocument {
     private Boolean diaryBookMarkCheck;
 
     @Field(type = FieldType.Keyword)
-    private String diaryFont;
+    private String diaryFont; // DiaryFont enum
 
     @Field(type = FieldType.Keyword)
-    private String diaryFontSize;
-
-    @Field(type = FieldType.Keyword)
-    private MoodBuddyStatus moodBuddyStatus;
-
-    public static DiaryDocument from(Diary diary) {
-        return DiaryDocument.builder()
-                .diaryTitle(diary.getDiaryTitle())
-                .diaryDate(diary.getDiaryDate())
-                .diaryContent(diary.getDiaryContent().toString())
-                .diaryWeather(diary.getDiaryWeather().toString())
-                .diaryStatus(DiaryStatus.PUBLISHED.toString())
-                .diarySummary(diary.getDiarySummary())
-                .diarySubject(diary.getDiarySubject().toString())
-                .userId(diary.getUserId())
-                .diaryBookMarkCheck(false)
-                .diaryFont(diary.getDiaryFont().toString())
-                .diaryFontSize(diary.getDiaryFontSize().toString())
-                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
-                .build();
-    }
-
-    public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) {
-        this.moodBuddyStatus = moodBuddyStatus;
-    }
+    private String diaryFontSize; // DiaryFontSize enum
 }

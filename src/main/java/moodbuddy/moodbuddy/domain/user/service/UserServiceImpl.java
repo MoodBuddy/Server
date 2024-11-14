@@ -1,11 +1,11 @@
 package moodbuddy.moodbuddy.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.repository.base.DiaryRepository;
-import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
+import moodbuddy.moodbuddy.domain.diary.service.DiaryImageService;
 import moodbuddy.moodbuddy.domain.monthcomment.domain.MonthComment;
 import moodbuddy.moodbuddy.domain.monthcomment.repository.MonthCommentRepository;
 import moodbuddy.moodbuddy.domain.profile.domain.Profile;
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService{
     // 각 emotion의 횟수를 세는 메소드
     public Map<DiaryEmotion,Integer> emotionNum(List<Diary> diaryList){
         try{
-            // 각 Diary의 emotion을 통해 한 달의 diaryEmotion 횟수를 세기 위한 Map
+            // 각 Diary의 emotion을 통해 한 달의 emotion 횟수를 세기 위한 Map
             Map<DiaryEmotion,Integer> emotionNum = new HashMap<>();
             for(Diary d : diaryList){
                 // emotionNum에 현재 Diary의 key가 없다면, key의 value를 1로 설정
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService{
                 emotionNum.merge(d.getDiaryEmotion(), 1, Integer::sum);
             }
             log.info("emotionNum : "+emotionNum);
-            // diaryEmotion 개수 중 최댓값 찾기
+            // emotion 개수 중 최댓값 찾기
             return getMaxEmotion(emotionNum);
         } catch (Exception e){
             log.error("[UserService] emotionNum error",e);
@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    // diaryEmotion 횟수의 최댓값을 찾기 위한 메소드
+    // emotion 횟수의 최댓값을 찾기 위한 메소드
     public Map<DiaryEmotion, Integer> getMaxEmotion(Map<DiaryEmotion, Integer> emotionNum) {
         try{
             int maxValue = 0;
@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService{
 
             log.info("maxKey : "+maxKey);
             log.info("maxValue : "+maxValue);
-            // diaryEmotion 개수 중 최댓값의 emotion과 그 값을 저장할 Map
+            // emotion 개수 중 최댓값의 emotion과 그 값을 저장할 Map
             Map<DiaryEmotion,Integer> maxEmotion = new HashMap<>();
             if(maxKey != null){
                 maxEmotion.put(maxKey, maxValue);
@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService{
 
             List<UserResCalendarMonthDTO> diaryResCalendarMonthDTOList = monthlyDiaryList.stream()
                     .map(diary -> UserResCalendarMonthDTO.builder()
-                            .diaryId(diary.getDiaryId())
+                            .diaryId(diary.getId())
                             .diaryDate(diary.getDiaryDate())
                             .diaryEmotion(diary.getDiaryEmotion())
                             .build())
@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService{
 
             // summaryDiary가 존재하면 그에 맞게 DTO를 build하여 반환하고, 그렇지 않으면 빈 DTO를 반환한다.
             return summaryDiary.map(diary -> UserResCalendarSummaryDTO.builder()
-                            .diaryId(diary.getDiaryId())
+                            .diaryId(diary.getId())
                             .diaryTitle(diary.getDiaryTitle())
                             .diarySummary(diary.getDiarySummary())
                             .build())
@@ -214,36 +214,58 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    /** =========================================================  다연  ========================================================= **/
+
+    //해당하는 월에 유저 아이디로 diary_emotion 조회 -> 감정별로 group by or 불러와서 리스트 또는 hashmap 형태로 가공 (감정(key), 횟수(value))
     @Override
-    public void scheduleUserMessage(Long userId) {
-        try {
-            User user = userRepository.findByUserId(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-            String alarmTimeString = user.getAlarmTime();
-            LocalTime alarmTime = LocalTime.parse(alarmTimeString, DateTimeFormatter.ofPattern("HH:mm"));
-            LocalDateTime alarmDateTime = LocalDateTime.now().with(alarmTime);
+    @Transactional(readOnly = true)
+    public UserResStatisticsMonthDTO getMonthStatic(LocalDate month) {
 
-            if (alarmDateTime.isBefore(LocalDateTime.now())) {
-                alarmDateTime = alarmDateTime.plusDays(1);
+        Long userId = JwtUtil.getUserId();
+
+        int year = month.getYear();
+        int monthValue = month.getMonthValue();
+
+        List<Diary> diaries = diaryRepository.findDiaryEmotionByUserIdAndMonth(userId, year, monthValue);
+
+        // 감정별로 횟수를 세기 위한 Map 생성 및 초기화
+        Map<DiaryEmotion, Integer> emotionCountMap = new HashMap<>();
+
+        // 모든 가능한 감정에 대해 기본값 0 설정
+        for (DiaryEmotion emotion : DiaryEmotion.values()) {
+            emotionCountMap.put(emotion, 0);
+        }
+
+        // 일기 데이터를 이용하여 감정별로 횟수를 세기
+        for (Diary diary : diaries) {
+            DiaryEmotion emotion = diary.getDiaryEmotion();
+            if (emotion != null && emotionCountMap.containsKey(emotion)) {
+                emotionCountMap.put(emotion, emotionCountMap.get(emotion) + 1);
             }
-
-            long delay = Duration.between(LocalDateTime.now(), alarmDateTime).toMillis();
-
-            scheduledExecutorService.schedule(() -> {
-                sendUserMessage(user);
-                // 다음 날 동일 시간에 다시 스케줄링
-                scheduleUserMessage(userId);
-            }, delay, TimeUnit.MILLISECONDS);
-
-        } catch (Exception e) {
-            log.error("[UserService] scheduleUserMessage error", e);
         }
-    }
 
-    private void sendUserMessage(User user){
-        if (user.getLetterAlarm() && !user.getPhoneNumber().isEmpty()) {
-            smsService.sendMessage(user.getPhoneNumber(),"USER");
-        }
+        // LocalDate를 문자열로 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        String formattedMonth = month.format(formatter);
+
+        Optional<MonthComment> monthComment = monthCommentRepository.findCommentByUserIdAndMonth(userId, formattedMonth);
+
+        // Map을 UserEmotionStaticDTO 리스트로 변환하고 nums 값으로 내림차순 정렬
+        List<UserEmotionStaticDTO> userEmotionStaticDTOList = emotionCountMap.entrySet().stream()
+                .map(entry -> new UserEmotionStaticDTO(entry.getKey(), entry.getValue()))
+                .sorted((e1, e2) -> e2.getNums().compareTo(e1.getNums())) // nums 값으로 내림차순 정렬
+                .collect(Collectors.toList());
+
+        return monthComment.map(mc -> UserResStatisticsMonthDTO.builder()
+                        .userEmotionStaticDTOList(userEmotionStaticDTOList)
+                        .monthComment(mc.getCommentContent())
+                        .commentCheck(true)
+                        .build())
+                .orElse(UserResStatisticsMonthDTO.builder()
+                        .userEmotionStaticDTOList(userEmotionStaticDTOList)
+                        .monthComment(null)
+                        .commentCheck(false)
+                        .build());
     }
 
     @Override
@@ -292,57 +314,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    /** =========================================================  다연  ========================================================= **/
-
-    //해당하는 월에 유저 아이디로 diary_emotion 조회 -> 감정별로 group by or 불러와서 리스트 또는 hashmap 형태로 가공 (감정(key), 횟수(value))
-    @Override
-    @Transactional(readOnly = true)
-    public UserResStatisticsMonthDTO getMonthStatic(LocalDate month) {
-        final Long userId = JwtUtil.getUserId();
-        int year = month.getYear();
-        int monthValue = month.getMonthValue();
-
-        List<Diary> diaries = diaryRepository.findDiaryEmotionByUserIdAndMonth(userId, year, monthValue);
-
-        // 감정별로 횟수를 세기 위한 Map 생성 및 초기화
-        Map<DiaryEmotion, Integer> emotionCountMap = new HashMap<>();
-
-        // 모든 가능한 감정에 대해 기본값 0 설정
-        for (DiaryEmotion emotion : DiaryEmotion.values()) {
-            emotionCountMap.put(emotion, 0);
-        }
-
-        // 일기 데이터를 이용하여 감정별로 횟수를 세기
-        for (Diary diary : diaries) {
-            DiaryEmotion emotion = diary.getDiaryEmotion();
-            if (emotion != null && emotionCountMap.containsKey(emotion)) {
-                emotionCountMap.put(emotion, emotionCountMap.get(emotion) + 1);
-            }
-        }
-
-        // LocalDate를 문자열로 변환
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        String formattedMonth = month.format(formatter);
-
-        Optional<MonthComment> monthComment = monthCommentRepository.findCommentByUserIdAndMonth(userId, formattedMonth);
-
-        // Map을 UserEmotionStaticDTO 리스트로 변환하고 nums 값으로 내림차순 정렬
-        List<UserEmotionStaticDTO> userEmotionStaticDTOList = emotionCountMap.entrySet().stream()
-                .map(entry -> new UserEmotionStaticDTO(entry.getKey(), entry.getValue()))
-                .sorted((e1, e2) -> e2.getNums().compareTo(e1.getNums())) // nums 값으로 내림차순 정렬
-                .collect(Collectors.toList());
-
-        return monthComment.map(mc -> UserResStatisticsMonthDTO.builder()
-                        .userEmotionStaticDTOList(userEmotionStaticDTOList)
-                        .monthComment(mc.getCommentContent())
-                        .commentCheck(true)
-                        .build())
-                .orElse(UserResStatisticsMonthDTO.builder()
-                        .userEmotionStaticDTOList(userEmotionStaticDTOList)
-                        .monthComment(null)
-                        .commentCheck(false)
-                        .build());
-    }
 
     //일기 작성 횟수 조회
     //year parameter로 받아서 -> year에 해당하는 데이터 key,value <month, nums> 형태로 출력
@@ -404,6 +375,24 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserResProfileDTO getUserProfile() {
+        Long userId = JwtUtil.getUserId();
+
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER)
+        );
+        Profile profile = profileRepository.findByUserId(userId).orElseThrow(
+                () -> new ProfileNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE)
+        );
+        ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
+                () -> new ProfileImageNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE_IMAGE)
+        );
+
+        return createUserResProfileDTO(user, profile, profileImage);
+    }
+
     //프로필 이미지 -> s3 사용
     //프로필 이미지 s3에 저장 -> url setter로 변경
     @Override
@@ -412,13 +401,13 @@ public class UserServiceImpl implements UserService{
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER)
+                () -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER)
         );
         Profile profile = profileRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE)
+                () -> new ProfileNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE)
         );
         ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileImageNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE_IMAGE)
+                () -> new ProfileImageNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE_IMAGE)
         );
 
         profile.setProfileComment(dto.getProfileComment());
@@ -455,22 +444,37 @@ public class UserServiceImpl implements UserService{
                 .build();
     }
 
+
     @Override
-    @Transactional(readOnly = true)
-    public UserResProfileDTO getUserProfile() {
-        Long userId = JwtUtil.getUserId();
+    public void scheduleUserMessage(Long userId) {
+        try {
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+            String alarmTimeString = user.getAlarmTime();
+            LocalTime alarmTime = LocalTime.parse(alarmTimeString, DateTimeFormatter.ofPattern("HH:mm"));
+            LocalDateTime alarmDateTime = LocalDateTime.now().with(alarmTime);
 
-        User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER)
-        );
-        Profile profile = profileRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE)
-        );
-        ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileImageNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE_IMAGE)
-        );
+            if (alarmDateTime.isBefore(LocalDateTime.now())) {
+                alarmDateTime = alarmDateTime.plusDays(1);
+            }
 
-        return createUserResProfileDTO(user, profile, profileImage);
+            long delay = Duration.between(LocalDateTime.now(), alarmDateTime).toMillis();
+
+            scheduledExecutorService.schedule(() -> {
+                sendUserMessage(user);
+                // 다음 날 동일 시간에 다시 스케줄링
+                scheduleUserMessage(userId);
+            }, delay, TimeUnit.MILLISECONDS);
+
+        } catch (Exception e) {
+            log.error("[UserService] scheduleUserMessage error", e);
+        }
+    }
+
+    private void sendUserMessage(User user){
+        if (user.getLetterAlarm() && !user.getPhoneNumber().isEmpty()) {
+            smsService.sendMessage(user.getPhoneNumber(),"USER");
+        }
     }
 
     @Override
@@ -492,7 +496,7 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void changeCount(Long userId, boolean increment) {
         try {
-            User user = getUserById(userId);
+            User user = getUser_Id(userId);
 
             if (!increment) {
                 user.plusUserNumCount();
@@ -511,20 +515,20 @@ public class UserServiceImpl implements UserService{
         Long userId = JwtUtil.getUserId();
         return UserResCheckTodayDiaryDTO.builder()
                 .userId(userId)
-                .checkTodayDairy(getUserById(userId).getCheckTodayDairy())
+                .checkTodayDairy(getUser_Id(userId).getCheckTodayDairy())
                 .build();
     }
 
     @Override
     public void setUserCheckTodayDairy(Long userId, Boolean check) {
-        User findUser = getUserById(userId);
+        User findUser = getUser_Id(userId);
         findUser.setCheckTodayDiary(check);
     }
 
     /** 테스트를 위한 임시 자체 로그인 **/
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
-        return UserMapper.toUserResLoginDTO(getUserById(userReqLoginDTO.getUserId()));
+        return UserMapper.toUserResLoginDTO(getUser_Id(userReqLoginDTO.getUserId()));
     }
 
     /** 테스트를 위한 임시 자체 회원가입 **/
@@ -535,8 +539,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserById(Long userId) {
+    public User getUser_Id(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(()->new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER));
+                .orElseThrow(()->new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER));
     }
 }

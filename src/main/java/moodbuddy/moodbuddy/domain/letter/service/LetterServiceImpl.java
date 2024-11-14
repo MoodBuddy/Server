@@ -65,7 +65,7 @@ public class LetterServiceImpl implements LetterService {
 
     private Profile getProfileByUserId(Long userId){
         return profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE));
+                .orElseThrow(() -> new ProfileNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_PROFILE));
     }
 
     private String getProfileImageUrlByUserId(Long userId){
@@ -161,7 +161,7 @@ public class LetterServiceImpl implements LetterService {
     private void validateUserLetterAvailability(User user){
         log.info("user.getUserLetterNums() : "+user.getUserLetterNums());
         if (user.getUserLetterNums() == null || user.getUserLetterNums() <= MIN_LETTER_NUMS) {
-            throw new LetterNumsException(ErrorCode.INVALID_LETTER_NUMS); // 편지지가 없을 경우 예외 처리
+            throw new LetterNumsException(user.getUserId(), ErrorCode.INVALID_LETTER_NUMS); // 편지지가 없을 경우 예외 처리
         }
     }
 
@@ -222,7 +222,7 @@ public class LetterServiceImpl implements LetterService {
 
     private Letter getLetterById(Long letterId){
         return letterRepository.findById(letterId)
-                .orElseThrow(()->new LetterNotFoundByIdException(ErrorCode.LETTER_NOT_FOUND_BY_ID));
+                .orElseThrow(()->new LetterNotFoundByIdException(letterId, ErrorCode.LETTER_NOT_FOUND_BY_ID));
     }
 
     private GPTResponseDTO getGPTResponseDto(Letter letter){
@@ -268,12 +268,12 @@ public class LetterServiceImpl implements LetterService {
 
     private User getUserByUserId(Long userId){
         return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER));
+                .orElseThrow(() -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER));
     }
 
     private Letter getLetterByIdAndUserId(Long letterId, Long userId){
         return letterRepository.findByIdAndUserId(letterId, userId)
-                .orElseThrow(() -> new LetterNotFoundByIdAndUserIdException(ErrorCode.LETTER_NOT_FOUND_BY_ID_AND_USER_ID));
+                .orElseThrow(() -> new LetterNotFoundByIdAndUserIdException(letterId ,userId , ErrorCode.LETTER_NOT_FOUND_BY_ID_AND_USER_ID));
     }
 
     private LetterResDetailsDTO getLetterResDetailsDtoForLetterDetails(User user, Letter letter){
@@ -289,7 +289,7 @@ public class LetterServiceImpl implements LetterService {
 
     private User getUserByUserIdWithPessimisticLock(Long userId){
         return userRepository.findByUserIdWithPessimisticLock(userId).orElseThrow(
-                () -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER)
+                () -> new UserNotFoundByUserIdException(userId, ErrorCode.NOT_FOUND_USER)
         );
     }
 

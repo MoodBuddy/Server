@@ -3,13 +3,15 @@ package moodbuddy.moodbuddy.global.common.gpt.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResEmotionDTO;
-import moodbuddy.moodbuddy.domain.diary.repository.base.DiaryRepository;
+import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
+import moodbuddy.moodbuddy.global.common.exception.database.DatabaseNullOrEmptyException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.gpt.ParsingContentException;
+import moodbuddy.moodbuddy.global.common.gpt.dto.GPTMessageDTO;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTRequestDTO;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;
@@ -43,7 +46,7 @@ public class GptServiceImpl implements GptService{
     // 일기 감정 + 감정 한 마디 프롬프트
     private static final String EMOTION_ANALYSIS_PROMPT = " 이 일기 내용을 분석하여, 일기에서 느껴지는 감정을 \"HAPPINESS\", \"ANGER\", \"DISGUST\", \"FEAR\", \"NEUTRAL\", \"SADNESS\", \"SURPRISE\" 중에서 골라줘. " +
             " 그리고 이 감정에 따른 한 줄 코멘트를 남겨줘. 글자 수는 20자로 제한하며, 꼭 한 줄로 작성해 줘." +
-            " 마지막으로, 두 가지 응답을 다른 설명 없이 다음 형식으로 반환해 줘: { \"diaryEmotion\": \"감정 값\", \"diaryComment\": \"한 줄 코멘트\" }.";
+            " 마지막으로, 두 가지 응답을 다른 설명 없이 다음 형식으로 반환해 줘: { \"emotion\": \"감정 값\", \"comment\": \"한 줄 코멘트\" }.";
     // 따뜻한 위로의 쿼디 답변 프롬프트
     private static final String GENTLE_LETTER_ANSWER_PROMPT = " 이 내용에 대해 편한 친구같은 느낌으로 따뜻한 위로의 답변을 해줘. 이 때 답변을 너무 건방지지 않고 부드럽게, 친구같이 편한 반말로 해줘";
     // 따끔한 해결의 쿼디 답변 프롬프트
@@ -67,16 +70,16 @@ public class GptServiceImpl implements GptService{
         Diary diary = diaryRepository.findDiarySummaryById(JwtUtil.getUserId())
                 .orElseThrow(() -> new DiaryNotFoundException(ErrorCode.NOT_FOUND_DIARY));
 
-        List<String> keys = List.of("diaryEmotion", "diaryComment");
+        List<String> keys = List.of("emotion", "comment");
         Map<String, String> responseMap = getGPTResponseMap(new GPTRequestDTO(model, diary.getDiaryContent() + EMOTION_ANALYSIS_PROMPT), keys);
 
-        diary.updateDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("diaryEmotion")));
+        diary.setDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("emotion")));
         diaryRepository.save(diary);
 
         return DiaryResEmotionDTO.builder()
-                .diaryEmotion(responseMap.get("diaryEmotion"))
+                .emotion(responseMap.get("emotion"))
                 .diaryDate(diary.getDiaryDate())
-                .diaryComment(responseMap.get("diaryComment"))
+                .comment(responseMap.get("comment"))
                 .build();
     }
 
@@ -102,7 +105,7 @@ public class GptServiceImpl implements GptService{
                 responseMap.put(key, jsonNode.path(key).asText());
             }
         } catch (Exception e) {
-            throw new ParsingContentException(ErrorCode.GPT_PARSE_ERROR);
+            throw new ParsingContentException(ErrorCode.GPT_PARSE_ERROR, content);
         }
         return responseMap;
     }
