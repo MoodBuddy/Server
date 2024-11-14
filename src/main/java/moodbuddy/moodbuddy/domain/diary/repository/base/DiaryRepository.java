@@ -2,6 +2,7 @@ package moodbuddy.moodbuddy.domain.diary.repository.base;
 
 import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,21 +12,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryRepositoryCustom {
+    Optional<Diary> findByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
+    List<Diary> findAllByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
+    Optional<Diary> findByDiaryIdAndMoodBuddyStatus(Long diaryId, MoodBuddyStatus moodBuddyStatus);
+
+
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId AND DATE_FORMAT(diary_date, '%Y-%m') = :month AND diary_status = :status", nativeQuery = true)
     List<Diary> findByUserIdAndMonthAndDiaryStatus(@Param("userId") Long userId, @Param("month") String month, @Param("status") String status); // nativeQuery 이므로 status를 enum 값으로 넘겨주면 안된다.
 
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId AND DATE_FORMAT(diary_date, '%Y-%m-%d') = :day AND diary_status = :status", nativeQuery = true)
     Optional<Diary> findByUserIdAndDayAndDiaryStatus(@Param("userId") Long userId, @Param("day") String day, @Param("status") String status); // nativeQuery 이므로 status를 enum 값으로 넘겨주면 안된다.
 
-    // diaryId 기반으로 삭제하기
-    List<Diary> findAllById(Iterable<Long> ids);
-
     //사용자가 제일 최근에 쓴 일기 요약본 출력
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId ORDER BY diary_date DESC LIMIT 1", nativeQuery = true)
     Optional<Diary> findDiarySummaryById(@Param("userId") Long userId);
-
-    Optional<Diary> findByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
-    List<Diary> findAllByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
 
     @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND YEAR(d.diaryDate) = :year AND MONTH(d.diaryDate) = :month")
     List<Diary> findDiaryEmotionByUserIdAndMonth(@Param("userId") Long userId, @Param("year") int year, @Param("month") int month);

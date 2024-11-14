@@ -15,6 +15,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindAllDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,19 +40,17 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     public DiaryResDraftFindAllDTO draftFindAllByUserId(Long userId) {
         List<DiaryResDraftFindOneDTO> draftList = queryFactory
                 .select(Projections.constructor(DiaryResDraftFindOneDTO.class,
-                        diary.id,
+                        diary.diaryId,
                         diary.userId,
                         diary.diaryDate,
-                        diary.diaryStatus,
-                        diary.diaryFont,
-                        diary.diaryFontSize
+                        diary.diaryStatus
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.DRAFT)))
+                        .and(diary.diaryStatus.eq(DiaryStatus.DRAFT).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .fetch()
                 .stream()
-                .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.userId(), d.diaryDate(), d.diaryStatus(), d.diaryFont(), d.diaryFontSize()))
+                .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.userId(), d.diaryDate(), d.diaryStatus()))
                 .collect(Collectors.toList());
 
         return new DiaryResDraftFindAllDTO(draftList);
@@ -60,7 +59,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     @Override
     public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
         DiaryResDetailDTO diaryResDetailDTO = queryFactory.select(Projections.constructor(DiaryResDetailDTO.class,
-                        diary.id,
+                        diary.diaryId,
                         diary.userId,
                         diary.diaryTitle,
                         diary.diaryDate,
@@ -72,15 +71,16 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         diary.diarySubject,
                         diary.diaryBookMarkCheck,
                         diary.diaryFont,
-                        diary.diaryFontSize
+                        diary.diaryFontSize,
+                        diary.moodBuddyStatus
                 ))
                 .from(diary)
-                .where(diary.id.eq(diaryId))
+                .where(diary.diaryId.eq(diaryId).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
 
         List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                 .from(diaryImage)
-                .where(diaryImage.diary.id.eq(diaryId))
+                .where(diaryImage.diary.diaryId.eq(diaryId))
                 .fetch();
 
         diaryResDetailDTO.setDiaryImgList(diaryImgList);
@@ -92,7 +92,9 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     public Page<DiaryResDetailDTO> findAllByUserIdWithPageable(Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)))
+                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)
+                ))
                 .orderBy(pageable.getSort().stream()
                         .map(order -> new OrderSpecifier(
                                 order.isAscending() ? Order.ASC : Order.DESC,
@@ -106,11 +108,11 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
         List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
-                    .where(diaryImage.diary.id.eq(d.getId()))
+                    .where(diaryImage.diary.diaryId.eq(d.getDiaryId()))
                     .fetch();
 
             return DiaryResDetailDTO.builder()
-                    .diaryId(d.getId())
+                    .diaryId(d.getDiaryId())
                     .diaryTitle(d.getDiaryTitle())
                     .diaryDate(d.getDiaryDate())
                     .diaryContent(d.getDiaryContent())
@@ -124,6 +126,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                     .diaryBookMarkCheck(d.getDiaryBookMarkCheck())
                     .diaryFont(d.getDiaryFont())
                     .diaryFontSize(d.getDiaryFontSize())
+                    .moodBuddyStatus(d.getMoodBuddyStatus())
                     .build();
         }).collect(Collectors.toList());
 
@@ -137,23 +140,23 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     @Override
     public Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
-                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId)))
+                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         Map<Long, List<String>> diaryImages = queryFactory.selectFrom(diaryImage)
-                .where(diaryImage.diary.id.in(diaries.stream().map(Diary::getId).collect(Collectors.toList())))
+                .where(diaryImage.diary.diaryId.in(diaries.stream().map(Diary::getDiaryId).collect(Collectors.toList())))
                 .fetch()
                 .stream()
                 .collect(Collectors.groupingBy(
-                        diaryImage -> diaryImage.getDiary().getId(),
+                        diaryImage -> diaryImage.getDiary().getDiaryId(),
                         Collectors.mapping(DiaryImage::getDiaryImgURL, Collectors.toList())
                 ));
 
         List<DiaryResDetailDTO> dtoList = diaries.stream()
                 .map(d -> new DiaryResDetailDTO(
-                        d.getId(),
+                        d.getDiaryId(),
                         d.getUserId(),
                         d.getDiaryTitle(),
                         d.getDiaryDate(),
@@ -164,9 +167,10 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         d.getDiarySummary(),
                         d.getDiarySubject(),
                         d.getDiaryBookMarkCheck(),
-                        diaryImages.getOrDefault(d.getId(), List.of()),
+                        diaryImages.getOrDefault(d.getDiaryId(), List.of()),
                         d.getDiaryFont(),
-                        d.getDiaryFontSize()
+                        d.getDiaryFontSize(),
+                        d.getMoodBuddyStatus()
                 ))
                 .collect(Collectors.toList());
 
@@ -217,21 +221,22 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                 .where(builder)
                 .fetchCount();
 
-        List<Long> diaryIds = results.stream().map(Diary::getId).collect(Collectors.toList());
+        List<Long> diaryIds = results.stream().map(Diary::getDiaryId).collect(Collectors.toList());
 
         Map<Long, List<String>> diaryImagesMap = queryFactory
                 .selectFrom(diaryImage)
-                .where(diaryImage.diary.id.in(diaryIds))
+                .where(diaryImage.diary.diaryId.in(diaryIds)
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch()
                 .stream()
                 .collect(Collectors.groupingBy(
-                        diaryImage -> diaryImage.getDiary().getId(),
+                        diaryImage -> diaryImage.getDiary().getDiaryId(),
                         Collectors.mapping(DiaryImage::getDiaryImgURL, Collectors.toList())
                 ));
 
         List<DiaryResDetailDTO> dtoList = results.stream()
                 .map(d -> DiaryResDetailDTO.builder()
-                        .diaryId(d.getId())
+                        .diaryId(d.getDiaryId())
                         .userId(d.getUserId())
                         .diaryTitle(d.getDiaryTitle())
                         .diaryDate(d.getDiaryDate())
@@ -241,9 +246,10 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         .diaryStatus(d.getDiaryStatus())
                         .diarySummary(d.getDiarySummary())
                         .diarySubject(d.getDiarySubject())
-                        .diaryImgList(diaryImagesMap.getOrDefault(d.getId(), List.of()))
+                        .diaryImgList(diaryImagesMap.getOrDefault(d.getDiaryId(), List.of()))
                         .diaryFont(d.getDiaryFont())
                         .diaryFontSize(d.getDiaryFontSize())
+                        .moodBuddyStatus(d.getMoodBuddyStatus())
                         .build())
                 .collect(Collectors.toList());
 

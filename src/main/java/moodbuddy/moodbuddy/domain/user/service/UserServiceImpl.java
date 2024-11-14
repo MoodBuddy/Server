@@ -177,7 +177,7 @@ public class UserServiceImpl implements UserService{
 
             List<UserResCalendarMonthDTO> diaryResCalendarMonthDTOList = monthlyDiaryList.stream()
                     .map(diary -> UserResCalendarMonthDTO.builder()
-                            .diaryId(diary.getId())
+                            .diaryId(diary.getDiaryId())
                             .diaryDate(diary.getDiaryDate())
                             .diaryEmotion(diary.getDiaryEmotion())
                             .build())
@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService{
 
             // summaryDiary가 존재하면 그에 맞게 DTO를 build하여 반환하고, 그렇지 않으면 빈 DTO를 반환한다.
             return summaryDiary.map(diary -> UserResCalendarSummaryDTO.builder()
-                            .diaryId(diary.getId())
+                            .diaryId(diary.getDiaryId())
                             .diaryTitle(diary.getDiaryTitle())
                             .diarySummary(diary.getDiarySummary())
                             .build())
@@ -297,7 +297,8 @@ public class UserServiceImpl implements UserService{
     //해당하는 월에 유저 아이디로 diary_emotion 조회 -> 감정별로 group by or 불러와서 리스트 또는 hashmap 형태로 가공 (감정(key), 횟수(value))
     @Override
     @Transactional(readOnly = true)
-    public UserResStatisticsMonthDTO getMonthStatic(LocalDate month, final Long userId) {
+    public UserResStatisticsMonthDTO getMonthStatic(LocalDate month) {
+        final Long userId = JwtUtil.getUserId();
         int year = month.getYear();
         int monthValue = month.getMonthValue();
 

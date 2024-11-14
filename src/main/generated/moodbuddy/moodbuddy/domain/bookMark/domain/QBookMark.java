@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,18 +17,16 @@ public class QBookMark extends EntityPathBase<BookMark> {
 
     private static final long serialVersionUID = -38585356L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QBookMark bookMark = new QBookMark("bookMark");
 
     public final moodbuddy.moodbuddy.global.common.base.QBaseEntity _super = new moodbuddy.moodbuddy.global.common.base.QBaseEntity(this);
 
+    public final NumberPath<Long> bookMarkId = createNumber("bookMarkId", Long.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdTime = _super.createdTime;
 
-    public final moodbuddy.moodbuddy.domain.diary.domain.base.QDiary diary;
-
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final NumberPath<Long> diaryId = createNumber("diaryId", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;
@@ -37,24 +34,15 @@ public class QBookMark extends EntityPathBase<BookMark> {
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public QBookMark(String variable) {
-        this(BookMark.class, forVariable(variable), INITS);
+        super(BookMark.class, forVariable(variable));
     }
 
     public QBookMark(Path<? extends BookMark> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QBookMark(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QBookMark(PathMetadata metadata, PathInits inits) {
-        this(BookMark.class, metadata, inits);
-    }
-
-    public QBookMark(Class<? extends BookMark> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.diary = inits.isInitialized("diary") ? new moodbuddy.moodbuddy.domain.diary.domain.base.QDiary(forProperty("diary")) : null;
+        super(BookMark.class, metadata);
     }
 
 }

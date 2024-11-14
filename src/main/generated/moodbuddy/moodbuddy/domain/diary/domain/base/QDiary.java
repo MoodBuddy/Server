@@ -36,6 +36,8 @@ public class QDiary extends EntityPathBase<Diary> {
 
     public final EnumPath<DiaryFontSize> diaryFontSize = createEnum("diaryFontSize", DiaryFontSize.class);
 
+    public final NumberPath<Long> diaryId = createNumber("diaryId", Long.class);
+
     public final EnumPath<DiaryStatus> diaryStatus = createEnum("diaryStatus", DiaryStatus.class);
 
     public final EnumPath<DiarySubject> diarySubject = createEnum("diarySubject", DiarySubject.class);
@@ -45,8 +47,6 @@ public class QDiary extends EntityPathBase<Diary> {
     public final StringPath diaryTitle = createString("diaryTitle");
 
     public final EnumPath<DiaryWeather> diaryWeather = createEnum("diaryWeather", DiaryWeather.class);
-
-    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final EnumPath<moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus> moodBuddyStatus = createEnum("moodBuddyStatus", moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus.class);
 

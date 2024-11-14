@@ -80,7 +80,7 @@ public class DiaryImageServiceImpl implements DiaryImageService {
         List<DiaryImageDocument> diaryImageDocuments = diaryImages.stream()
                 .map(diaryImage -> DiaryImageDocument.builder()
                         .id(diaryImage.getId())
-                        .diaryId(diary.getId())
+                        .diaryId(diary.getDiaryId())
                         .diaryImgURL(diaryImage.getDiaryImgURL())
                         .build())
                 .collect(Collectors.toList());
