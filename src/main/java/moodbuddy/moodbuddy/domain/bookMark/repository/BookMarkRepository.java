@@ -8,9 +8,9 @@ import java.util.Optional;
 
 @Repository
 public interface BookMarkRepository extends JpaRepository<BookMark, Long>, BookMarkRepositoryCustom {
-    Optional<BookMark> findByUserIdAndDiary(Long userId, Diary diary);
-    void deleteByDiaryDiaryId(Long diaryId);
-    Optional<BookMark> findByDiaryDiaryId(Long diaryId);
+    Optional<BookMark> findByUserIdAndDiaryId(Long userId, Long diaryId);
+    void deleteByDiaryId(Long diaryId);
+    Optional<BookMark> findByDiaryId(Long diaryId);
 
 //    @Query(value = "SELECT new moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO(" +
 //            "d.id, d.user_id, d.diary_title, d.diary_date, d.diary_content, d.diary_weather, d.diary_emotion, " +
