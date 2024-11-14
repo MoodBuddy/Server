@@ -14,6 +14,7 @@ public record DiaryReqUpdateDTO (
         Long diaryId,
         @Schema(description = "수정할 일기 제목", example = "쿼카의 하카")
         String diaryTitle,
+        //TODO 일기 날짜 수정은 기획과 논의할 필요가 있음
         @Schema(description = "수정할 일기 날짜", example = "2023-07-02T15:30:00")
         LocalDate diaryDate,
         @Schema(description = "수정할 일기 내용", example = "쿼카쿼카쿼카쿼카쿼카쿼카")
