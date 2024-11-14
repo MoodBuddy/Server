@@ -25,7 +25,8 @@ public class DiaryApiController {
     @Operation(summary = "일기 작성", description = "새로운 일기를 작성합니다.")
     public ResponseEntity<DiaryResDetailDTO> save(@Parameter(description = "일기 정보를 담고 있는 DTO")
                                                       @RequestBody DiaryReqSaveDTO requestDTO) {
-        return ResponseEntity.ok().body(diaryFacade.saveDiary(requestDTO));
+        DiaryResDetailDTO res = diaryFacade.saveDiary(requestDTO);
+        return ResponseEntity.ok().body(res);
     }
 
     /** 구현 완료 **/
@@ -37,7 +38,7 @@ public class DiaryApiController {
     }
 
     /** 구현 완료 **/
-    @DeleteMapping("/delete/{diaryId}")
+    @PostMapping("/delete/{diaryId}")
     @Operation(summary = "일기 삭제", description = "기존 일기를 삭제합니다.")
     public ResponseEntity<?> delete(@Parameter(description = "일기 고유 식별자")
                                         @PathVariable("diaryId") Long diaryId) {
@@ -46,10 +47,10 @@ public class DiaryApiController {
     }
 
     /** 구현 완료 **/
-    @PostMapping("/draftSave")
+    @PostMapping("/save-draft-diary")
     @Operation(summary = "일기 임시 저장", description = "일기를 임시 저장합니다.")
     public ResponseEntity<DiaryResDetailDTO> draftSave(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
-                                           @ModelAttribute DiaryReqSaveDTO requestDTO) {
+                                           @RequestBody DiaryReqSaveDTO requestDTO) {
         return ResponseEntity.ok().body(diaryFacade.saveDraftDiary(requestDTO));
     }
 
@@ -61,7 +62,7 @@ public class DiaryApiController {
     }
 
     /** 구현 완료 **/
-    @DeleteMapping("/draftSelectDelete")
+    @PostMapping("/draftSelectDelete")
     @Operation(summary = "임시 저장 일기 선택 삭제", description = "임시 저장 일기를 선택해서 삭제합니다.")
     public ResponseEntity<?> draftSelectDelete(@Parameter(description = "삭제할 임시 저장 일기 고유 식별자를 담고 있는 DTO")
                                                    @RequestBody DiaryReqDraftSelectDeleteDTO requestDTO) {

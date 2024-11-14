@@ -23,12 +23,12 @@ import java.util.List;
 @RequestMapping("/api/v2/member")
 @Slf4j
 public class UserApiController {
-    private final UserFacade userFacade;
+    private final UserService userService;
 
     @GetMapping("/main")
     @Operation(summary = "메인 화면", description = "메인 화면으로 이동합니다.")
     public ResponseEntity<?> mainPage(){
-        return ResponseEntity.ok(userFacade.mainPage());
+        return ResponseEntity.ok(userService.mainPage());
     }
 
     @PostMapping("/main/month")
@@ -36,7 +36,7 @@ public class UserApiController {
     public ResponseEntity<?> monthlyCalendar(
             @Parameter(description = "캘린더에서 이동할 년, 월을 담고 있는 DTO")
             @RequestBody UserReqCalendarMonthDTO calendarMonthDTO) {
-        return ResponseEntity.ok(userFacade.monthlyCalendar(calendarMonthDTO));
+        return ResponseEntity.ok(userService.monthlyCalendar(calendarMonthDTO));
     }
 
     @PostMapping("/main/summary")
@@ -44,7 +44,7 @@ public class UserApiController {
     public ResponseEntity<?> summary(
             @Parameter(description = "사용자가 선택한 날짜를 담고 있는 DTO")
             @RequestBody UserReqCalendarSummaryDTO calendarSummaryDTO) {
-        return ResponseEntity.ok(userFacade.summary(calendarSummaryDTO));
+        return ResponseEntity.ok(userService.summary(calendarSummaryDTO));
     }
 
     //월별 통계 보기
@@ -53,7 +53,7 @@ public class UserApiController {
     @Parameters(@Parameter(name="month", description = "YYYY-MM-DD 형식으로 입력하세요"))
     public ResponseEntity<?> getMonthStatic(
             @RequestParam("month") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate month) {
-        return ResponseEntity.ok(userFacade.getMonthStatic(month));
+        return ResponseEntity.ok(userService.getMonthStatic(month));
     }
 
     // 다음 달 나에게 짧은 한 마디
@@ -62,7 +62,7 @@ public class UserApiController {
     public ResponseEntity<?> monthComment(
             @Parameter(description = "월별 통계의 달과 한 마디를 받아오는 DTO")
             @RequestBody UserReqMonthCommentDTO userReqMonthCommentDTO) {
-        return ResponseEntity.ok(userFacade.monthComment(userReqMonthCommentDTO));
+        return ResponseEntity.ok(userService.monthComment(userReqMonthCommentDTO));
     }
 
     // 다음 달 나에게 짧은 한 마디 수정
@@ -71,7 +71,7 @@ public class UserApiController {
     public ResponseEntity<?> monthCommentUpdate(
             @Parameter(description = "월별 통계의 달과 수정할 한 마디를 받아오는 DTO")
             @RequestBody UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO) {
-        return ResponseEntity.ok(userFacade.monthCommentUpdate(userReqMonthCommentUpdateDTO));
+        return ResponseEntity.ok(userService.monthCommentUpdate(userReqMonthCommentUpdateDTO));
     }
 
 
@@ -82,7 +82,7 @@ public class UserApiController {
             @Parameter(name="year", description = "YYYY-MM-DD 형식으로 입력하세요"),})
     public ResponseEntity<?> getDiaryNums(
             @RequestParam("year") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate year) {
-        return ResponseEntity.ok(userFacade.getDiaryNums(year));
+        return ResponseEntity.ok(userService.getDiaryNums(year));
     }
 
 
@@ -94,14 +94,14 @@ public class UserApiController {
     })
     public ResponseEntity<?> getEmotionNums(
             @RequestParam("month") @DateTimeFormat(pattern = "yyyy-MM") LocalDate month) {
-        return ResponseEntity.ok(userFacade.getEmotionNums(month));
+        return ResponseEntity.ok(userService.getEmotionNums(month));
     }
 
     //프로필 조회
     @GetMapping("/main/profile")
     @Operation(summary = "프로필 조회")
     public ResponseEntity<?> getProfile() {
-        return ResponseEntity.ok(userFacade.getUserProfile());
+        return ResponseEntity.ok(userService.getUserProfile());
     }
 
 
@@ -111,8 +111,8 @@ public class UserApiController {
     public ResponseEntity<?> updateProfile(
             @ModelAttribute UserReqProfileUpdateDto updateDto) throws IOException {
         Long kakaoId = JwtUtil.getUserId();
-        userFacade.scheduleUserMessage(kakaoId);
-        return ResponseEntity.ok(userFacade.updateProfile(updateDto));
+        userService.scheduleUserMessage(kakaoId);
+        return ResponseEntity.ok(userService.updateProfile(updateDto));
     }
 
     /** 테스트를 위한 임시 자체 로그인 **/
@@ -121,12 +121,12 @@ public class UserApiController {
     public ResponseEntity<?> login(
             @Parameter(description = "자체 로그인 회원 정보를 받아오는 DTO")
             @RequestBody UserReqLoginDTO userReqLoginDTO) {
-        return ResponseEntity.ok().body(userFacade.login(userReqLoginDTO));
+        return ResponseEntity.ok().body(userService.login(userReqLoginDTO));
     }
 
     @GetMapping("/checkTodayDiary")
     @Operation(summary = "오늘 일기 작성 가능 여부 확인")
     public ResponseEntity<?> checkTodayDiary(){
-        return ResponseEntity.ok().body(userFacade.checkTodayDiary());
+        return ResponseEntity.ok().body(userService.checkTodayDiary());
     }
 }

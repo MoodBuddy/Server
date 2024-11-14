@@ -33,7 +33,6 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public Diary save(DiaryReqSaveDTO requestDTO, Map<String, String> gptResults, final Long userId) {
-        validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryRepository.save(Diary.ofPublished(
                 requestDTO,
                 userId,
@@ -78,12 +77,10 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public List<Diary> draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, final Long userId) {
-        List<Diary> diaries = diaryRepository.findAllById(requestDTO.diaryIdList());
-        for (Diary diary : diaries) {
-            diary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
-        }
-        return diaries;
+    public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, Long userId) {
+        requestDTO.diaryIdList().forEach(diaryId ->
+                getDiaryById(diaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
+        );
     }
 
     @Override
@@ -101,17 +98,13 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {
-        List<Diary> draftDiaries = diaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT);
-        if (!draftDiaries.isEmpty()) {
-            for(Diary draftDiary : draftDiaries) {
-                draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
-            }
-        }
+        diaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT)
+                .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 
     @Override
     public Diary getDiaryById(Long diaryId) {
-        return diaryRepository.findById(diaryId)
+        return diaryRepository.findByDiaryIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
     }
 }

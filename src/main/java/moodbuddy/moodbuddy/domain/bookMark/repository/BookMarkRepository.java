@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface BookMarkRepository extends JpaRepository<BookMark, Long>, BookMarkRepositoryCustom {
-    Optional<BookMark> findByUserIdAndDiary(Long userId, Diary diary);
+    Optional<BookMark> findByUserIdAndDiaryId(Long userId, Long diaryId);
     void deleteByDiaryId(Long diaryId);
     Optional<BookMark> findByDiaryId(Long diaryId);
 

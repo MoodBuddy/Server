@@ -5,9 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.bookMark.dto.response.BookMarkResToggleDTO;
 import moodbuddy.moodbuddy.domain.bookMark.facade.BookMarkFacade;
-import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +23,7 @@ public class BookMarkApiController {
     /** 구현 완료 **/
     @PostMapping("/toggle/{diaryId}")
     @Operation(summary = "북마크 토글", description = "북마크 토글 북마크 성공(true) / 북마크 취소(false)")
-    public ResponseEntity<BookMarkResToggleDTO> toggle(@Parameter(description = "일기 고유 식별자")
+    public ResponseEntity<?> toggle(@Parameter(description = "일기 고유 식별자")
                                   @PathVariable("diaryId") Long diaryId) {
         return ResponseEntity.ok().body(bookMarkFacade.toggle(diaryId));
     }

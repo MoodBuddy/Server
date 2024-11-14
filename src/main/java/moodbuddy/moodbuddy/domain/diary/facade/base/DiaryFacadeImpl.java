@@ -37,6 +37,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     @Transactional
     public DiaryResDetailDTO saveDiary(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
+        diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
@@ -85,7 +86,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResDetailDTO saveDraftDiary(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = diaryService.draftSave(requestDTO, userId);
-        diaryDocumentService.save(diary);
         return diaryMapper.toResDetailDTO(diary);
     }
 
@@ -96,9 +96,10 @@ public class DiaryFacadeImpl implements DiaryFacade {
     }
 
     @Override
+    @Transactional
     public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        List<Diary> diaries = diaryService.draftSelectDelete(requestDTO, userId);
+        diaryService.draftSelectDelete(requestDTO, userId);
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {

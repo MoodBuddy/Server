@@ -7,6 +7,7 @@ import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.base.DiaryRepository;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
@@ -46,7 +47,7 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     }
 
     private Diary findDiaryById(Long diaryId) {
-        return diaryRepository.findById(diaryId)
+        return diaryRepository.findByDiaryIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
     }
 
