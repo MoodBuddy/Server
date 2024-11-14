@@ -1,7 +1,6 @@
 package moodbuddy.moodbuddy.domain.bookMark.facade;
 
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.bookMark.dto.response.BookMarkResToggleDTO;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
@@ -20,7 +19,8 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     private final DiaryService diaryService;
 
     @Override
-    public BookMarkResToggleDTO toggle(final Long diaryId) {
+    @Transactional
+    public boolean toggle(final Long diaryId) {
         final Long userId = JwtUtil.getUserId();
         Diary findDiary = diaryService.getDiaryById(diaryId);
         diaryService.validateDiaryAccess(findDiary, userId);
