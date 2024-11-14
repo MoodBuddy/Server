@@ -1,6 +1,6 @@
 package moodbuddy.moodbuddy.domain.diary.service.image;
 
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import org.springframework.web.multipart.MultipartFile;
 

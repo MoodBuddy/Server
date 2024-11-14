@@ -27,7 +27,7 @@ public class QDiaryImage extends EntityPathBase<DiaryImage> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdTime = _super.createdTime;
 
-    public final moodbuddy.moodbuddy.domain.diary.domain.base.QDiary diary;
+    public final moodbuddy.moodbuddy.domain.diary.domain.QDiary diary;
 
     public final StringPath diaryImgFileName = createString("diaryImgFileName");
 
@@ -70,7 +70,7 @@ public class QDiaryImage extends EntityPathBase<DiaryImage> {
 
     public QDiaryImage(Class<? extends DiaryImage> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.diary = inits.isInitialized("diary") ? new moodbuddy.moodbuddy.domain.diary.domain.base.QDiary(forProperty("diary")) : null;
+        this.diary = inits.isInitialized("diary") ? new moodbuddy.moodbuddy.domain.diary.domain.QDiary(forProperty("diary")) : null;
     }
 
 }

@@ -2,9 +2,9 @@ package moodbuddy.moodbuddy.domain.diary.service.count;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiarySubject;
-import moodbuddy.moodbuddy.domain.diary.repository.base.DiaryRepository;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

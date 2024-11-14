@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.domain.base;
+package moodbuddy.moodbuddy.domain.diary.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QDiary extends EntityPathBase<Diary> {
 
-    private static final long serialVersionUID = 151296409L;
+    private static final long serialVersionUID = -2103895952L;
 
     public static final QDiary diary = new QDiary("diary");
 
@@ -30,23 +30,23 @@ public class QDiary extends EntityPathBase<Diary> {
 
     public final DatePath<java.time.LocalDate> diaryDate = createDate("diaryDate", java.time.LocalDate.class);
 
-    public final EnumPath<DiaryEmotion> diaryEmotion = createEnum("diaryEmotion", DiaryEmotion.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion> diaryEmotion = createEnum("diaryEmotion", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion.class);
 
-    public final EnumPath<DiaryFont> diaryFont = createEnum("diaryFont", DiaryFont.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont> diaryFont = createEnum("diaryFont", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont.class);
 
-    public final EnumPath<DiaryFontSize> diaryFontSize = createEnum("diaryFontSize", DiaryFontSize.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize> diaryFontSize = createEnum("diaryFontSize", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize.class);
 
     public final NumberPath<Long> diaryId = createNumber("diaryId", Long.class);
 
-    public final EnumPath<DiaryStatus> diaryStatus = createEnum("diaryStatus", DiaryStatus.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus> diaryStatus = createEnum("diaryStatus", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus.class);
 
-    public final EnumPath<DiarySubject> diarySubject = createEnum("diarySubject", DiarySubject.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject> diarySubject = createEnum("diarySubject", moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject.class);
 
     public final StringPath diarySummary = createString("diarySummary");
 
     public final StringPath diaryTitle = createString("diaryTitle");
 
-    public final EnumPath<DiaryWeather> diaryWeather = createEnum("diaryWeather", DiaryWeather.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather> diaryWeather = createEnum("diaryWeather", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather.class);
 
     public final EnumPath<moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus> moodBuddyStatus = createEnum("moodBuddyStatus", moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus.class);
 

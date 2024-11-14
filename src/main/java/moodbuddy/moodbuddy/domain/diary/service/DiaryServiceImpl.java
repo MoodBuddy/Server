@@ -1,13 +1,13 @@
-package moodbuddy.moodbuddy.domain.diary.service.base;
+package moodbuddy.moodbuddy.domain.diary.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.dto.request.*;
-import moodbuddy.moodbuddy.domain.diary.dto.response.*;
-import moodbuddy.moodbuddy.domain.diary.repository.base.DiaryRepository;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindAllDTO;
+import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
@@ -23,7 +23,6 @@ import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.NOT_FOUND_DI
 
 @Service
 @Transactional(readOnly = true)
-@Slf4j
 @RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
@@ -60,27 +59,6 @@ public class DiaryServiceImpl implements DiaryService {
         validateDiaryAccess(findDiary, userId);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         return findDiary;
-    }
-
-    @Override
-    @Transactional
-    public Diary draftSave(DiaryReqSaveDTO requestDTO, final Long userId) {
-       return diaryRepository.save(diaryRepository.save(Diary.ofDraft(
-               requestDTO,
-                userId)));
-    }
-
-    @Override
-    public DiaryResDraftFindAllDTO draftFindAll(final Long userId) {
-        return diaryRepository.draftFindAllByUserId(userId);
-    }
-
-    @Override
-    @Transactional
-    public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, Long userId) {
-        requestDTO.diaryIdList().forEach(diaryId ->
-                getDiaryById(diaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
-        );
     }
 
     @Override

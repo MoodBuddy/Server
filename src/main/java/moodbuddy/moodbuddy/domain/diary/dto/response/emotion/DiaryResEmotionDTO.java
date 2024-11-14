@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.dto.response;
+package moodbuddy.moodbuddy.domain.diary.dto.response.emotion;
 
 import lombok.Builder;
 

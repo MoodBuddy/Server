@@ -1,10 +1,9 @@
-package moodbuddy.moodbuddy.domain.diary.service.base;
+package moodbuddy.moodbuddy.domain.diary.service;
 
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.*;
-import moodbuddy.moodbuddy.domain.diary.dto.response.*;
+
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public interface DiaryService {
@@ -16,15 +15,6 @@ public interface DiaryService {
 
     // 일기 삭제
     Diary delete(Long diaryId, Long userId);
-
-    // 일기 임시 저장
-    Diary draftSave(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);
-
-    // 일기 임시 저장 날짜 조회
-    DiaryResDraftFindAllDTO draftFindAll(final Long userId);
-
-    // 일기 임시 저장 선택 삭제
-    void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, final Long userId);
 
     Diary getDiaryById(Long diaryId);
     void validateDiaryAccess(Diary findDiary, Long userId);
