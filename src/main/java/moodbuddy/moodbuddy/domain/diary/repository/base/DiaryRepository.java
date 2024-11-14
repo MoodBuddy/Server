@@ -18,7 +18,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryReposi
     Optional<Diary> findByUserIdAndDayAndDiaryStatus(@Param("userId") Long userId, @Param("day") String day, @Param("status") String status); // nativeQuery 이므로 status를 enum 값으로 넘겨주면 안된다.
 
     // diaryId 기반으로 삭제하기
-    List<Diary> findAllById(Iterable<Long> ids);
+    List<Diary> findAllByDiaryIdIn(Iterable<Long> diaryIds);
 
     //사용자가 제일 최근에 쓴 일기 요약본 출력
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId ORDER BY diary_date DESC LIMIT 1", nativeQuery = true)
