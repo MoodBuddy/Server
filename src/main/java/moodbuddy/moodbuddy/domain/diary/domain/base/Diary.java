@@ -91,7 +91,7 @@ public class Diary extends BaseEntity {
                 .diaryDate(requestDTO.diaryDate())
                 .diaryContent(requestDTO.diaryContent())
                 .diaryWeather(requestDTO.diaryWeather())
-                .diaryStatus(DiaryStatus.PUBLISHED)
+                .diaryStatus(DiaryStatus.DRAFT)
                 .userId(userId)
                 .diaryBookMarkCheck(false)
                 .diaryFont(requestDTO.diaryFont())

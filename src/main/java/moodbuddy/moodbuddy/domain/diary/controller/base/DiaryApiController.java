@@ -47,10 +47,10 @@ public class DiaryApiController {
     }
 
     /** 구현 완료 **/
-    @PostMapping("/draftSave")
+    @PostMapping("/save-draft-diary")
     @Operation(summary = "일기 임시 저장", description = "일기를 임시 저장합니다.")
     public ResponseEntity<DiaryResDetailDTO> draftSave(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
-                                           @ModelAttribute DiaryReqSaveDTO requestDTO) {
+                                           @RequestBody DiaryReqSaveDTO requestDTO) {
         return ResponseEntity.ok().body(diaryFacade.saveDraftDiary(requestDTO));
     }
 
