@@ -44,4 +44,12 @@ public class DiaryApiController {
         diaryFacade.deleteDiary(diaryId);
         return ResponseEntity.ok().body("일기 삭제 완료.");
     }
+
+    /** 구현 완료 **/
+    @GetMapping("/findOne/{diaryId}")
+    @Operation(summary = "일기 하나 조회", description = "일기 하나를 조회합니다.")
+    public ResponseEntity<DiaryResDetailDTO> findOneByDiaryId(@Parameter(description = "일기 고유 식별자")
+                                                              @PathVariable("diaryId") Long diaryId) {
+        return ResponseEntity.ok().body(diaryFacade.findOneByDiaryId(diaryId));
+    }
 }
