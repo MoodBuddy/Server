@@ -1,14 +1,14 @@
 package moodbuddy.moodbuddy.domain.bookMark.repository;
 
 import moodbuddy.moodbuddy.domain.bookMark.domain.BookMark;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
 public interface BookMarkRepository extends JpaRepository<BookMark, Long>, BookMarkRepositoryCustom {
-    Optional<BookMark> findByUserIdAndDiary(Long userId, Diary diary);
+    Optional<BookMark> findByUserIdAndDiaryId(Long userId, Long diaryId);
     void deleteByDiaryId(Long diaryId);
     Optional<BookMark> findByDiaryId(Long diaryId);
 

@@ -2,7 +2,7 @@ package moodbuddy.moodbuddy.domain.bookMark.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 
 @Entity
@@ -15,12 +15,18 @@ public class BookMark extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "book_mark_id")
-    private Long id;
+    private Long bookMarkId;
 
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_id", nullable = false)
-    private Diary diary;
+    @Column(name = "diary_id")
+    private Long diaryId;
+
+    public static BookMark of(Long userId, Long diaryId) {
+        return BookMark.builder()
+                .userId(userId)
+                .diaryId(diaryId)
+                .build();
+    }
 }
