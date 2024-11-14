@@ -11,6 +11,7 @@ public interface DiaryMapper {
     DiaryMapper INSTANCE = Mappers.getMapper(DiaryMapper.class);
 
     @Mapping(source = "diaryId", target = "diaryId")
+    @Mapping(source = "moodBuddyStatus", target = "moodBuddyStatus")
     DiaryResDetailDTO toResDetailDTO(Diary diary);
     DiaryResDraftFindOneDTO toResDraftFindOneDTO(Diary diary);
 }

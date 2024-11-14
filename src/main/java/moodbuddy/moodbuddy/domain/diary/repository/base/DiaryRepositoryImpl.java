@@ -44,7 +44,8 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         diary.diaryDate,
                         diary.diaryStatus,
                         diary.diaryFont,
-                        diary.diaryFontSize
+                        diary.diaryFontSize,
+                        diary.moodBuddyStatus
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
@@ -72,7 +73,8 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         diary.diarySubject,
                         diary.diaryBookMarkCheck,
                         diary.diaryFont,
-                        diary.diaryFontSize
+                        diary.diaryFontSize,
+                        diary.moodBuddyStatus
                 ))
                 .from(diary)
                 .where(diary.diaryId.eq(diaryId))
@@ -124,6 +126,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                     .diaryBookMarkCheck(d.getDiaryBookMarkCheck())
                     .diaryFont(d.getDiaryFont())
                     .diaryFontSize(d.getDiaryFontSize())
+                    .moodBuddyStatus(d.getMoodBuddyStatus())
                     .build();
         }).collect(Collectors.toList());
 
@@ -166,7 +169,8 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         d.getDiaryBookMarkCheck(),
                         diaryImages.getOrDefault(d.getDiaryId(), List.of()),
                         d.getDiaryFont(),
-                        d.getDiaryFontSize()
+                        d.getDiaryFontSize(),
+                        d.getMoodBuddyStatus()
                 ))
                 .collect(Collectors.toList());
 
@@ -244,6 +248,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         .diaryImgList(diaryImagesMap.getOrDefault(d.getDiaryId(), List.of()))
                         .diaryFont(d.getDiaryFont())
                         .diaryFontSize(d.getDiaryFontSize())
+                        .moodBuddyStatus(d.getMoodBuddyStatus())
                         .build())
                 .collect(Collectors.toList());
 

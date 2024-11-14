@@ -110,7 +110,6 @@ public class Diary extends BaseEntity {
         this.diarySubject = DiarySubject.valueOf(gptResults.get("subject"));
         this.diaryFont = requestDTO.diaryFont();
         this.diaryFontSize = requestDTO.diaryFontSize();
-        this.moodBuddyStatus = MoodBuddyStatus.valueOf(gptResults.get("status"));
     }
 
     public void updateDiaryEmotion(DiaryEmotion diaryEmotion) {
