@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.dto.request;
+package moodbuddy.moodbuddy.domain.diary.dto.request.draft;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

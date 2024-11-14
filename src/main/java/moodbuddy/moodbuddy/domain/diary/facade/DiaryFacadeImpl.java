@@ -3,11 +3,9 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqDraftSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindAllDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
@@ -60,6 +58,12 @@ public class DiaryFacadeImpl implements DiaryFacade {
         diaryImageService.deleteAllDiaryImages(findDiary);
         diaryDocumentService.delete(diaryId);
         checkTodayDiary(findDiary.getDiaryDate(), userId, true);
+    }
+
+    @Override
+    public DiaryResDetailDTO findOneByDiaryId(final Long diaryId) {
+        final Long userId = JwtUtil.getUserId();
+        return diaryService.findOneByDiaryId(diaryId, userId);
     }
 
     //TODO 이미지 로직 구현해야 함

@@ -1,12 +1,11 @@
 package moodbuddy.moodbuddy.domain.diary.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.dto.request.*;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindAllDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
@@ -15,10 +14,8 @@ import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.*;
-
 import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.NOT_FOUND_DIARY;
 
 @Service
@@ -59,6 +56,13 @@ public class DiaryServiceImpl implements DiaryService {
         validateDiaryAccess(findDiary, userId);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         return findDiary;
+    }
+
+    @Override
+    public DiaryResDetailDTO findOneByDiaryId(final Long diaryId, final Long userId) {
+        final Diary findDiary = getDiaryById(diaryId);
+        validateDiaryAccess(findDiary, userId);
+        return diaryRepository.findOneByDiaryId(diaryId);
     }
 
     @Override
