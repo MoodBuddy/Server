@@ -297,7 +297,8 @@ public class UserServiceImpl implements UserService{
     //해당하는 월에 유저 아이디로 diary_emotion 조회 -> 감정별로 group by or 불러와서 리스트 또는 hashmap 형태로 가공 (감정(key), 횟수(value))
     @Override
     @Transactional(readOnly = true)
-    public UserResStatisticsMonthDTO getMonthStatic(LocalDate month, final Long userId) {
+    public UserResStatisticsMonthDTO getMonthStatic(LocalDate month) {
+        final Long userId = JwtUtil.getUserId();
         int year = month.getYear();
         int monthValue = month.getMonthValue();
 
