@@ -86,7 +86,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResDetailDTO saveDraftDiary(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = diaryService.draftSave(requestDTO, userId);
-        diaryDocumentService.save(diary);
         return diaryMapper.toResDetailDTO(diary);
     }
 

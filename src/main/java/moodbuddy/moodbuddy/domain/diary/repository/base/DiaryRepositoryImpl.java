@@ -42,17 +42,14 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         diary.diaryId,
                         diary.userId,
                         diary.diaryDate,
-                        diary.diaryStatus,
-                        diary.diaryFont,
-                        diary.diaryFontSize,
-                        diary.moodBuddyStatus
+                        diary.diaryStatus
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
                         .and(diary.diaryStatus.eq(DiaryStatus.DRAFT)))
                 .fetch()
                 .stream()
-                .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.userId(), d.diaryDate(), d.diaryStatus(), d.diaryFont(), d.diaryFontSize()))
+                .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.userId(), d.diaryDate(), d.diaryStatus()))
                 .collect(Collectors.toList());
 
         return new DiaryResDraftFindAllDTO(draftList);
