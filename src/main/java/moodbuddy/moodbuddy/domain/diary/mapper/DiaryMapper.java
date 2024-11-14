@@ -1,7 +1,7 @@
 package moodbuddy.moodbuddy.domain.diary.mapper;
 
 import moodbuddy.moodbuddy.domain.diary.dto.response.*;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -13,5 +13,4 @@ public interface DiaryMapper {
     @Mapping(source = "diaryId", target = "diaryId")
     @Mapping(source = "moodBuddyStatus", target = "moodBuddyStatus")
     DiaryResDetailDTO toResDetailDTO(Diary diary);
-    DiaryResDraftFindOneDTO toResDraftFindOneDTO(Diary diary);
 }

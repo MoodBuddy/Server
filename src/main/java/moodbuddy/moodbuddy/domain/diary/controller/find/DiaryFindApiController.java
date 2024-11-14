@@ -5,10 +5,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.dto.request.*;
+import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.facade.find.DiaryFindFacade;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,17 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v2/member/diary")
 @Tag(name = "Diary", description = "일기 관련 API")
 @RequiredArgsConstructor
-@Slf4j
 public class DiaryFindApiController {
     private final DiaryFindFacade diaryFindFacade;
-
-    /** 구현 완료 **/
-    @GetMapping("/findOne/{diaryId}")
-    @Operation(summary = "일기 하나 조회", description = "일기 하나를 조회합니다.")
-    public ResponseEntity<DiaryResDetailDTO> findOneByDiaryId(@Parameter(description = "일기 고유 식별자")
-                                                              @PathVariable("diaryId") Long diaryId) {
-        return ResponseEntity.ok().body(diaryFindFacade.findOneByDiaryId(diaryId));
-    }
 
     /** 구현 완료 **/
     @GetMapping("/findAllPageable")
