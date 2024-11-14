@@ -1,6 +1,6 @@
 package moodbuddy.moodbuddy.domain.diary.repository.image;
 
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 

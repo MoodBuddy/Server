@@ -1,13 +1,12 @@
 package moodbuddy.moodbuddy.domain.diary.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFontSize;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryWeather;
-import org.springframework.web.multipart.MultipartFile;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
+
 import java.time.LocalDate;
-import java.util.List;
 
 public record DiaryReqUpdateDTO (
         @Schema(description = "수정할 일기 고유 식별자(diaryId)", example = "1")

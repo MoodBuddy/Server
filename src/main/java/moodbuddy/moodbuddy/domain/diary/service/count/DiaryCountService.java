@@ -1,7 +1,7 @@
 package moodbuddy.moodbuddy.domain.diary.service.count;
 
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 
 import java.time.LocalDate;
 
