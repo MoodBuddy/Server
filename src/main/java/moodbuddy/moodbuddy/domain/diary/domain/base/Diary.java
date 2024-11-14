@@ -19,8 +19,8 @@ import java.util.Map;
 public class Diary extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "diary_id")
+    private Long diaryId;
 
     @Column(name = "diary_title", nullable = false)
     private String diaryTitle;

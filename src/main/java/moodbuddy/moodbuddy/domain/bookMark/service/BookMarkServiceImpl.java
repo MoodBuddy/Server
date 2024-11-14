@@ -8,10 +8,6 @@ import moodbuddy.moodbuddy.domain.bookMark.mapper.BookMarkMapper;
 import moodbuddy.moodbuddy.domain.bookMark.repository.BookMarkRepository;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.service.base.DiaryService;
-import moodbuddy.moodbuddy.domain.user.domain.User;
-import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -56,9 +52,9 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     public void deleteByDiaryId(Long diaryId) {
-        Optional<BookMark> optionalBookMark = bookMarkRepository.findByDiaryId(diaryId);
+        Optional<BookMark> optionalBookMark = bookMarkRepository.findByDiaryDiaryId(diaryId);
         if(optionalBookMark.isPresent()) {
-            bookMarkRepository.deleteByDiaryId(diaryId);
+            bookMarkRepository.deleteByDiaryDiaryId(diaryId);
         }
     }
 }
