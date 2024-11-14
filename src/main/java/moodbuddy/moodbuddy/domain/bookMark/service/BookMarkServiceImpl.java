@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 
 @Service
@@ -25,7 +24,7 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Transactional
     public BookMarkResToggleDTO toggle(Diary diary, final Long userId) {
-        Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserIdAndDiary(userId, diary);
+        Optional<BookMark> optionalBookMark = bookMarkRepository.findByUserIdAndDiaryId(userId, diary.getDiaryId());
         if(optionalBookMark.isPresent()) {
             return cancelToggle(diary, optionalBookMark.get());
         }
@@ -34,7 +33,7 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     private BookMarkResToggleDTO saveToggle(Diary diary, Long userId) {
         diary.updateDiaryBookMarkCheck(true);
-        BookMark newBookmark = BookMark.of(userId, diary);
+        BookMark newBookmark = BookMark.of(userId, diary.getDiaryId());
         bookMarkRepository.save(newBookmark);
         return bookMarkMapper.toResToggleDTO(true);
     }
@@ -52,9 +51,9 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     public void deleteByDiaryId(Long diaryId) {
-        Optional<BookMark> optionalBookMark = bookMarkRepository.findByDiaryDiaryId(diaryId);
+        Optional<BookMark> optionalBookMark = bookMarkRepository.findByDiaryId(diaryId);
         if(optionalBookMark.isPresent()) {
-            bookMarkRepository.deleteByDiaryDiaryId(diaryId);
+            bookMarkRepository.deleteByDiaryId(diaryId);
         }
     }
 }

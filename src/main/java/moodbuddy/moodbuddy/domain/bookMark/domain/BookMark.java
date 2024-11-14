@@ -20,14 +20,13 @@ public class BookMark extends BaseEntity {
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_id", nullable = false)
-    private Diary diary;
+    @Column(name = "diary_id")
+    private Long diaryId;
 
-    public static BookMark of(Long userId, Diary diary) {
+    public static BookMark of(Long userId, Long diaryId) {
         return BookMark.builder()
                 .userId(userId)
-                .diary(diary)
+                .diaryId(diaryId)
                 .build();
     }
 }
