@@ -61,7 +61,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final Long userId = JwtUtil.getUserId();
         Diary findDiary = diaryService.delete(diaryId, userId);
         bookMarkService.deleteByDiaryId(diaryId);
-        diaryImageService.deleteAllDiaryImages(findDiary);
+        diaryImageService.deleteAllDiaryImages(diaryId);
         diaryDocumentService.delete(diaryId);
         checkTodayDiary(findDiary.getDiaryDate(), userId, true);
     }

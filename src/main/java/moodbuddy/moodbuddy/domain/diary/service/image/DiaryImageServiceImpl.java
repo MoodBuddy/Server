@@ -1,7 +1,6 @@
 package moodbuddy.moodbuddy.domain.diary.service.image;
 
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.repository.image.DiaryImageRepository;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,16 +39,11 @@ public class DiaryImageServiceImpl implements DiaryImageService {
 
     @Override
     @Transactional
-    public void deleteAllDiaryImages(Diary diary) {
-        List<DiaryImage> diaryImages = diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
+    public void deleteAllDiaryImages(final Long diaryId) {
+        List<DiaryImage> diaryImages = diaryImageRepository.findAllByDiaryIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE);
         for (DiaryImage diaryImage : diaryImages) {
             diaryImage.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         }
-    }
-
-    @Override
-    public List<DiaryImage> findImagesByDiary(Diary diary) {
-        return diaryImageRepository.findByDiary(diary).orElseGet(Collections::emptyList);
     }
 
     @Override
