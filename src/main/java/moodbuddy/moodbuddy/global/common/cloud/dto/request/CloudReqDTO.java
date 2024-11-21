@@ -1,8 +1,9 @@
 package moodbuddy.moodbuddy.global.common.cloud.dto.request;
 
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 public record CloudReqDTO(
-        File file,
+        Long userId,
+        MultipartFile file,
         String fileExtension
 ) { }

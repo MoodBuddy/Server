@@ -11,6 +11,7 @@ import org.apache.commons.imaging.Imaging;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,9 @@ import java.util.UUID;
 public class CloudServiceImpl implements CloudService {
     private final AmazonS3 amazonS3;
     private final ThumbnailGenerator thumbnailGenerator;
+    private final String dot = ".";
+    private final String resizePrefix = "resize_";
+    private final String uploadPathFormat = "%s/%s/%s";
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -29,12 +33,12 @@ public class CloudServiceImpl implements CloudService {
 
     @Override
     @Transactional
-    public CloudUploadDTO resizeAndUploadImage(CloudReqDTO requestDTO, Long userId) throws IOException {
+    public CloudUploadDTO resizeAndUploadImage(CloudReqDTO requestDTO) throws IOException {
         String fileExtension = requestDTO.fileExtension();
-        String fileName = UUID.randomUUID() + "." + fileExtension;
+        String fileName = UUID.randomUUID() + dot + fileExtension;
 
-        File originalFile = requestDTO.file();
-        File resizeFile = File.createTempFile("resize_", fileExtension);
+        File originalFile = convertMultipartFileToFile(requestDTO.file());
+        File resizeFile = File.createTempFile(resizePrefix, fileExtension);
         ImageInfo originalFileInfo = Imaging.getImageInfo(originalFile);
 
         try {
@@ -42,7 +46,7 @@ public class CloudServiceImpl implements CloudService {
                     originalFile, resizeFile, fileName, fileExtension
             );
 
-            String uploadPath = String.format("%s/%s/%s", diaryImagesFolder, userId, fileName);
+            String uploadPath = String.format(uploadPathFormat, diaryImagesFolder, requestDTO.userId(), fileName);
             String fileUrl = uploadToS3(resizeFile, uploadPath);
             ImageInfo resizeFileInfo = Imaging.getImageInfo(resizeFile);
 
@@ -59,5 +63,10 @@ public class CloudServiceImpl implements CloudService {
 
         amazonS3.putObject(bucket, uploadPath, file);
         return amazonS3.getUrl(bucket, uploadPath).toString();
+    }
+    private File convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
+        File convFile = File.createTempFile("upload_", multipartFile.getOriginalFilename());
+        multipartFile.transferTo(convFile);
+        return convFile;
     }
 }

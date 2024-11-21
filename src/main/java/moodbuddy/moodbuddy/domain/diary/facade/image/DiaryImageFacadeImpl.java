@@ -9,9 +9,11 @@ import moodbuddy.moodbuddy.global.common.cloud.dto.request.CloudReqDTO;
 import moodbuddy.moodbuddy.global.common.cloud.dto.response.CloudUploadDTO;
 import moodbuddy.moodbuddy.global.common.cloud.service.CloudService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
@@ -19,15 +21,15 @@ import java.io.IOException;
 public class DiaryImageFacadeImpl implements DiaryImageFacade {
     private final DiaryImageService diaryImageService;
     private final CloudService cloudService;
-    private DiaryImageMapper diaryImageMapper;
+    private final DiaryImageMapper diaryImageMapper;
 
     @Override
     @Transactional
-    public DiaryImageResURLDTO uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
-        final Long userId = JwtUtil.getUserId();
-        CloudUploadDTO cloudUploadDTO = cloudService.resizeAndUploadImage(cloudReqDTO, userId);
+    @Async
+    public CompletableFuture<DiaryImageResURLDTO> uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
+        CloudUploadDTO cloudUploadDTO = cloudService.resizeAndUploadImage(cloudReqDTO);
         DiaryImage diaryImage = diaryImageService.saveImage(cloudUploadDTO);
 
-        return diaryImageMapper.toResURLDTO(diaryImage.getDiaryImgURL());
+        return CompletableFuture.completedFuture(diaryImageMapper.toResURLDTO(diaryImage.getDiaryImgURL()));
     }
 }

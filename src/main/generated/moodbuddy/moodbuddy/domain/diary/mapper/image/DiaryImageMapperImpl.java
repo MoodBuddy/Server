@@ -6,21 +6,23 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-21T17:14:38+0900",
+    date = "2024-11-21T22:29:18+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.13 (Homebrew)"
 )
 @Component
 public class DiaryImageMapperImpl implements DiaryImageMapper {
 
     @Override
-    public DiaryImageResURLDTO toResURLDTO(String diaryImageUrl) {
-        if ( diaryImageUrl == null ) {
+    public DiaryImageResURLDTO toResURLDTO(String diaryImageURL) {
+        if ( diaryImageURL == null ) {
             return null;
         }
 
-        String diaryImageURL = null;
+        String diaryImageURL1 = null;
 
-        DiaryImageResURLDTO diaryImageResURLDTO = new DiaryImageResURLDTO( diaryImageURL );
+        diaryImageURL1 = diaryImageURL;
+
+        DiaryImageResURLDTO diaryImageResURLDTO = new DiaryImageResURLDTO( diaryImageURL1 );
 
         return diaryImageResURLDTO;
     }

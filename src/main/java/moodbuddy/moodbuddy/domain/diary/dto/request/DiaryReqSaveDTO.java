@@ -21,7 +21,7 @@ public record DiaryReqSaveDTO (
         DiaryFont diaryFont,
         @Schema(description = "일기 폰트 사이즈", example = "PX30")
         DiaryFontSize diaryFontSize,
-        @Schema(description = "일기 사진 URL 리스트", example = "이미지.jpg")
-        List<String> imageURLs )
+        @Schema(description = "일기 사진 URL 리스트", example = "[이미지 URL, 이미지 URL]")
+        List<String> diaryImageURLs)
 {
 }

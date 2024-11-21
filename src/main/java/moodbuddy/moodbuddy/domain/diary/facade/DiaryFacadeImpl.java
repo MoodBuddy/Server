@@ -3,25 +3,19 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.image.DiaryImageResURLDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
-import moodbuddy.moodbuddy.domain.diary.mapper.image.DiaryImageMapper;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
-import moodbuddy.moodbuddy.global.common.cloud.dto.request.CloudReqDTO;
-import moodbuddy.moodbuddy.global.common.cloud.dto.response.CloudUploadDTO;
-import moodbuddy.moodbuddy.global.common.cloud.service.CloudService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import java.io.IOException;
+
 import java.time.LocalDate;
 
 @Component
@@ -39,10 +33,11 @@ public class DiaryFacadeImpl implements DiaryFacade {
     @Override
     @Transactional
     public DiaryResDetailDTO saveDiary(DiaryReqSaveDTO requestDTO) {
+        //TODO 일기 저장, 이미지 저장, 일라스틱서치 저장 분리할 필요가 있음.
         final Long userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryImageService.saveImages(requestDTO.imageURLs(), diary.getDiaryId());
+        diaryImageService.saveImages(requestDTO.diaryImageURLs(), diary.getDiaryId());
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
         return diaryMapper.toResDetailDTO(diary);
