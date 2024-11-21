@@ -11,8 +11,7 @@ import java.util.List;
 public interface DiaryImageService {
     DiaryImage saveImage(CloudUploadDTO cloudUploadDTO);
     List<DiaryImage> saveImages(List<String> imageURLs, Long diaryId);
-    void deleteAllDiaryImages(Diary diary);
-    List<DiaryImage> findImagesByDiary(Diary diary);
+    void deleteAllDiaryImages(final Long diaryId);
     String saveProfileImages(MultipartFile newProfileImg) throws IOException;
 }
 
