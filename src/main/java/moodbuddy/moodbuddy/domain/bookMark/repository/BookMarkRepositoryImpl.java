@@ -43,7 +43,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
         List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
-                    .where(diaryImage.diary.diaryId.eq(d.getDiaryId()))
+                    .where(diaryImage.diaryId.eq(d.getDiaryId()))
                     .fetch();
 
             return DiaryResDetailDTO.builder()
