@@ -13,5 +13,4 @@ public interface DiaryFacade {
     DiaryResDetailDTO updateDiary(DiaryReqUpdateDTO requestDTO);
     void deleteDiary(final Long diaryId);
     DiaryResDetailDTO findOneByDiaryId(final Long diaryId);
-    DiaryImageResURLDTO uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException;
 }
