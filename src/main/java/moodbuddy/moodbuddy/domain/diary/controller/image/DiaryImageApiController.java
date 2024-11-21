@@ -9,6 +9,7 @@ import moodbuddy.moodbuddy.global.common.cloud.dto.request.CloudReqDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/api/v2/member/diaryImage")
@@ -20,7 +21,7 @@ public class DiaryImageApiController {
     /** 구현 완료 **/
     @PostMapping("/upload")
     @Operation(summary = "일기 이미지 업로드", description = "일기 이미지를 업로드합니다.")
-    public ResponseEntity<DiaryImageResURLDTO> upload(@ModelAttribute CloudReqDTO cloudReqDTO) throws IOException {
+    public ResponseEntity<CompletableFuture<DiaryImageResURLDTO>> upload(@ModelAttribute CloudReqDTO cloudReqDTO) throws IOException {
         return ResponseEntity.ok().body(diaryImageFacade.uploadAndSaveDiaryImage(cloudReqDTO));
     }
 }

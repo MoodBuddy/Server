@@ -4,7 +4,8 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.image.DiaryImageResURLDTO;
 import moodbuddy.moodbuddy.global.common.cloud.dto.request.CloudReqDTO;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 
 public interface DiaryImageFacade {
-    DiaryImageResURLDTO uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException;
+    CompletableFuture<DiaryImageResURLDTO> uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException;
 }
