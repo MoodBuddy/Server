@@ -32,7 +32,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResDetailDTO saveDiary(DiaryReqSaveDTO requestDTO) {
+    public DiaryResDetailDTO save(DiaryReqSaveDTO requestDTO) {
         //TODO 일기 저장, 이미지 저장, 일라스틱서치 저장 분리할 필요가 있음.
         final Long userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
@@ -45,7 +45,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResDetailDTO updateDiary(DiaryReqUpdateDTO requestDTO) {
+    public DiaryResDetailDTO update(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = diaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryDocumentService.save(diary);
@@ -54,7 +54,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public void deleteDiary(final Long diaryId) {
+    public void delete(final Long diaryId) {
         final Long userId = JwtUtil.getUserId();
         Diary findDiary = diaryService.delete(diaryId, userId);
         bookMarkService.deleteByDiaryId(diaryId);
