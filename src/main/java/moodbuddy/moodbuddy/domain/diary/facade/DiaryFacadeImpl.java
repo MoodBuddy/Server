@@ -9,12 +9,16 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
+import moodbuddy.moodbuddy.global.common.cloud.dto.request.CloudReqDTO;
+import moodbuddy.moodbuddy.global.common.cloud.dto.response.CloudUploadDTO;
+import moodbuddy.moodbuddy.global.common.cloud.service.CloudService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import java.io.IOException;
 import java.time.LocalDate;
 
 @Component
@@ -24,6 +28,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;
     private final DiaryDocumentService diaryDocumentService;
     private final DiaryImageService diaryImageService;
+    private final CloudService cloudService;
     private final BookMarkService bookMarkService;
     private final UserService userService;
     private final GptService gptService;
@@ -35,6 +40,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final Long userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        diaryImageService.saveImages(requestDTO.imageURLs(), diary.getDiaryId());
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
         return diaryMapper.toResDetailDTO(diary);
@@ -66,21 +72,13 @@ public class DiaryFacadeImpl implements DiaryFacade {
         return diaryService.findOneByDiaryId(diaryId, userId);
     }
 
-    //TODO 이미지 로직 구현해야 함
     @Transactional
-    public DiaryResDetailDTO saveImage(DiaryReqSaveDTO requestDTO) {
+    public String uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
         final Long userId = JwtUtil.getUserId();
-        Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryDocumentService.save(diary);
-        return diaryMapper.toResDetailDTO(diary);
-    }
+        CloudUploadDTO cloudUploadDTO = cloudService.resizeAndUploadImage(cloudReqDTO, userId);
+        diaryImageService.saveImage(cloudUploadDTO);
 
-    @Transactional
-    public DiaryResDetailDTO updateImage(DiaryReqSaveDTO requestDTO) {
-        final Long userId = JwtUtil.getUserId();
-        Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryDocumentService.save(diary);
-        return diaryMapper.toResDetailDTO(diary);
+        return cloudUploadDTO.fileUrl();
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {

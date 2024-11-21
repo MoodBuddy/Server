@@ -6,6 +6,7 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record DiaryReqSaveDTO (
         @Schema(description = "일기 제목", example = "쿼카의 하루")
@@ -19,6 +20,8 @@ public record DiaryReqSaveDTO (
         @Schema(description = "일기 폰트", example = "INTER")
         DiaryFont diaryFont,
         @Schema(description = "일기 폰트 사이즈", example = "PX30")
-        DiaryFontSize diaryFontSize )
+        DiaryFontSize diaryFontSize,
+        @Schema(description = "일기 사진 URL 리스트", example = "이미지.jpg")
+        List<String> imageURLs )
 {
 }
