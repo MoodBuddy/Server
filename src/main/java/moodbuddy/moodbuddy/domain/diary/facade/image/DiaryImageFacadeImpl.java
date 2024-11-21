@@ -8,7 +8,6 @@ import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.global.common.cloud.dto.request.CloudReqDTO;
 import moodbuddy.moodbuddy.global.common.cloud.dto.response.CloudUploadDTO;
 import moodbuddy.moodbuddy.global.common.cloud.service.CloudService;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +26,7 @@ public class DiaryImageFacadeImpl implements DiaryImageFacade {
     @Transactional
     @Async
     public CompletableFuture<DiaryImageResURLDTO> uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
+        System.out.println("Current Thread: " + Thread.currentThread().getName());
         CloudUploadDTO cloudUploadDTO = cloudService.resizeAndUploadImage(cloudReqDTO);
         DiaryImage diaryImage = diaryImageService.saveImage(cloudUploadDTO);
 
