@@ -21,13 +21,13 @@ public class DiaryImageServiceImpl implements DiaryImageService {
 
     @Override
     @Transactional
-    public DiaryImage saveImage(CloudUploadDTO uploadDTO) {
+    public DiaryImage save(CloudUploadDTO uploadDTO) {
         return diaryImageRepository.save(DiaryImage.from(uploadDTO));
     }
 
     @Override
     @Transactional
-    public List<DiaryImage> saveImages(List<String> imageURLs, Long diaryId) {
+    public List<DiaryImage> saveAll(List<String> imageURLs, Long diaryId) {
         List<DiaryImage> diaryImages = new ArrayList<>();
         for (String imageURL : imageURLs) {
             DiaryImage diaryImage = getDiaryImageByImageURL(imageURL);
@@ -39,7 +39,7 @@ public class DiaryImageServiceImpl implements DiaryImageService {
 
     @Override
     @Transactional
-    public void deleteAllDiaryImages(final Long diaryId) {
+    public void deleteAll(final Long diaryId) {
         List<DiaryImage> diaryImages = diaryImageRepository.findAllByDiaryIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE);
         for (DiaryImage diaryImage : diaryImages) {
             diaryImage.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);

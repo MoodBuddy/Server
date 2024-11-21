@@ -65,5 +65,6 @@ public class DiaryImage extends BaseEntity {
         this.diaryId = diaryId;
         this.moodBuddyStatus = MoodBuddyStatus.ACTIVE;
     }
+
     public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
 }
