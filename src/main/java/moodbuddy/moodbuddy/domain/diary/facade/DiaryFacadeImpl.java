@@ -3,10 +3,13 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.image.DiaryImageResURLDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
+import moodbuddy.moodbuddy.domain.diary.mapper.image.DiaryImageMapper;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.cloud.dto.request.CloudReqDTO;
@@ -33,6 +36,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final UserService userService;
     private final GptService gptService;
     private final DiaryMapper diaryMapper;
+    private final DiaryImageMapper diaryImageMapper;
 
     @Override
     @Transactional
@@ -72,13 +76,14 @@ public class DiaryFacadeImpl implements DiaryFacade {
         return diaryService.findOneByDiaryId(diaryId, userId);
     }
 
+    @Override
     @Transactional
-    public String uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
+    public DiaryImageResURLDTO uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
         final Long userId = JwtUtil.getUserId();
         CloudUploadDTO cloudUploadDTO = cloudService.resizeAndUploadImage(cloudReqDTO, userId);
-        diaryImageService.saveImage(cloudUploadDTO);
+        DiaryImage diaryImage = diaryImageService.saveImage(cloudUploadDTO);
 
-        return cloudUploadDTO.fileUrl();
+        return diaryImageMapper.toResURLDTO(diaryImage.getDiaryImgURL());
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
