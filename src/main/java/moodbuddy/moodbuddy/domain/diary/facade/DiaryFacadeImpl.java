@@ -31,12 +31,10 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;
     private final DiaryDocumentService diaryDocumentService;
     private final DiaryImageService diaryImageService;
-    private final CloudService cloudService;
     private final BookMarkService bookMarkService;
     private final UserService userService;
     private final GptService gptService;
     private final DiaryMapper diaryMapper;
-    private final DiaryImageMapper diaryImageMapper;
 
     @Override
     @Transactional
@@ -74,16 +72,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResDetailDTO findOneByDiaryId(final Long diaryId) {
         final Long userId = JwtUtil.getUserId();
         return diaryService.findOneByDiaryId(diaryId, userId);
-    }
-
-    @Override
-    @Transactional
-    public DiaryImageResURLDTO uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
-        final Long userId = JwtUtil.getUserId();
-        CloudUploadDTO cloudUploadDTO = cloudService.resizeAndUploadImage(cloudReqDTO, userId);
-        DiaryImage diaryImage = diaryImageService.saveImage(cloudUploadDTO);
-
-        return diaryImageMapper.toResURLDTO(diaryImage.getDiaryImgURL());
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
