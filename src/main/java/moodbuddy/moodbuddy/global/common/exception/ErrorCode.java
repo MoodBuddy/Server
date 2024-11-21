@@ -15,6 +15,7 @@ public enum ErrorCode {
     BAD_REQUEST_SUMMARY(400, "DIARY-ERR-400", "일기가 요약하기에 불충분합니다."),
     NOT_FOUND(400,"COMMON-ERR-400","PAGE NOT FOUND"),
     NOT_FOUND_DIARY(400, "DIARY-ERR-400", "일기를 찾을 수 없습니다."),
+    NOT_FOUND_DIARY_IMAGE(400, "DIARY-IMAGE-ERR-400", "일기 사진을 찾을 수 없습니다."),
     NOT_FOUND_DRAFT_DIARY(400, "DIARY-ERR-400", "임시 저장 일기를 찾을 수 없습니다."),
     NOT_FOUND_BOOK_MARK(400, "BOOK-MARK-ERR-400", "북마크를 찾을 수 없습니다."),
     NOT_FOUND_QUDDYTI(400, "QUDDYTI-ERR-400", "쿼디티아이를 찾을 수 없습니다."),
