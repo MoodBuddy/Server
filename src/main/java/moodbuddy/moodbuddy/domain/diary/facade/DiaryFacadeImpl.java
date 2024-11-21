@@ -51,15 +51,8 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final Long userId = JwtUtil.getUserId();
         Diary diary = diaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryImageService.deleteAll(diary.getDiaryId());
-        List<DiaryImage> diaryImages = diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
+        diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
         diaryDocumentService.save(diary);
-
-        for(DiaryImage diaryImage : diaryImages) {
-            System.out.println("diaryImage.getDiaryId() = " + diaryImage.getDiaryId());
-            System.out.println("diaryImage.getDiaryImgURL() = " + diaryImage.getDiaryImgURL());
-            System.out.println("diaryImage.getMoodBuddyStatus() = " + diaryImage.getMoodBuddyStatus());
-        }
-
         return diaryMapper.toResDetailDTO(diary);
     }
 
