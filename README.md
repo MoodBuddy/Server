@@ -38,7 +38,7 @@
   <summary> 💊 1차 개발 (⬇️ 눌러주세요‼️) </summary>
   
   ## 🕰️ 개발 기간
-  * 24.03.01일 - 24.07.27
+  * 24.03.01 - 24.07.27
   
   <br>
   
@@ -306,16 +306,7 @@
    ┃ ┃ ┣ 📂templates
    ┃ ┃ ┣ 📜application.yml
    ┃ ┃ ┗ 📜logback.xml
-   ┗ 📂test
-   ┃ ┣ 📂generated_tests
-   ┃ ┗ 📂java
-   ┃ ┃ ┗ 📂moodbuddy
-   ┃ ┃ ┃ ┗ 📂moodbuddy
-   ┃ ┃ ┃ ┃ ┣ 📂global
-   ┃ ┃ ┃ ┃ ┃ ┗ 📂common
-   ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📂util
-   ┃ ┃ ┃ ┃ ┃ ┃ ┃ ┗ 📜JwtUtilTest.java
-   ┃ ┃ ┃ ┃ ┗ 📜MoodBuddyApplicationTests.java
+    
   ```
   
   ## 🛠️ 아키텍처 구조
@@ -334,22 +325,16 @@
       - Test: 테스트 코드, 리팩토링 테스트 코드 추가
       - Chore: 빌드 업무 수정, 패키지 매니저 수정
   
-  <br>
-  
   - **Branch 규칙**
       - 각자의 깃 닉네임을 딴 branch 명을 사용한다.
       - 예시
           - git checkout -b mung
-  
-  <br>
   
   - **Commit message 규칙**
       - 종류: 메시지
       - 예시
           - feat: 커밋 내용 - #브랜치명
           - feat: 로그인 구현 - #mung
-  
-  <br>
   
   - **DTO 규칙**
       - 엔티티명 + Res/Req + 역할 + DTO
@@ -364,7 +349,7 @@
   <summary> 💊 2차 개발 (⬇️ 눌러주세요‼️) </summary>
   
   ## 🕰️ 개발 기간
-  * 24.08.01일 - 진행 중
+  * 24.08.01 - 진행 중
   
   <br>
   
@@ -410,23 +395,17 @@
       - Test: 테스트 코드, 리팩토링 테스트 코드 추가
       - Chore: 빌드 업무 수정, 패키지 매니저 수정
   
-  <br>
-  
   - **Branch 규칙**
       - 각자의 깃 타입과 이슈번호를 딴 branch 명을 사용한다.
       - 예시
           - git checkout -b 타입/#이슈번호
           - git checkout -b feature/#5
   
-  <br>
-  
   - **Commit message 규칙**
       - "타입(앞글자를 대문자로): 커밋 메세지 - #이슈번호" 형식으로 작성한다.
       - 예시
           - Feat: 커밋 내용 - #이슈번호
           - Feat: 로그인 구현 - #5
-  
-  <br>
   
   - **DTO 규칙**
       - 엔티티명 + Res/Req + 역할 + DTO
