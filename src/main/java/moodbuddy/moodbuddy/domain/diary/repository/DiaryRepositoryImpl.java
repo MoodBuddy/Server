@@ -40,7 +40,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
 
         List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                 .from(diaryImage)
-                .where(diaryImage.diary.diaryId.eq(diaryId))
+                .where(diaryImage.diaryId.eq(diaryId))
                 .fetch();
 
         diaryResDetailDTO.setDiaryImgList(diaryImgList);
