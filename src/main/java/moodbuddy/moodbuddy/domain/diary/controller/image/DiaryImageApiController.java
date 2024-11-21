@@ -22,6 +22,6 @@ public class DiaryImageApiController {
     @PostMapping("/upload")
     @Operation(summary = "일기 이미지 업로드", description = "일기 이미지를 업로드합니다.")
     public ResponseEntity<CompletableFuture<DiaryImageResURLDTO>> upload(@ModelAttribute CloudReqDTO cloudReqDTO) throws IOException {
-        return ResponseEntity.ok().body(diaryImageFacade.uploadAndSaveDiaryImage(cloudReqDTO));
+        return ResponseEntity.ok().body(diaryImageFacade.uploadAndSave(cloudReqDTO));
     }
 }

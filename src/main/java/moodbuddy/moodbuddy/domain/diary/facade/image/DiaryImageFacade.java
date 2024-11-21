@@ -7,5 +7,5 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 public interface DiaryImageFacade {
-    CompletableFuture<DiaryImageResURLDTO> uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException;
+    CompletableFuture<DiaryImageResURLDTO> uploadAndSave(CloudReqDTO cloudReqDTO) throws IOException;
 }

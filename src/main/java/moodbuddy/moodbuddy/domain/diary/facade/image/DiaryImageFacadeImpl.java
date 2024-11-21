@@ -25,11 +25,9 @@ public class DiaryImageFacadeImpl implements DiaryImageFacade {
     @Override
     @Transactional
     @Async
-    public CompletableFuture<DiaryImageResURLDTO> uploadAndSaveDiaryImage(CloudReqDTO cloudReqDTO) throws IOException {
-        System.out.println("Current Thread: " + Thread.currentThread().getName());
+    public CompletableFuture<DiaryImageResURLDTO> uploadAndSave(CloudReqDTO cloudReqDTO) throws IOException {
         CloudUploadDTO cloudUploadDTO = cloudService.resizeAndUploadImage(cloudReqDTO);
-        DiaryImage diaryImage = diaryImageService.saveImage(cloudUploadDTO);
-
+        DiaryImage diaryImage = diaryImageService.save(cloudUploadDTO);
         return CompletableFuture.completedFuture(diaryImageMapper.toResURLDTO(diaryImage.getDiaryImgURL()));
     }
 }

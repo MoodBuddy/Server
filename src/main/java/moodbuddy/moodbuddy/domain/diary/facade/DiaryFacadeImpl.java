@@ -3,6 +3,7 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final Long userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryImageService.saveImages(requestDTO.diaryImageURLs(), diary.getDiaryId());
+        diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
         return diaryMapper.toResDetailDTO(diary);
@@ -48,7 +50,16 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResDetailDTO update(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = diaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        diaryImageService.deleteAll(diary.getDiaryId());
+        List<DiaryImage> diaryImages = diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
         diaryDocumentService.save(diary);
+
+        for(DiaryImage diaryImage : diaryImages) {
+            System.out.println("diaryImage.getDiaryId() = " + diaryImage.getDiaryId());
+            System.out.println("diaryImage.getDiaryImgURL() = " + diaryImage.getDiaryImgURL());
+            System.out.println("diaryImage.getMoodBuddyStatus() = " + diaryImage.getMoodBuddyStatus());
+        }
+
         return diaryMapper.toResDetailDTO(diary);
     }
 
@@ -58,7 +69,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final Long userId = JwtUtil.getUserId();
         Diary findDiary = diaryService.delete(diaryId, userId);
         bookMarkService.deleteByDiaryId(diaryId);
-        diaryImageService.deleteAllDiaryImages(diaryId);
+        diaryImageService.deleteAll(diaryId);
         diaryDocumentService.delete(diaryId);
         checkTodayDiary(findDiary.getDiaryDate(), userId, true);
     }
