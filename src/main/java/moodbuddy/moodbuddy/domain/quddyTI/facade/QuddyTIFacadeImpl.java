@@ -5,6 +5,7 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.service.count.DiaryCountService;
 import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
+import moodbuddy.moodbuddy.domain.quddyTI.mapper.QuddyTIMapper;
 import moodbuddy.moodbuddy.domain.quddyTI.service.QuddyTIService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,11 @@ import java.util.stream.Collectors;
 public class QuddyTIFacadeImpl implements QuddyTIFacade {
     private final DiaryCountService diaryCountService;
     private final QuddyTIService quddyTIService;
+    private final QuddyTIMapper quddyTIMapper;
 
     @Override
-    public List<QuddyTIResDetailDTO> findAll() {
-        return quddyTIService.findAll(JwtUtil.getUserId());
+    public QuddyTIResDetailDTO findByDate(String year, String month) {
+        return quddyTIMapper.toResDetailDTO(quddyTIService.findByDate(JwtUtil.getUserId(), year, month));
     }
 
     @Override

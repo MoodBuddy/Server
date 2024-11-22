@@ -5,7 +5,7 @@ import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
 import java.util.List;
 
 public interface QuddyTIFacade {
-    List<QuddyTIResDetailDTO> findAll();
+    QuddyTIResDetailDTO findByDate(String year, String month);
     void aggregateAndSaveDiaryData();
 
 }
