@@ -39,7 +39,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final Long userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
+        if(requestDTO.diaryImageURLs() != null) {
+            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
+        }
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
         return diaryMapper.toResDetailDTO(diary);
@@ -51,7 +53,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final Long userId = JwtUtil.getUserId();
         Diary diary = diaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryImageService.deleteAll(diary.getDiaryId());
-        diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
+        if(requestDTO.newImageURLs() != null) {
+            diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
+        }
         diaryDocumentService.save(diary);
         return diaryMapper.toResDetailDTO(diary);
     }
@@ -63,7 +67,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         Diary findDiary = diaryService.delete(diaryId, userId);
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
-        diaryDocumentService.delete(diaryId);
+//        diaryDocumentService.delete(diaryId);
         checkTodayDiary(findDiary.getDiaryDate(), userId, true);
     }
 

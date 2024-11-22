@@ -18,7 +18,7 @@ public class DiaryApiController {
     private final DiaryFacade diaryFacade;
 
     /** 구현 완료 **/
-    @PostMapping("/save-diary")
+    @PostMapping("/save")
     @Operation(summary = "일기 작성", description = "새로운 일기를 작성합니다.")
     public ResponseEntity<DiaryResDetailDTO> save(@Parameter(description = "일기 정보를 담고 있는 DTO")
                                                       @RequestBody DiaryReqSaveDTO requestDTO) {
@@ -27,7 +27,7 @@ public class DiaryApiController {
     }
 
     /** 구현 완료 **/
-    @PostMapping("/update-diary")
+    @PostMapping("/update")
     @Operation(summary = "일기 수정", description = "기존 일기를 수정합니다.")
     public ResponseEntity<DiaryResDetailDTO> update(@Parameter(description = "수정된 일기 정보를 담고 있는 DTO")
                                                         @RequestBody DiaryReqUpdateDTO requestDTO) {

@@ -170,7 +170,7 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
         Map<Long, List<String>> diaryImagesMap = queryFactory
                 .selectFrom(diaryImage)
                 .where(diaryImage.diaryId.in(diaryIds)
-                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                        .and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch()
                 .stream()
                 .collect(Collectors.groupingBy(
@@ -225,7 +225,6 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
         if (month == null) {
             return null;
         }
-        // 날짜의 월을 비교하는 조건 추가
         return diary.diaryDate.month().eq(month);
     }
 

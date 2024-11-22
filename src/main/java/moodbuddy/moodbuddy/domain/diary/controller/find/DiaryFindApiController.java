@@ -23,14 +23,14 @@ public class DiaryFindApiController {
     private final DiaryFindFacade diaryFindFacade;
 
     /** 구현 완료 **/
-    @GetMapping("/findAllPageable")
+    @GetMapping("/findAll")
     @Operation(summary = "일기 전체 조회", description = "일기를 모두 조회합니다.")
     public ResponseEntity<Page<DiaryResDetailDTO>> findAll(Pageable pageable) {
         return ResponseEntity.ok().body(diaryFindFacade.findAll(pageable));
     }
 
     /** 구현 완료 **/
-    @GetMapping("/findAllByEmotionWithPageable")
+    @GetMapping("/findAllByEmotion")
     @Operation(summary = "일기 감정으로 일기 전체 조회", description = "감정이 똑같은 일기를 모두 조회합니다.")
     public ResponseEntity<Page<DiaryResDetailDTO>> findAllByEmotion(
             @Parameter(description = "검색하고 싶은 감정(HAPPY, ANGRY, AVERSION, SURPRISED, CALMNESS, DEPRESSION, FEAR)", example = "HAPPY")

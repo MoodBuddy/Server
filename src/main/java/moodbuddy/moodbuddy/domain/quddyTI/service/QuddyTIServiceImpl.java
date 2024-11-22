@@ -37,8 +37,8 @@ public class QuddyTIServiceImpl implements QuddyTIService {
                                        Map<DiaryEmotion, Long> emotionCounts,
                                        Map<DiarySubject, Long> subjectCounts,
                                        String quddyTIType) {
-        QuddyTI quddyTI = getQuddyTIByUserIdAndDate(userId, formatYear(currentDate), formatMonth(currentDate));
-        quddyTI.updateQuddyTI(emotionCounts, subjectCounts, quddyTIType);
+        getQuddyTIByUserIdAndDate(userId, formatYear(currentDate), formatMonth(currentDate))
+                .updateQuddyTI(emotionCounts, subjectCounts, quddyTIType);
     }
 
     private QuddyTI getQuddyTIByUserIdAndDate(Long userId, String year, String month) {

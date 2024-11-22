@@ -19,6 +19,7 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     private final DraftDiaryService draftDiaryService;
     private final DiaryMapper diaryMapper;
 
+    //TODO 이미지 관리 해결해야 함.
     @Override
     @Transactional
     public DiaryResDetailDTO saveDraftDiary(DiaryReqSaveDTO requestDTO) {
