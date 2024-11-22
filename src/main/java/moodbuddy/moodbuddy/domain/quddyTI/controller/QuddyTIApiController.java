@@ -6,13 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
 import moodbuddy.moodbuddy.domain.quddyTI.facade.QuddyTIFacade;
-import moodbuddy.moodbuddy.domain.quddyTI.service.QuddyTIService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v2/member/quddyTI")
@@ -23,9 +21,12 @@ public class QuddyTIApiController {
     private final QuddyTIFacade quddyTIFacade;
 
     /** 구현 완료 **/
-    @GetMapping("/findAll")
-    @Operation(summary = "쿼디티아이 조회", description = "쿼디티아이 관련 내용을 모두 조회합니다.")
-    public ResponseEntity<List<QuddyTIResDetailDTO>> findAll() {
-        return ResponseEntity.ok().body(quddyTIFacade.findAll());
+    @GetMapping("/findByDate")
+    @Operation(summary = "쿼디티아이 날짜 별 조회", description = "쿼디티아이를 날짜 별로 조회합니다.")
+    public ResponseEntity<QuddyTIResDetailDTO> findByDate(
+            @RequestParam("year") String year,
+            @RequestParam("month") String month
+    ) {
+        return ResponseEntity.ok().body(quddyTIFacade.findByDate(year, month));
     }
 }

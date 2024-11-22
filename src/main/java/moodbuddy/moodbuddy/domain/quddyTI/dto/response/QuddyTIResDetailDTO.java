@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTIStatus;
+import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +12,8 @@ import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTIStatus;
 @Builder
 public class QuddyTIResDetailDTO {
     private Long userId;
-    private String quddyTIYearMonth;
+    private String quddyTIYear;
+    private String quddyTIMonth;
     private Integer diaryFrequency;
     private Integer happinessCount;
     private Integer angerCount;
@@ -26,5 +27,5 @@ public class QuddyTIResDetailDTO {
     private Integer emotionCount;
     private Integer travelCount;
     private String quddyTIType ;
-    private QuddyTIStatus quddyTIStatus;
+    private MoodBuddyStatus moodBuddyStatus;
 }
