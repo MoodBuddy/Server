@@ -5,6 +5,7 @@ import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.service.draft.DraftDiaryService;
@@ -44,7 +45,8 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     }
 
     @Override
-    public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
-        return null;
+    public DraftDiaryResDetailDTO findOneByDiaryId(Long diaryId) {
+        final Long userId = JwtUtil.getUserId();
+        return draftDiaryService.findOneByDiaryId(diaryId, userId);
     }
 }

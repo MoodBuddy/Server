@@ -3,6 +3,7 @@ package moodbuddy.moodbuddy.domain.diary.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import java.util.List;
@@ -35,12 +36,14 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         diary.moodBuddyStatus
                 ))
                 .from(diary)
-                .where(diary.diaryId.eq(diaryId).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                .where(diary.diaryId.eq(diaryId)
+                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
 
         List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                 .from(diaryImage)
-                .where(diaryImage.diaryId.eq(diaryId))
+                .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();
 
         diaryResDetailDTO.setDiaryImgList(diaryImgList);
