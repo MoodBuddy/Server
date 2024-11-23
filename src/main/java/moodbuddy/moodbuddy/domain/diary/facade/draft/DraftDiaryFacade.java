@@ -9,4 +9,5 @@ public interface DraftDiaryFacade {
     DiaryResDetailDTO save(DiaryReqSaveDTO requestDTO);
     DiaryResDraftFindAllDTO findAll();
     void selectDelete(DiaryReqDraftSelectDeleteDTO requestDTO);
+    DiaryResDetailDTO findOneByDiaryId(Long diaryId);
 }

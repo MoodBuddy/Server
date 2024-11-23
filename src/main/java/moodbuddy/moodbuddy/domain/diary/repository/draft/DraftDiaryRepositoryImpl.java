@@ -32,7 +32,7 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
                         .and(diary.diaryStatus.eq(DiaryStatus.DRAFT).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .fetch()
                 .stream()
-                .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.userId(), d.diaryDate(), d.diaryStatus()))
+                .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.diaryDate(), d.diaryStatus()))
                 .collect(Collectors.toList());
 
         return new DiaryResDraftFindAllDTO(draftList);
