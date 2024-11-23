@@ -42,13 +42,15 @@ public class QQuddyTI extends EntityPathBase<QuddyTI> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final EnumPath<moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus> moodBuddyStatus = createEnum("moodBuddyStatus", moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus.class);
+
     public final NumberPath<Integer> neutralCount = createNumber("neutralCount", Integer.class);
 
-    public final EnumPath<QuddyTIStatus> quddyTIStatus = createEnum("quddyTIStatus", QuddyTIStatus.class);
+    public final StringPath quddyTIMonth = createString("quddyTIMonth");
 
     public final StringPath quddyTIType = createString("quddyTIType");
 
-    public final StringPath quddyTIYearMonth = createString("quddyTIYearMonth");
+    public final StringPath quddyTIYear = createString("quddyTIYear");
 
     public final NumberPath<Integer> sadnessCount = createNumber("sadnessCount", Integer.class);
 

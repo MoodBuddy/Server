@@ -19,6 +19,7 @@ public enum ErrorCode {
     NOT_FOUND_DRAFT_DIARY(400, "DIARY-ERR-400", "임시 저장 일기를 찾을 수 없습니다."),
     NOT_FOUND_BOOK_MARK(400, "BOOK-MARK-ERR-400", "북마크를 찾을 수 없습니다."),
     NOT_FOUND_QUDDYTI(400, "QUDDYTI-ERR-400", "쿼디티아이를 찾을 수 없습니다."),
+    INVALIDATE_QUDDYTI(400, "QUDDYTI-ERR-400", "쿼디티아이를 결정 중 에러가 발생했습니다."),
     NOT_FOUND_USER(400, "USER-ERR-400", "userId에 해당하는 회원을 찾을 수 없습니다."),
     NOT_FOUND_PROFILE(400, "PROFILE-ERR-400", "userId에 해당하는 프로필을 찾을 수 없습니다."),
     NOT_FOUND_PROFILE_IMAGE(400, "PROFILE-IMAGE-ERR-400", "userId에 해당하는 프로필 이미지를 찾을 수 없습니다."),
