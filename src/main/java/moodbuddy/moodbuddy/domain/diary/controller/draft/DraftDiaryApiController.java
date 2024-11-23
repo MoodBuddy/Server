@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.facade.draft.DraftDiaryFacade;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,10 @@ public class DraftDiaryApiController {
         return ResponseEntity.ok().body(draftDiaryFacade.save(requestDTO));
     }
 
-    //TODO 임시 저장 일기 조회
     /** 구현 완료 **/
     @GetMapping("/findOne/{diaryId}")
     @Operation(summary = "임시 저장 일기 하나 조회", description = "임시 저장 일기 하나를 조회합니다.")
-    public ResponseEntity<DiaryResDetailDTO> findOneByDiaryId(@Parameter(description = "일기 고유 식별자")
+    public ResponseEntity<DraftDiaryResDetailDTO> findOneByDiaryId(@Parameter(description = "일기 고유 식별자")
                                                               @PathVariable("diaryId") Long diaryId) {
         return ResponseEntity.ok().body(draftDiaryFacade.findOneByDiaryId(diaryId));
     }
