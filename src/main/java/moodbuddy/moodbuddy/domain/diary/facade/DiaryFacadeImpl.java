@@ -10,7 +10,6 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
-import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
@@ -25,7 +24,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;
-    private final DiaryDocumentService diaryDocumentService;
     private final DiaryImageService diaryImageService;
     private final BookMarkService bookMarkService;
     private final UserService userService;
@@ -42,7 +40,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         if(requestDTO.diaryImageURLs() != null) {
             diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
         }
-        diaryDocumentService.save(diary);
+//        diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
         return diaryMapper.toResDetailDTO(diary);
     }
@@ -56,7 +54,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         if(requestDTO.newImageURLs() != null) {
             diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
         }
-        diaryDocumentService.save(diary);
+//        diaryDocumentService.save(diary);
         return diaryMapper.toResDetailDTO(diary);
     }
 
