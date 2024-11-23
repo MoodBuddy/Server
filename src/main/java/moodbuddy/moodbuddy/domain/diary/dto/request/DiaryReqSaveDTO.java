@@ -1,11 +1,11 @@
 package moodbuddy.moodbuddy.domain.diary.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryFontSize;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryWeather;
-import org.springframework.web.multipart.MultipartFile;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 
+import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -21,6 +21,9 @@ public record DiaryReqSaveDTO (
         @Schema(description = "일기 폰트", example = "INTER")
         DiaryFont diaryFont,
         @Schema(description = "일기 폰트 사이즈", example = "PX30")
-        DiaryFontSize diaryFontSize )
+        DiaryFontSize diaryFontSize,
+        @Schema(description = "일기 사진 URL 리스트", example = "[이미지 URL, 이미지 URL]")
+        @Nullable
+        List<String> diaryImageURLs)
 {
 }

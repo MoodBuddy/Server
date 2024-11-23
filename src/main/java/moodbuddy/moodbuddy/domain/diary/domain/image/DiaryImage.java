@@ -2,9 +2,10 @@ package moodbuddy.moodbuddy.domain.diary.domain.image;
 
 import jakarta.persistence.*;
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.cloud.dto.response.CloudUploadDTO;
 
 @Entity
 @Getter
@@ -18,37 +19,52 @@ public class DiaryImage extends BaseEntity {
     @Column(name = "diary_image_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_id")
-    private Diary diary;
+    @Column(name = "diary_id")
+    private Long diaryId;
+
+    @Column(name = "original_width")
+    private int originalWidth;
+
+    @Column(name = "original_height")
+    private int originalHeight;
+
+    @Column(name = "resize_width")
+    private int resizeWidth;
+
+    @Column(name = "resize_height")
+    private int resizeHeight;
+
+    @Column(name = "diary_img_file_name")
+    private String diaryImgFileName;
+
+    @Column(name = "diary_img_path")
+    private String diaryImgPath;
 
     @Column(name = "diary_img_url")
     private String diaryImgURL;
 
-    @Column(name = "diary_image_file_name")
-    private String diaryImgFileName;
-
-    @Column(name = "diary_img_width")
-    private Double diaryImgWidth;
-
-    @Column(name = "diary_img_height")
-    private Double diaryImgHeight;
-
-    @Column(name = "diary_img_thumb_file_name")
-    private String diaryImgThumbFileName;
-
-    @Column(name = "diary_img_thumb_url")
-    private String diaryImgThumbURL;
-
-    @Column(name = "diary_img_thumb_width")
-    private Double diaryImgThumbWidth;
-
-    @Column(name = "diary_img_thumb_height")
-    private Double diaryImgThumbHeight;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "mood_buddy_status")
     private MoodBuddyStatus moodBuddyStatus;
+
+    public static DiaryImage from(CloudUploadDTO cloudUploadDTO) {
+        return DiaryImage.builder()
+                .diaryId(null)
+                .diaryImgFileName(cloudUploadDTO.fileName())
+                .diaryImgPath(cloudUploadDTO.filePath())
+                .diaryImgURL(cloudUploadDTO.fileUrl())
+                .originalWidth(cloudUploadDTO.originalWidth())
+                .originalHeight(cloudUploadDTO.originalHeight())
+                .resizeWidth(cloudUploadDTO.resizeWidth())
+                .resizeHeight(cloudUploadDTO.resizeHeight())
+                .moodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
+                .build();
+    }
+
+    public void updateStatus(Long diaryId) {
+        this.diaryId = diaryId;
+        this.moodBuddyStatus = MoodBuddyStatus.ACTIVE;
+    }
 
     public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
 }

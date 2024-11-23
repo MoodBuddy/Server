@@ -1,10 +1,10 @@
 package moodbuddy.moodbuddy.domain.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.repository.base.DiaryRepository;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.monthcomment.domain.MonthComment;
 import moodbuddy.moodbuddy.domain.monthcomment.repository.MonthCommentRepository;
