@@ -52,7 +52,7 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
         List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
-                    .where(diaryImage.diaryId.eq(d.getDiaryId()))
+                    .where(diaryImage.diaryId.eq(d.getDiaryId()).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                     .fetch();
 
             return DiaryResDetailDTO.builder()
@@ -93,7 +93,8 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
                 .fetch();
 
         Map<Long, List<String>> diaryImages = queryFactory.selectFrom(diaryImage)
-                .where(diaryImage.diaryId.in(diaries.stream().map(Diary::getDiaryId).collect(Collectors.toList())))
+                .where(diaryImage.diaryId.in(diaries.stream().map(Diary::getDiaryId).collect(Collectors.toList()))
+                        .and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch()
                 .stream()
                 .collect(Collectors.groupingBy(
