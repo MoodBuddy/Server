@@ -4,8 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindAllDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindOneDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,11 +18,10 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
     }
 
     @Override
-    public DiaryResDraftFindAllDTO draftFindAllByUserId(Long userId) {
-        List<DiaryResDraftFindOneDTO> draftList = queryFactory
-                .select(Projections.constructor(DiaryResDraftFindOneDTO.class,
+    public List<DraftDiaryResFindOneDTO> findAllByUserId(Long userId) {
+        List<DraftDiaryResFindOneDTO> result = queryFactory
+                .select(Projections.constructor(DraftDiaryResFindOneDTO.class,
                         diary.diaryId,
-                        diary.userId,
                         diary.diaryDate,
                         diary.diaryStatus
                 ))
@@ -32,9 +30,9 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
                         .and(diary.diaryStatus.eq(DiaryStatus.DRAFT).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .fetch()
                 .stream()
-                .map(d -> new DiaryResDraftFindOneDTO(d.diaryId(), d.diaryDate(), d.diaryStatus()))
+                .map(d -> new DraftDiaryResFindOneDTO(d.diaryId(), d.diaryDate(), d.diaryStatus()))
                 .collect(Collectors.toList());
 
-        return new DiaryResDraftFindAllDTO(draftList);
+        return result;
     }
 }

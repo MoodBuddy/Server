@@ -2,15 +2,17 @@ package moodbuddy.moodbuddy.domain.diary.facade.draft;
 
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DiaryReqDraftSelectDeleteDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindAllDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.service.draft.DraftDiaryService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,14 +31,14 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     }
 
     @Override
-    public DiaryResDraftFindAllDTO findAll() {
+    public List<DraftDiaryResFindOneDTO> findAll() {
         final Long userId = JwtUtil.getUserId();
         return draftDiaryService.findAll(userId);
     }
 
     @Override
     @Transactional
-    public void selectDelete(DiaryReqDraftSelectDeleteDTO requestDTO) {
+    public void selectDelete(DraftDiaryReqSelectDeleteDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         draftDiaryService.selectDelete(requestDTO, userId);
     }
