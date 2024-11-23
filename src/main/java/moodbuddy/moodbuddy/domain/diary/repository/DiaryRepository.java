@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryRepositoryCustom {
     Optional<Diary> findByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
     List<Diary> findAllByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
-    Optional<Diary> findByDiaryIdAndMoodBuddyStatus(Long diaryId, MoodBuddyStatus moodBuddyStatus);
+    Optional<Diary> findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(Long diaryId, DiaryStatus diaryStatus, MoodBuddyStatus moodBuddyStatus);
 
 
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId AND DATE_FORMAT(diary_date, '%Y-%m') = :month AND diary_status = :status", nativeQuery = true)
