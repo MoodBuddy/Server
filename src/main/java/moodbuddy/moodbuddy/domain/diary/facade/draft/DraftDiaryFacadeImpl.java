@@ -40,4 +40,9 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
         final Long userId = JwtUtil.getUserId();
         draftDiaryService.selectDelete(requestDTO, userId);
     }
+
+    @Override
+    public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
+        return null;
+    }
 }

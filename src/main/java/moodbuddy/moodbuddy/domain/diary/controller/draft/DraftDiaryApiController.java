@@ -27,6 +27,15 @@ public class DraftDiaryApiController {
         return ResponseEntity.ok().body(draftDiaryFacade.save(requestDTO));
     }
 
+    //TODO 임시 저장 일기 조회
+    /** 구현 완료 **/
+    @GetMapping("/findOne/{diaryId}")
+    @Operation(summary = "임시 저장 일기 하나 조회", description = "임시 저장 일기 하나를 조회합니다.")
+    public ResponseEntity<DiaryResDetailDTO> findOneByDiaryId(@Parameter(description = "일기 고유 식별자")
+                                                              @PathVariable("diaryId") Long diaryId) {
+        return ResponseEntity.ok().body(draftDiaryFacade.findOneByDiaryId(diaryId));
+    }
+
     /** 구현 완료 **/
     @GetMapping("/findAll")
     @Operation(summary = "임시 저장 일기 목록 조회", description = "임시 저장 일기를 모두 조회합니다.")
