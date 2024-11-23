@@ -22,20 +22,20 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     @Transactional
-    public Diary draftSave(DiaryReqSaveDTO requestDTO, final Long userId) {
+    public Diary save(DiaryReqSaveDTO requestDTO, final Long userId) {
         return draftDiaryRepository.save((Diary.ofDraft(
                 requestDTO,
                 userId)));
     }
 
     @Override
-    public DiaryResDraftFindAllDTO draftFindAll(final Long userId) {
+    public DiaryResDraftFindAllDTO findAll(final Long userId) {
         return draftDiaryRepository.draftFindAllByUserId(userId);
     }
 
     @Override
     @Transactional
-    public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, Long userId) {
+    public void selectDelete(DiaryReqDraftSelectDeleteDTO requestDTO, Long userId) {
         requestDTO.diaryIdList().forEach(diaryId ->
                 getDraftDiaryById(diaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
         );

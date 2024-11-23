@@ -22,22 +22,22 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     //TODO 이미지 관리 해결해야 함.
     @Override
     @Transactional
-    public DiaryResDetailDTO saveDraftDiary(DiaryReqSaveDTO requestDTO) {
+    public DiaryResDetailDTO save(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        Diary diary = draftDiaryService.draftSave(requestDTO, userId);
+        Diary diary = draftDiaryService.save(requestDTO, userId);
         return diaryMapper.toResDetailDTO(diary);
     }
 
     @Override
-    public DiaryResDraftFindAllDTO draftFindAll() {
+    public DiaryResDraftFindAllDTO findAll() {
         final Long userId = JwtUtil.getUserId();
-        return draftDiaryService.draftFindAll(userId);
+        return draftDiaryService.findAll(userId);
     }
 
     @Override
     @Transactional
-    public void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO) {
+    public void selectDelete(DiaryReqDraftSelectDeleteDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        draftDiaryService.draftSelectDelete(requestDTO, userId);
+        draftDiaryService.selectDelete(requestDTO, userId);
     }
 }
