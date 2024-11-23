@@ -2,15 +2,15 @@ package moodbuddy.moodbuddy.domain.quddyTI.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiarySubject;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 
 import java.util.Map;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,15 +24,15 @@ public class QuddyTI extends BaseEntity {
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
-    @Column(name = "quddy_ti_year", columnDefinition = "varchar(4)")
-    private String quddyTIYear;
+    /** 월 **/
+    @Column(name = "quddy_ti_year_month", columnDefinition = "varchar(7)")
+    private String quddyTIYearMonth;
 
-    @Column(name = "quddy_ti_month", columnDefinition = "varchar(2)")
-    private String quddyTIMonth;
-
+    /** 일기 작성 빈도수 **/
     @Column(name = "diary_frequency", columnDefinition = "int")
     private Integer diaryFrequency;
 
+    /** 일기 주제 **/
     @Column(name = "daily_count", columnDefinition = "int")
     private Integer dailyCount;
     @Column(name = "growth_count", columnDefinition = "int")
@@ -64,30 +64,8 @@ public class QuddyTI extends BaseEntity {
 
     /** 쿼디티아이 상태 **/
     @Enumerated(EnumType.STRING)
-    @Column(name = "mood_buddy_status")
-    private MoodBuddyStatus moodBuddyStatus;
-
-    public static QuddyTI of(Long userId, String year, String month) {
-        return QuddyTI.builder()
-                .userId(userId)
-                .quddyTIYear(year)
-                .quddyTIMonth(month)
-                .diaryFrequency(0)
-                .dailyCount(0)
-                .growthCount(0)
-                .emotionCount(0)
-                .travelCount(0)
-                .happinessCount(0)
-                .angerCount(0)
-                .disgustCount(0)
-                .fearCount(0)
-                .neutralCount(0)
-                .sadnessCount(0)
-                .surpriseCount(0)
-                .quddyTIType(null)
-                .moodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
-                .build();
-    }
+    @Column(name = "quddy_ti_status")
+    private QuddyTIStatus quddyTIStatus;
 
     public void updateQuddyTI(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts, String quddyTIType) {
         this.happinessCount = emotionCounts.getOrDefault(DiaryEmotion.HAPPINESS, 0L).intValue();
@@ -102,7 +80,9 @@ public class QuddyTI extends BaseEntity {
         this.emotionCount = subjectCounts.getOrDefault(DiarySubject.EMOTION, 0L).intValue();
         this.travelCount = subjectCounts.getOrDefault(DiarySubject.TRAVEL, 0L).intValue();
         this.quddyTIType = quddyTIType;
-        this.moodBuddyStatus = MoodBuddyStatus.ACTIVE;
+        this.quddyTIStatus = QuddyTIStatus.FINISH;
+
+        // 다이어리 빈도 계산
         this.diaryFrequency = (int) emotionCounts.values().stream().mapToLong(Long::longValue).sum();
     }
 }

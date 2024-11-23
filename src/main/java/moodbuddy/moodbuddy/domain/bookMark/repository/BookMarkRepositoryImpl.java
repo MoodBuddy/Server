@@ -5,8 +5,8 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 import static moodbuddy.moodbuddy.domain.bookMark.domain.QBookMark.bookMark;
-import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
+import static moodbuddy.moodbuddy.domain.diary.domain.base.QDiary.diary;
 import static moodbuddy.moodbuddy.domain.diary.domain.image.QDiaryImage.diaryImage;
 
 public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
@@ -43,7 +43,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
         List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
-                    .where(diaryImage.diaryId.eq(d.getDiaryId()))
+                    .where(diaryImage.diary.diaryId.eq(d.getDiaryId()))
                     .fetch();
 
             return DiaryResDetailDTO.builder()

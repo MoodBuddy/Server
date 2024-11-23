@@ -1,31 +1,37 @@
 package moodbuddy.moodbuddy.domain.quddyTI.mapper;
 
-import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTI;
 import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
+import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTI;
+import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTIStatus;
+import org.modelmapper.ModelMapper;
 
-@Mapper(componentModel = "spring")
-public interface QuddyTIMapper {
-    QuddyTIMapper INSTANCE = Mappers.getMapper(QuddyTIMapper.class);
+public class QuddyTIMapper {
+    private static final ModelMapper modelMapper = new ModelMapper();
 
-    @Mapping(target = "userId", source = "userId")
-    @Mapping(target = "quddyTIYear", source = "quddyTIYear")
-    @Mapping(target = "quddyTIMonth", source = "quddyTIMonth")
-    @Mapping(target = "diaryFrequency", source = "diaryFrequency")
-    @Mapping(target = "happinessCount", source = "happinessCount")
-    @Mapping(target = "angerCount", source = "angerCount")
-    @Mapping(target = "disgustCount", source = "disgustCount")
-    @Mapping(target = "fearCount", source = "fearCount")
-    @Mapping(target = "neutralCount", source = "neutralCount")
-    @Mapping(target = "sadnessCount", source = "sadnessCount")
-    @Mapping(target = "surpriseCount", source = "surpriseCount")
-    @Mapping(target = "dailyCount", source = "dailyCount")
-    @Mapping(target = "growthCount", source = "growthCount")
-    @Mapping(target = "emotionCount", source = "emotionCount")
-    @Mapping(target = "travelCount", source = "travelCount")
-    @Mapping(target = "quddyTIType", source = "quddyTIType")
-    @Mapping(target = "moodBuddyStatus", source = "moodBuddyStatus")
-    QuddyTIResDetailDTO toResDetailDTO(QuddyTI quddyTI);
+    public static QuddyTIResDetailDTO toQuddyTIResDetailDTO(QuddyTI quddyTI) {
+        return modelMapper.map(quddyTI, QuddyTIResDetailDTO.class);
+    }
+
+    // QuddyTI 생성
+    public static QuddyTI toQuddyTIEntity(Long userId, String quddyTIYearMonth) {
+        return QuddyTI.builder()
+                .userId(userId)
+                .happinessCount(0)
+                .angerCount(0)
+                .disgustCount(0)
+                .fearCount(0)
+                .neutralCount(0)
+                .sadnessCount(0)
+                .surpriseCount(0)
+                .dailyCount(0)
+                .growthCount(0)
+                .emotionCount(0)
+                .travelCount(0)
+                .quddyTIType(null)
+                .quddyTIStatus(QuddyTIStatus.CREATING)
+                .quddyTIYearMonth(quddyTIYearMonth)
+                .diaryFrequency(0)
+                .build();
+    }
 }
+

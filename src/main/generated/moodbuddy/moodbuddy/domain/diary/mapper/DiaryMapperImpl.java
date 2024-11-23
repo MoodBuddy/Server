@@ -1,13 +1,16 @@
 package moodbuddy.moodbuddy.domain.diary.mapper;
 
+import java.time.LocalDate;
 import javax.annotation.processing.Generated;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.base.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDraftFindOneDTO;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-23T17:53:28+0900",
+    date = "2024-11-14T16:45:13+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.13 (Homebrew)"
 )
 @Component
@@ -37,5 +40,26 @@ public class DiaryMapperImpl implements DiaryMapper {
         diaryResDetailDTO.diaryFontSize( diary.getDiaryFontSize() );
 
         return diaryResDetailDTO.build();
+    }
+
+    @Override
+    public DiaryResDraftFindOneDTO toResDraftFindOneDTO(Diary diary) {
+        if ( diary == null ) {
+            return null;
+        }
+
+        Long diaryId = null;
+        Long userId = null;
+        LocalDate diaryDate = null;
+        DiaryStatus diaryStatus = null;
+
+        diaryId = diary.getDiaryId();
+        userId = diary.getUserId();
+        diaryDate = diary.getDiaryDate();
+        diaryStatus = diary.getDiaryStatus();
+
+        DiaryResDraftFindOneDTO diaryResDraftFindOneDTO = new DiaryResDraftFindOneDTO( diaryId, userId, diaryDate, diaryStatus );
+
+        return diaryResDraftFindOneDTO;
     }
 }

@@ -8,9 +8,5 @@ import java.util.Optional;
 
 public interface QuddyTIRepository extends JpaRepository<QuddyTI, Long> {
     Optional<List<QuddyTI>> findByUserId(Long userId);
-    Optional<QuddyTI> findByUserIdAndQuddyTIYearAndQuddyTIMonth(
-            Long userId,
-            String quddyTIYear,
-            String quddyTIMonth
-    );
+    Optional<QuddyTI> findByUserIdAndQuddyTIYearMonth(Long userId, String yearMonth);
 }

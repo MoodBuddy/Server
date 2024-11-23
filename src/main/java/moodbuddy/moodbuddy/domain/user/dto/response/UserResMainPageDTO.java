@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
+import moodbuddy.moodbuddy.domain.diary.domain.base.DiaryEmotion;
 
 @Data
 @AllArgsConstructor
