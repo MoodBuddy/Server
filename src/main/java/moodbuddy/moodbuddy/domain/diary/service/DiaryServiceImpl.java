@@ -86,7 +86,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public Diary getDiaryById(Long diaryId) {
-        return diaryRepository.findByDiaryIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
+        return diaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.PUBLISHED, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
     }
 }
