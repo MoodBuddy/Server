@@ -52,7 +52,7 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
         List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
-                    .where(diaryImage.diaryId.eq(d.getDiaryId()))
+                    .where(diaryImage.diaryId.eq(d.getDiaryId()).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                     .fetch();
 
             return DiaryResDetailDTO.builder()
@@ -84,13 +84,17 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
     @Override
     public Page<DiaryResDetailDTO> findAllByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
-                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
+                .where(diaryEmotionEq(emotion).and(diary.userId.eq(userId)
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)
+                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
+                        )))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         Map<Long, List<String>> diaryImages = queryFactory.selectFrom(diaryImage)
-                .where(diaryImage.diaryId.in(diaries.stream().map(Diary::getDiaryId).collect(Collectors.toList())))
+                .where(diaryImage.diaryId.in(diaries.stream().map(Diary::getDiaryId).collect(Collectors.toList()))
+                        .and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch()
                 .stream()
                 .collect(Collectors.groupingBy(
@@ -156,7 +160,9 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
         }
 
         List<Diary> results = queryFactory.selectFrom(diary)
-                .where(builder)
+                .where(builder
+                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED)
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
