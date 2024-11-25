@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.user.dto.response;
+package moodbuddy.moodbuddy.domain.profile.dto.response;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class UserResProfileDTO {
+public class ProfileResDetailDTO {
     String url;
     String profileComment;
     String nickname;
