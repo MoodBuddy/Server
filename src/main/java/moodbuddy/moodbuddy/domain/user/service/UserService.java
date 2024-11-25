@@ -1,5 +1,7 @@
 package moodbuddy.moodbuddy.domain.user.service;
 
+import moodbuddy.moodbuddy.domain.profile.dto.request.ProfileReqUpdateDTO;
+import moodbuddy.moodbuddy.domain.profile.dto.response.ProfileResDetailDTO;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
@@ -7,7 +9,6 @@ import moodbuddy.moodbuddy.domain.user.dto.response.UserResMainPageDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
 import moodbuddy.moodbuddy.domain.user.domain.User;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,10 +32,10 @@ public interface UserService {
     List<UserEmotionStaticDTO> getEmotionNums(LocalDate month);
 
     //프로필 조회
-    UserResProfileDTO getUserProfile();
+    ProfileResDetailDTO getUserProfile();
 
     //프로필 수정
-    UserResProfileDTO updateProfile(UserReqProfileUpdateDto dto) throws IOException;
+    ProfileResDetailDTO updateProfile(ProfileReqUpdateDTO requestDTO) ;
 
     // 사용자가 설정한 알림 시간에 문자 보내기
     void scheduleUserMessage(Long userId);

@@ -9,6 +9,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDT
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
 import moodbuddy.moodbuddy.domain.diary.service.draft.DraftDiaryService;
+import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     private final DraftDiaryService draftDiaryService;
+    private final DiaryImageService diaryImageService;
     private final DiaryMapper diaryMapper;
 
     //TODO 이미지 관리 해결해야 함.
@@ -28,6 +30,9 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     public DiaryResDetailDTO save(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = draftDiaryService.save(requestDTO, userId);
+        if(requestDTO.diaryImageURLs() != null) {
+            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
+        }
         return diaryMapper.toResDetailDTO(diary);
     }
 
