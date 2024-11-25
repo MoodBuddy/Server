@@ -5,11 +5,10 @@ import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
+import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.monthcomment.domain.MonthComment;
 import moodbuddy.moodbuddy.domain.monthcomment.repository.MonthCommentRepository;
 import moodbuddy.moodbuddy.domain.profile.domain.Profile;
-import moodbuddy.moodbuddy.domain.profile.dto.request.ProfileReqUpdateDTO;
-import moodbuddy.moodbuddy.domain.profile.dto.response.ProfileResDetailDTO;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileRepository;
 import moodbuddy.moodbuddy.domain.profile.domain.ProfileImage;
 import moodbuddy.moodbuddy.domain.profile.repository.ProfileImageRepository;
@@ -32,7 +31,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.io.IOException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -45,12 +44,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @EnableScheduling
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final ProfileImageRepository profileImageRepository;
     private final DiaryRepository diaryRepository;
     private final MonthCommentRepository monthCommentRepository;
+    private final DiaryImageService diaryImageService;
     private final ScheduledExecutorService scheduledExecutorService;
     private final SmsService smsService;
 
@@ -408,7 +408,7 @@ public class UserServiceImpl implements UserService {
     //프로필 이미지 s3에 저장 -> url setter로 변경
     @Override
     @Transactional
-    public ProfileResDetailDTO updateProfile(ProfileReqUpdateDTO requestDTO) {
+    public UserResProfileDTO updateProfile(UserReqProfileUpdateDto dto) throws IOException {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(
@@ -421,27 +421,29 @@ public class UserServiceImpl implements UserService {
                 () -> new ProfileImageNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE_IMAGE)
         );
 
-        profile.setProfileComment(requestDTO.getProfileComment());
+        profile.setProfileComment(dto.getProfileComment());
         profileRepository.save(profile);
 
-        user.setAlarm(requestDTO.getAlarm());
-        user.setAlarmTime(requestDTO.getAlarmTime());
-        user.setPhoneNumber(requestDTO.getPhoneNumber());
-        user.setNickname(requestDTO.getNickname());
-        user.setGender(requestDTO.getGender());
-        user.setBirthday(requestDTO.getBirthday());
+        user.setAlarm(dto.getAlarm());
+        user.setAlarmTime(dto.getAlarmTime());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setNickname(dto.getNickname());
+        user.setGender(dto.getGender());
+        user.setBirthday(dto.getBirthday());
         userRepository.save(user);
 
-        String profileImageUrl = requestDTO.getProfileImageUrl();
-        if (profileImageUrl != null) {
-            profileImage.setProfileImgURL(profileImageUrl);
+        if (dto.getNewProfileImg() != null) {
+            String url = diaryImageService.saveProfileImages(dto.getNewProfileImg());
+            profileImage.setProfileImgURL(url);
+            profileImageRepository.save(profileImage);
         }
 
+        // 업데이트된 정보를 기반으로 UserResProfileDTO 객체를 생성하여 반환
         return createUserResProfileDTO(user, profile, profileImage);
     }
 
-    private ProfileResDetailDTO createUserResProfileDTO(User user, Profile profile, ProfileImage profileImage) {
-        return ProfileResDetailDTO.builder()
+    private UserResProfileDTO createUserResProfileDTO(User user, Profile profile, ProfileImage profileImage) {
+        return UserResProfileDTO.builder()
                 .url(profileImage.getProfileImgURL())
                 .profileComment(profile.getProfileComment())
                 .nickname(user.getNickname())
@@ -455,7 +457,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProfileResDetailDTO getUserProfile() {
+    public UserResProfileDTO getUserProfile() {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(

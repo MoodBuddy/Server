@@ -1,8 +1,6 @@
 package moodbuddy.moodbuddy.domain.user.facade;
 
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.profile.dto.request.ProfileReqUpdateDTO;
-import moodbuddy.moodbuddy.domain.profile.dto.response.ProfileResDetailDTO;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
 import org.springframework.stereotype.Component;
@@ -55,7 +53,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public ProfileResDetailDTO getUserProfile() {
+    public UserResProfileDTO getUserProfile() {
         return null;
     }
 
@@ -65,7 +63,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public ProfileResDetailDTO updateProfile(ProfileReqUpdateDTO updateDto) {
+    public UserResProfileDTO updateProfile(UserReqProfileUpdateDto updateDto) {
         return null;
     }
 

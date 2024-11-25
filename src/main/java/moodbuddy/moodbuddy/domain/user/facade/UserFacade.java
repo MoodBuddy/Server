@@ -1,7 +1,5 @@
 package moodbuddy.moodbuddy.domain.user.facade;
 
-import moodbuddy.moodbuddy.domain.profile.dto.request.ProfileReqUpdateDTO;
-import moodbuddy.moodbuddy.domain.profile.dto.response.ProfileResDetailDTO;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
 
@@ -17,9 +15,9 @@ public interface UserFacade {
     UserResMonthCommentUpdateDTO monthCommentUpdate(UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO);
     List<UserDiaryNumsDTO> getDiaryNums(LocalDate year);
     List<UserEmotionStaticDTO> getEmotionNums(LocalDate month);
-    ProfileResDetailDTO getUserProfile();
+    UserResProfileDTO getUserProfile();
     void scheduleUserMessage(Long kakaoId);
-    ProfileResDetailDTO updateProfile(ProfileReqUpdateDTO updateDto);
+    UserResProfileDTO updateProfile(UserReqProfileUpdateDto updateDto);
     UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO);
     UserResCheckTodayDiaryDTO checkTodayDiary();
 }

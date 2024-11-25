@@ -5,15 +5,18 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import moodbuddy.moodbuddy.domain.profile.dto.request.ProfileReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
+import moodbuddy.moodbuddy.domain.user.dto.response.*;
+import moodbuddy.moodbuddy.domain.user.facade.UserFacade;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -101,11 +104,12 @@ public class UserApiController {
         return ResponseEntity.ok(userService.getUserProfile());
     }
 
+
     //프로필 수정
     @PostMapping ("/main/profile-edit")
     @Operation(summary = "프로필 수정", description = "alarmTime(str) -> HH:mm 형식,birthday(str) -> YYYY-mm-dd 형식 ")
     public ResponseEntity<?> updateProfile(
-            @ModelAttribute ProfileReqUpdateDTO updateDto) {
+            @ModelAttribute UserReqProfileUpdateDto updateDto) throws IOException {
         Long kakaoId = JwtUtil.getUserId();
         userService.scheduleUserMessage(kakaoId);
         return ResponseEntity.ok(userService.updateProfile(updateDto));
