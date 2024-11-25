@@ -1,12 +1,18 @@
 package moodbuddy.moodbuddy.domain.diary.facade.draft;
 
-import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DiaryReqDraftSelectDeleteDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DiaryResDraftFindAllDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
+
+import java.util.List;
 
 public interface DraftDiaryFacade {
-    DiaryResDetailDTO saveDraftDiary(DiaryReqSaveDTO requestDTO);
-    DiaryResDraftFindAllDTO draftFindAll();
-    void draftSelectDelete(DiaryReqDraftSelectDeleteDTO requestDTO);
+    DiaryResDetailDTO save(DiaryReqSaveDTO requestDTO);
+    DiaryResDetailDTO update(DiaryReqUpdateDTO requestDTO);
+    List<DraftDiaryResFindOneDTO> findAll();
+    void selectDelete(DraftDiaryReqSelectDeleteDTO requestDTO);
+    DraftDiaryResDetailDTO findOneByDiaryId(Long diaryId);
 }

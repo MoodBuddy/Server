@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.mapper;
+package moodbuddy.moodbuddy.domain.diary.mapper.draft;
 
 import javax.annotation.processing.Generated;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-26T01:10:10+0900",
+    date = "2024-11-26T01:51:46+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.13 (Homebrew)"
 )
 @Component
-public class DiaryMapperImpl implements DiaryMapper {
+public class DraftDiaryMapperImpl implements DraftDiaryMapper {
 
     @Override
     public DiaryResDetailDTO toResDetailDTO(Diary diary) {
