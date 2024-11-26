@@ -21,7 +21,7 @@ import java.util.TimerTask;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/member/letter")
+@RequestMapping("/api/v2/member/letter")
 @Tag(name = "letter-controller", description = "Letter API")
 public class LetterApiController {
 
