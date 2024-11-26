@@ -60,4 +60,5 @@ public interface UserService {
     UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO);
     UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO);
     User getUserById(Long userId);
+    User getUserByKakaoId(Long kakaoId);
 }
