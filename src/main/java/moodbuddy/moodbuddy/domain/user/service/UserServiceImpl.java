@@ -522,7 +522,7 @@ public class UserServiceImpl implements UserService {
     /** 테스트를 위한 임시 자체 로그인 **/
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
-        return UserMapper.toUserResLoginDTO(getUserById(userReqLoginDTO.getUserId()));
+        return UserMapper.toUserResLoginDTO(getUserByKakaoId(userReqLoginDTO.getKakaoId()));
     }
 
     /** 테스트를 위한 임시 자체 회원가입 **/
@@ -534,7 +534,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Long userId) {
-        return userRepository.findById(userId)
+        return userRepository.findByUserId(userId)
+                .orElseThrow(()->new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER));
+    }
+
+    @Override
+    public User getUserByKakaoId(Long kakaoId) {
+        return userRepository.findByKakaoId(kakaoId)
                 .orElseThrow(()->new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER));
     }
 }
