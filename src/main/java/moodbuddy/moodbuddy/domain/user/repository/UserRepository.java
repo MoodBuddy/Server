@@ -24,6 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.userId = :userId")
     Optional<User> findByUserIdWithPessimisticLock(@Param("userId") Long userId);
 
+    @Query("select u from User u where u.kakaoId = :kakaoId")
+    Optional<User> findByKakaoId(@Param("kakaoId") Long kakaoId);
 //    @Modifying
 //    @Transactional
 //    @Query("update User u set u.userCurDiaryNums = :curDiaryNums where u.userId = :userId")
@@ -32,11 +34,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //    @Modifying
 //    @Transactional
 //    @Query("update User u set u.userLastDiaryNums = :curDiaryNums where u.userId = :userId")
+
 //    void updateLastDiaryNumsById(@Param("userId") Long userId, @Param("curDiaryNums") Integer curDiaryNums);
 
     @Modifying
     @Transactional
     @Query("update User u set u.letterAlarm = :letterAlarm where u.userId = :userId")
     void updateLetterAlarmByUserId(@Param("userId") Long userId, @Param("letterAlarm") boolean letterAlarm);
-
 }
