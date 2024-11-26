@@ -31,8 +31,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/**"))
                 .requestMatchers(new AntPathRequestMatcher("/user/sign-up"))
                 .requestMatchers(new AntPathRequestMatcher("/api/healthCheck"))
-                .requestMatchers(new AntPathRequestMatcher("/user/login"))
-                .requestMatchers(new AntPathRequestMatcher("/test/login")));
+                .requestMatchers(new AntPathRequestMatcher("/user/login")));
     }
 
     @Bean
