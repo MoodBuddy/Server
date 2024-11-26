@@ -44,10 +44,14 @@ public class SecurityConfig {
                                 "http://react-app:3000",
                                 "http://localhost:5173",
                                 "http://localhost:3000",
+                                "http://localhost:8080",
+                                "http://52.79.54.242:8080",
+                                "http://52.79.54.242:3000",
                                 "http://moodbuddy:8080",
                                 "https://moodbuddy.site",
                                 "http://moodbuddy.site",
-                                "https://neon-cat-f70a98.netlify.app"));
+                                "https://neon-cat-f70a98.netlify.app",
+                                "https://main.d28mm6xwy7gaq8.amplifyapp.com/"));
                         config.setAllowedHeaders(List.of("*"));
                         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                         config.setAllowCredentials(true);
