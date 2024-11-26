@@ -46,7 +46,7 @@ public class DiaryResDetailDTO {
     @Schema(description = "일기 상태", example = "ACTIVE")
     private MoodBuddyStatus moodBuddyStatus;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL) // 굳이 필요하지 않은 경우가 있음.
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Schema(description = "일기 이미지 List", example = "[이미지 URL, 이미지 URL]")
     private List<String> diaryImgList;
 

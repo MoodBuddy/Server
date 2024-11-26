@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.mapper;
+package moodbuddy.moodbuddy.domain.diary.mapper.draft;
 
 import javax.annotation.processing.Generated;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.13 (Homebrew)"
 )
 @Component
-public class DiaryMapperImpl implements DiaryMapper {
+public class DraftDiaryMapperImpl implements DraftDiaryMapper {
 
     @Override
     public DiaryResDetailDTO toResDetailDTO(Diary diary) {
