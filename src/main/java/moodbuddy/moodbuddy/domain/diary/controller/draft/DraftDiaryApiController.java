@@ -10,6 +10,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.facade.draft.DraftDiaryFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class DraftDiaryApiController {
     /** 구현 완료 **/
     @PostMapping("/save")
     @Operation(summary = "일기 임시 저장", description = "일기를 임시 저장합니다.")
-    public ResponseEntity<DiaryResDetailDTO> save(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
+    public ResponseEntity<DiaryResSaveDTO> save(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
                                                        @RequestBody DiaryReqSaveDTO requestDTO) {
         return ResponseEntity.ok().body(draftDiaryFacade.save(requestDTO));
     }
@@ -34,7 +35,7 @@ public class DraftDiaryApiController {
     /** 구현 완료 **/
     @PostMapping("/update")
     @Operation(summary = "임시 저장 일기 -> 일기 저장으로 변경", description = "임시 저장 일기 -> 일기 저장으로 변경합니다.")
-    public ResponseEntity<DiaryResDetailDTO> update(@Parameter(description = "변경할 일기 정보를 담고 있는 DTO")
+    public ResponseEntity<DiaryResSaveDTO> update(@Parameter(description = "변경할 일기 정보를 담고 있는 DTO")
                                                     @RequestBody DiaryReqUpdateDTO requestDTO) {
         return ResponseEntity.ok().body(draftDiaryFacade.update(requestDTO));
     }

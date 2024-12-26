@@ -5,12 +5,9 @@ import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
-import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
-import moodbuddy.moodbuddy.domain.diary.mapper.draft.DraftDiaryMapper;
-import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
+import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.draft.DraftDiaryService;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
@@ -29,22 +26,21 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     private final DiaryDocumentService diaryDocumentService;
     private final DiaryImageService diaryImageService;
     private final GptService gptService;
-    private final DraftDiaryMapper draftDiaryMapper;
 
     @Override
     @Transactional
-    public DiaryResDetailDTO save(DiaryReqSaveDTO requestDTO) {
+    public DiaryResSaveDTO save(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = draftDiaryService.save(requestDTO, userId);
         if(requestDTO.diaryImageURLs() != null) {
             diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
         }
-        return draftDiaryMapper.toResDetailDTO(diary);
+        return new DiaryResSaveDTO(diary.getDiaryId());
     }
 
     @Override
     @Transactional
-    public DiaryResDetailDTO update(DiaryReqUpdateDTO requestDTO) {
+    public DiaryResSaveDTO update(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = draftDiaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryImageService.deleteAll(diary.getDiaryId());
@@ -52,7 +48,7 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
             diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
         }
         diaryDocumentService.save(diary);
-        return draftDiaryMapper.toResDetailDTO(diary);
+        return new DiaryResSaveDTO(diary.getDiaryId());
     }
 
     @Override
