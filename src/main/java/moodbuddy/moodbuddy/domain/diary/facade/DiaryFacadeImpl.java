@@ -6,7 +6,7 @@ import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.mapper.DiaryMapper;
+import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
@@ -27,11 +27,10 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final BookMarkService bookMarkService;
     private final UserService userService;
     private final GptService gptService;
-    private final DiaryMapper diaryMapper;
 
     @Override
     @Transactional
-    public DiaryResDetailDTO save(DiaryReqSaveDTO requestDTO) {
+    public DiaryResSaveDTO save(DiaryReqSaveDTO requestDTO) {
         //TODO 일기 저장, 이미지 저장, 일라스틱서치 저장 분리할 필요가 있음.
         final Long userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
@@ -41,12 +40,12 @@ public class DiaryFacadeImpl implements DiaryFacade {
         }
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
-        return diaryMapper.toResDetailDTO(diary);
+        return new DiaryResSaveDTO(diary.getDiaryId());
     }
 
     @Override
     @Transactional
-    public DiaryResDetailDTO update(DiaryReqUpdateDTO requestDTO) {
+    public DiaryResSaveDTO update(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = diaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryImageService.deleteAll(diary.getDiaryId());
@@ -54,7 +53,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
             diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
         }
         diaryDocumentService.save(diary);
-        return diaryMapper.toResDetailDTO(diary);
+        return new DiaryResSaveDTO(diary.getDiaryId());
     }
 
     @Override

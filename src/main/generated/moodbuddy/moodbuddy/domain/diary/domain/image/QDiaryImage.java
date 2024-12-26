@@ -26,23 +26,11 @@ public class QDiaryImage extends EntityPathBase<DiaryImage> {
 
     public final NumberPath<Long> diaryId = createNumber("diaryId", Long.class);
 
-    public final StringPath diaryImgFileName = createString("diaryImgFileName");
-
-    public final StringPath diaryImgPath = createString("diaryImgPath");
-
     public final StringPath diaryImgURL = createString("diaryImgURL");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final EnumPath<moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus> moodBuddyStatus = createEnum("moodBuddyStatus", moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus.class);
-
-    public final NumberPath<Integer> originalHeight = createNumber("originalHeight", Integer.class);
-
-    public final NumberPath<Integer> originalWidth = createNumber("originalWidth", Integer.class);
-
-    public final NumberPath<Integer> resizeHeight = createNumber("resizeHeight", Integer.class);
-
-    public final NumberPath<Integer> resizeWidth = createNumber("resizeWidth", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;

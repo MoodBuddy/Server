@@ -3,9 +3,11 @@ package moodbuddy.moodbuddy.domain.diary.domain.image;
 import jakarta.persistence.*;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
-import moodbuddy.moodbuddy.global.common.cloud.dto.response.CloudUploadDTO;
 
 @Entity
 @Getter
@@ -22,24 +24,6 @@ public class DiaryImage extends BaseEntity {
     @Column(name = "diary_id")
     private Long diaryId;
 
-    @Column(name = "original_width")
-    private int originalWidth;
-
-    @Column(name = "original_height")
-    private int originalHeight;
-
-    @Column(name = "resize_width")
-    private int resizeWidth;
-
-    @Column(name = "resize_height")
-    private int resizeHeight;
-
-    @Column(name = "diary_img_file_name")
-    private String diaryImgFileName;
-
-    @Column(name = "diary_img_path")
-    private String diaryImgPath;
-
     @Column(name = "diary_img_url")
     private String diaryImgURL;
 
@@ -47,23 +31,12 @@ public class DiaryImage extends BaseEntity {
     @Column(name = "mood_buddy_status")
     private MoodBuddyStatus moodBuddyStatus;
 
-    public static DiaryImage from(CloudUploadDTO cloudUploadDTO) {
+    public static DiaryImage of(Long diaryId, String diaryImgURL) {
         return DiaryImage.builder()
-                .diaryId(null)
-                .diaryImgFileName(cloudUploadDTO.fileName())
-                .diaryImgPath(cloudUploadDTO.filePath())
-                .diaryImgURL(cloudUploadDTO.fileUrl())
-                .originalWidth(cloudUploadDTO.originalWidth())
-                .originalHeight(cloudUploadDTO.originalHeight())
-                .resizeWidth(cloudUploadDTO.resizeWidth())
-                .resizeHeight(cloudUploadDTO.resizeHeight())
-                .moodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
+                .diaryId(diaryId)
+                .diaryImgURL(diaryImgURL)
+                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();
-    }
-
-    public void updateStatus(Long diaryId) {
-        this.diaryId = diaryId;
-        this.moodBuddyStatus = MoodBuddyStatus.ACTIVE;
     }
 
     public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
