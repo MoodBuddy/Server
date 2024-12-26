@@ -22,14 +22,14 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     @Transactional
     public boolean toggle(final Long diaryId) {
         final Long userId = JwtUtil.getUserId();
-        Diary findDiary = diaryService.getDiaryById(diaryId);
+        Diary findDiary = diaryService.findDiaryById(diaryId);
         diaryService.validateDiaryAccess(findDiary, userId);
         return bookMarkService.toggle(findDiary, userId);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable) {
+    public Page<DiaryResDetailDTO> getBookMarks(Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
-        return bookMarkService.bookMarkFindAllByWithPageable(pageable, userId);
+        return bookMarkService.getBookMarks(pageable, userId);
     }
 }

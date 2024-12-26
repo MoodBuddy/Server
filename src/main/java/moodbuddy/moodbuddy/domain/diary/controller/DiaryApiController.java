@@ -21,33 +21,33 @@ public class DiaryApiController {
     /** 구현 완료 **/
     @PostMapping("/save")
     @Operation(summary = "일기 작성", description = "새로운 일기를 작성합니다.")
-    public ResponseEntity<DiaryResSaveDTO> save(@Parameter(description = "일기 정보를 담고 있는 DTO")
+    public ResponseEntity<DiaryResSaveDTO> saveDiary(@Parameter(description = "일기 정보를 담고 있는 DTO")
                                                       @RequestBody DiaryReqSaveDTO requestDTO) {
-        return ResponseEntity.ok().body(diaryFacade.save(requestDTO));
+        return ResponseEntity.ok().body(diaryFacade.saveDiary(requestDTO));
     }
 
     /** 구현 완료 **/
     @PostMapping("/update")
     @Operation(summary = "일기 수정", description = "기존 일기를 수정합니다.")
-    public ResponseEntity<DiaryResSaveDTO> update(@Parameter(description = "수정된 일기 정보를 담고 있는 DTO")
+    public ResponseEntity<DiaryResSaveDTO> updateDiary(@Parameter(description = "수정된 일기 정보를 담고 있는 DTO")
                                                         @RequestBody DiaryReqUpdateDTO requestDTO) {
-        return ResponseEntity.ok().body(diaryFacade.update(requestDTO));
+        return ResponseEntity.ok().body(diaryFacade.updateDiary(requestDTO));
     }
 
     /** 구현 완료 **/
     @PostMapping("/delete/{diaryId}")
     @Operation(summary = "일기 삭제", description = "기존 일기를 삭제합니다.")
-    public ResponseEntity<?> delete(@Parameter(description = "일기 고유 식별자")
+    public ResponseEntity<?> deleteDiary(@Parameter(description = "일기 고유 식별자")
                                         @PathVariable("diaryId") Long diaryId) {
-        diaryFacade.delete(diaryId);
+        diaryFacade.deleteDiary(diaryId);
         return ResponseEntity.ok().body("일기 삭제 완료.");
     }
 
     /** 구현 완료 **/
-    @GetMapping("/findOne/{diaryId}")
+    @GetMapping("/{diaryId}")
     @Operation(summary = "일기 하나 조회", description = "일기 하나를 조회합니다.")
-    public ResponseEntity<DiaryResDetailDTO> findOneByDiaryId(@Parameter(description = "일기 고유 식별자")
+    public ResponseEntity<DiaryResDetailDTO> getDiary(@Parameter(description = "일기 고유 식별자")
                                                               @PathVariable("diaryId") Long diaryId) {
-        return ResponseEntity.ok().body(diaryFacade.findOneByDiaryId(diaryId));
+        return ResponseEntity.ok().body(diaryFacade.getDiary(diaryId));
     }
 }

@@ -20,23 +20,17 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     private final DiaryFindRepository diaryFindRepository;
 
     @Override
-    public Page<DiaryResDetailDTO> findAll(Pageable pageable, final Long userId) {
+    public Page<DiaryResDetailDTO> getDiaries(Pageable pageable, final Long userId) {
         return diaryFindRepository.findAllByUserIdWithPageable(userId, pageable);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> findAllByEmotion(DiaryEmotion diaryEmotion, Pageable pageable, final Long userId) {
+    public Page<DiaryResDetailDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable, final Long userId) {
         return diaryFindRepository.findAllByEmotionWithPageable(diaryEmotion, userId, pageable);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> findAllByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
+    public Page<DiaryResDetailDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
         return diaryFindRepository.findAllByFilterWithPageable(requestDTO, userId, pageable);
-    }
-
-    private void validateDiaryAccess(Diary findDiary, Long userId) {
-        if (!findDiary.getUserId().equals(userId)) {
-            throw new DiaryNoAccessException(ErrorCode.NO_ACCESS_DIARY);
-        }
     }
 }

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public interface QuddyTIService {
-    QuddyTI findByDate(final Long userId, String year, String month);
+    QuddyTI getQuddyTIByDate(final Long userId, String year, String month);
     void createNewMonth(Long userId, LocalDate currentMonth);
     void processLastMonth(Long userId, LocalDate[] dateRange, Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts);
 }

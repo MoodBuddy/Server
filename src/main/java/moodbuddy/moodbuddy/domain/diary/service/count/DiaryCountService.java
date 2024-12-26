@@ -7,6 +7,6 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public interface DiaryCountService {
-    Map<DiaryEmotion, Long> getEmotionCounts(LocalDate[] dates);
-    Map<DiarySubject, Long> getSubjectCounts(LocalDate[] dates);
+    Map<DiaryEmotion, Long> getEmotionCountsByDate(LocalDate[] dates);
+    Map<DiarySubject, Long> getSubjectCountsByDate(LocalDate[] dates);
 }

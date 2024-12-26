@@ -24,7 +24,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     }
 
     @Override
-    public Page<DiaryResDetailDTO> bookMarkFindAllWithPageable(Long userId, Pageable pageable) {
+    public Page<DiaryResDetailDTO> findAllWithPageable(Long userId, Pageable pageable) {
         List<Diary> diaries = queryFactory.selectFrom(diary)
                 .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
                 .where(bookMark.userId.eq(userId)
