@@ -29,9 +29,9 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResSaveDTO save(DiaryReqSaveDTO requestDTO) {
+    public DiaryResSaveDTO saveDraftDiary(DiaryReqSaveDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        Diary diary = draftDiaryService.save(requestDTO, userId);
+        Diary diary = draftDiaryService.saveDraftDiary(requestDTO, userId);
         if(requestDTO.diaryImageURLs() != null) {
             diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
         }
@@ -40,9 +40,9 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResSaveDTO update(DiaryReqUpdateDTO requestDTO) {
+    public DiaryResSaveDTO updateDraftDiary(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        Diary diary = draftDiaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        Diary diary = draftDiaryService.updateDraftDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryImageService.deleteAll(diary.getDiaryId());
         if(requestDTO.newImageURLs() != null) {
             diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
@@ -52,21 +52,21 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     }
 
     @Override
-    public List<DraftDiaryResFindOneDTO> findAll() {
+    public List<DraftDiaryResFindOneDTO> getDraftDiaries() {
         final Long userId = JwtUtil.getUserId();
-        return draftDiaryService.findAll(userId);
+        return draftDiaryService.getDraftDiaries(userId);
     }
 
     @Override
     @Transactional
-    public void selectDelete(DraftDiaryReqSelectDeleteDTO requestDTO) {
+    public void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        draftDiaryService.selectDelete(requestDTO, userId);
+        draftDiaryService.deleteDraftDiaries(requestDTO, userId);
     }
 
     @Override
-    public DraftDiaryResDetailDTO findOneByDiaryId(Long diaryId) {
+    public DraftDiaryResDetailDTO getDraftDiary(Long diaryId) {
         final Long userId = JwtUtil.getUserId();
-        return draftDiaryService.findOneByDiaryId(diaryId, userId);
+        return draftDiaryService.getDraftDiary(diaryId, userId);
     }
 }
