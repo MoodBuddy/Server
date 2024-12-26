@@ -35,12 +35,4 @@ public class DiaryCountServiceImpl implements DiaryCountService {
         }
         return subjectCounts;
     }
-
-    private long getDiaryEmotionCount(DiaryEmotion diaryEmotion, LocalDate start, LocalDate end) {
-        return diaryCountRepository.countByEmotionAndDateRange(diaryEmotion, start, end);
-    }
-
-    private long getDiarySubjectCount(DiarySubject subject, LocalDate start, LocalDate end) {
-        return diaryCountRepository.countBySubjectAndDateRange(subject, start, end);
-    }
 }
