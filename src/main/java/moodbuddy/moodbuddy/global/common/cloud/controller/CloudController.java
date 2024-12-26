@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/member/cloud")
+@RequestMapping("/api/v2/member/cloud")
 @Tag(name = "Cloud", description = "클라우드 관련 API")
 @RequiredArgsConstructor
 public class CloudController {
