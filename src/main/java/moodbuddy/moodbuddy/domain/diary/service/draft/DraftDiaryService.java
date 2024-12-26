@@ -10,16 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface DraftDiaryService {
-    // 일기 임시 저장
-    Diary save(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);
-
-    Diary update(DiaryReqUpdateDTO requestDTO, Map<String, String> stringStringMap, final Long userId);
-
-    // 일기 임시 저장 날짜 조회
-    List<DraftDiaryResFindOneDTO> findAll(final Long userId);
-
-    // 일기 임시 저장 선택 삭제
-    void selectDelete(DraftDiaryReqSelectDeleteDTO requestDTO, final Long userId);
-
-    DraftDiaryResDetailDTO findOneByDiaryId(final Long diaryId, final Long userId);
+    Diary saveDraftDiary(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);
+    Diary updateDraftDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> stringStringMap, final Long userId);
+    List<DraftDiaryResFindOneDTO> getDraftDiaries(final Long userId);
+    void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO, final Long userId);
+    DraftDiaryResDetailDTO getDraftDiary(final Long diaryId, final Long userId);
 }

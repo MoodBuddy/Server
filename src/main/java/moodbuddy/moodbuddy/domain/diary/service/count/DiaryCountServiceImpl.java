@@ -17,7 +17,7 @@ public class DiaryCountServiceImpl implements DiaryCountService {
     private final DiaryCountRepository diaryCountRepository;
 
     @Override
-    public Map<DiaryEmotion, Long> getEmotionCounts(LocalDate[] dates) {
+    public Map<DiaryEmotion, Long> getEmotionCountsByDate(LocalDate[] dates) {
         EnumMap<DiaryEmotion, Long> emotionCounts = new EnumMap<>(DiaryEmotion.class);
         for (DiaryEmotion emotion : DiaryEmotion.values()) {
             long count = diaryCountRepository.countByEmotionAndDateRange(emotion, dates[0], dates[1]);
@@ -27,20 +27,12 @@ public class DiaryCountServiceImpl implements DiaryCountService {
     }
 
     @Override
-    public Map<DiarySubject, Long> getSubjectCounts(LocalDate[] dates) {
+    public Map<DiarySubject, Long> getSubjectCountsByDate(LocalDate[] dates) {
         EnumMap<DiarySubject, Long> subjectCounts = new EnumMap<>(DiarySubject.class);
         for (DiarySubject subject : DiarySubject.values()) {
             long count = diaryCountRepository.countBySubjectAndDateRange(subject, dates[0], dates[1]);
             subjectCounts.put(subject, count);
         }
         return subjectCounts;
-    }
-
-    private long getDiaryEmotionCount(DiaryEmotion diaryEmotion, LocalDate start, LocalDate end) {
-        return diaryCountRepository.countByEmotionAndDateRange(diaryEmotion, start, end);
-    }
-
-    private long getDiarySubjectCount(DiarySubject subject, LocalDate start, LocalDate end) {
-        return diaryCountRepository.countBySubjectAndDateRange(subject, start, end);
     }
 }
