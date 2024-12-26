@@ -23,7 +23,7 @@ public class QuddyTIFacadeImpl implements QuddyTIFacade {
     private final QuddyTIMapper quddyTIMapper;
 
     @Override
-    public QuddyTIResDetailDTO getQuddyTI(String year, String month) {
+    public QuddyTIResDetailDTO getQuddyTIByDate(String year, String month) {
         Long userId = JwtUtil.getUserId();
         return quddyTIMapper.toResDetailDTO(
                 quddyTIService.getQuddyTIByDate(userId, year, month)
@@ -36,8 +36,8 @@ public class QuddyTIFacadeImpl implements QuddyTIFacade {
         Long userId = JwtUtil.getUserId();
         quddyTIService.createNewMonth(userId, LocalDate.now());
         LocalDate[] dates = getLastMonthDates();
-        Map<DiaryEmotion, Long> emotionCounts = diaryCountService.getEmotionCounts(dates);
-        Map<DiarySubject, Long> subjectCounts = diaryCountService.getSubjectCounts(dates);
+        Map<DiaryEmotion, Long> emotionCounts = diaryCountService.getEmotionCountsByDate(dates);
+        Map<DiarySubject, Long> subjectCounts = diaryCountService.getSubjectCountsByDate(dates);
 
         quddyTIService.processLastMonth(userId, getLastMonthDates(), emotionCounts, subjectCounts);
     }
