@@ -24,6 +24,5 @@ public record DiaryReqSaveDTO (
         DiaryFontSize diaryFontSize,
         @Schema(description = "일기 사진 URL 리스트", example = "[이미지 URL, 이미지 URL]")
         @Nullable
-        List<String> diaryImageURLs )
-{
-}
+        List<String> diaryImageURLs
+) {}

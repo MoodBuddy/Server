@@ -4,13 +4,8 @@ import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.repository.image.DiaryImageRepository;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
-import moodbuddy.moodbuddy.global.common.cloud.dto.response.CloudUploadDTO;
-import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.diaryImage.DiaryImageNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,20 +16,10 @@ public class DiaryImageServiceImpl implements DiaryImageService {
 
     @Override
     @Transactional
-    public DiaryImage save(CloudUploadDTO uploadDTO) {
-        return diaryImageRepository.save(DiaryImage.from(uploadDTO));
-    }
-
-    @Override
-    @Transactional
-    public List<DiaryImage> saveAll(List<String> imageURLs, Long diaryId) {
-        List<DiaryImage> diaryImages = new ArrayList<>();
+    public void saveAll(List<String> imageURLs, Long diaryId) {
         for (String imageURL : imageURLs) {
-            DiaryImage diaryImage = getDiaryImageByImageURL(imageURL);
-            diaryImage.updateStatus(diaryId);
-            diaryImages.add(diaryImage);
+            diaryImageRepository.save(DiaryImage.of(diaryId, imageURL));
         }
-        return diaryImages;
     }
 
     @Override
@@ -44,16 +29,5 @@ public class DiaryImageServiceImpl implements DiaryImageService {
         for (DiaryImage diaryImage : diaryImages) {
             diaryImage.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         }
-    }
-
-    @Override
-    public String saveProfileImages(MultipartFile newProfileImg) {
-//        return uploadImage(newProfileImg);
-        return null;
-    }
-
-    private DiaryImage getDiaryImageByImageURL(String imageURL) {
-        return diaryImageRepository.findByDiaryImgURL(imageURL)
-                .orElseThrow(() -> new DiaryImageNotFoundException(ErrorCode.NOT_FOUND_DIARY_IMAGE));
     }
 }
