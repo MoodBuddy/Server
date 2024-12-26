@@ -23,10 +23,10 @@ public class QuddyTIApiController {
     /** 구현 완료 **/
     @GetMapping("/")
     @Operation(summary = "쿼디티아이 날짜 별 조회", description = "쿼디티아이를 날짜 별로 조회합니다.")
-    public ResponseEntity<QuddyTIResDetailDTO> findByDate(
+    public ResponseEntity<QuddyTIResDetailDTO> getQuddyTIByDate(
             @RequestParam("year") String year,
             @RequestParam("month") String month
     ) {
-        return ResponseEntity.ok().body(quddyTIFacade.getQuddyTI(year, month));
+        return ResponseEntity.ok().body(quddyTIFacade.getQuddyTIByDate(year, month));
     }
 }
