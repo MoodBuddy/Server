@@ -12,7 +12,7 @@ import java.util.Map;
 public interface DraftDiaryService {
     Diary saveDraftDiary(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);
     Diary updateDraftDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> stringStringMap, final Long userId);
-    List<DraftDiaryResFindOneDTO> findAll(final Long userId);
+    List<DraftDiaryResFindOneDTO> getDraftDiaries(final Long userId);
     void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO, final Long userId);
     DraftDiaryResDetailDTO getDraftDiary(final Long diaryId, final Long userId);
 }

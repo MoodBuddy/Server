@@ -28,7 +28,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary save(DiaryReqSaveDTO requestDTO, Map<String, String> gptResults, final Long userId) {
+    public Diary saveDiary(DiaryReqSaveDTO requestDTO, Map<String, String> gptResults, final Long userId) {
         Diary diary = diaryRepository.save(Diary.ofPublished(
                 requestDTO,
                 userId,
@@ -41,8 +41,8 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary update(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults, final Long userId) {
-        Diary findDiary = getDiaryById(requestDTO.diaryId());
+    public Diary updateDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults, final Long userId) {
+        Diary findDiary = findDiaryById(requestDTO.diaryId());
         validateDiaryAccess(findDiary, userId);
         findDiary.updateDiary(requestDTO, gptResults);
         deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
@@ -51,16 +51,16 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary delete(Long diaryId, Long userId) {
-        final Diary findDiary = getDiaryById(diaryId);
+    public Diary deleteDiary(Long diaryId, Long userId) {
+        final Diary findDiary = findDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         return findDiary;
     }
 
     @Override
-    public DiaryResDetailDTO findOneByDiaryId(final Long diaryId, final Long userId) {
-        final Diary findDiary = getDiaryById(diaryId);
+    public DiaryResDetailDTO getDiary(final Long diaryId, final Long userId) {
+        final Diary findDiary = findDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
         return diaryRepository.findOneByDiaryId(diaryId);
     }
@@ -85,7 +85,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public Diary getDiaryById(Long diaryId) {
+    public Diary findDiaryById(Long diaryId) {
         return diaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.PUBLISHED, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
     }

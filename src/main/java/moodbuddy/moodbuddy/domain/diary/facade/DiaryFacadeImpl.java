@@ -30,11 +30,11 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResSaveDTO save(DiaryReqSaveDTO requestDTO) {
+    public DiaryResSaveDTO saveDiary(DiaryReqSaveDTO requestDTO) {
         //TODO 일기 저장, 이미지 저장, 일라스틱서치 저장 분리할 필요가 있음.
         final Long userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
-        Diary diary = diaryService.save(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        Diary diary = diaryService.saveDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         if(requestDTO.diaryImageURLs() != null) {
             diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
         }
@@ -45,9 +45,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResSaveDTO update(DiaryReqUpdateDTO requestDTO) {
+    public DiaryResSaveDTO updateDiary(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        Diary diary = diaryService.update(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        Diary diary = diaryService.updateDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryImageService.deleteAll(diary.getDiaryId());
         if(requestDTO.newImageURLs() != null) {
             diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
@@ -58,9 +58,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public void delete(final Long diaryId) {
+    public void deleteDiary(final Long diaryId) {
         final Long userId = JwtUtil.getUserId();
-        Diary findDiary = diaryService.delete(diaryId, userId);
+        Diary findDiary = diaryService.deleteDiary(diaryId, userId);
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
 //        diaryDocumentService.delete(diaryId);
@@ -68,9 +68,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
     }
 
     @Override
-    public DiaryResDetailDTO findOneByDiaryId(final Long diaryId) {
+    public DiaryResDetailDTO getDiary(final Long diaryId) {
         final Long userId = JwtUtil.getUserId();
-        return diaryService.findOneByDiaryId(diaryId, userId);
+        return diaryService.getDiary(diaryId, userId);
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
