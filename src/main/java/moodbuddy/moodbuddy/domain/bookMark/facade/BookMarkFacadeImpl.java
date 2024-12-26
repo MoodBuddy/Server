@@ -28,8 +28,8 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     }
 
     @Override
-    public Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable) {
+    public Page<DiaryResDetailDTO> getBookMarks(Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
-        return bookMarkService.bookMarkFindAllByWithPageable(pageable, userId);
+        return bookMarkService.findAllByWithPageable(pageable, userId);
     }
 }

@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v2/member/bookMark")
+@RequestMapping("/api/v2/member/book-mark")
 @Tag(name = "BookMark", description = "북마크 관련 API")
 @RequiredArgsConstructor
 @Slf4j
@@ -29,9 +29,9 @@ public class BookMarkApiController {
     }
 
     /** 구현 완료 **/
-    @GetMapping("/findAll")
+    @GetMapping("/")
     @Operation(summary = "북마크 전체 조회", description = "북마크 전체 조회합니다.")
-    public ResponseEntity<Page<DiaryResDetailDTO>> findAll(Pageable pageable) {
-        return ResponseEntity.ok().body(bookMarkFacade.bookMarkFindAllByWithPageable(pageable));
+    public ResponseEntity<Page<DiaryResDetailDTO>> getBookMarks(Pageable pageable) {
+        return ResponseEntity.ok().body(bookMarkFacade.getBookMarks(pageable));
     }
 }

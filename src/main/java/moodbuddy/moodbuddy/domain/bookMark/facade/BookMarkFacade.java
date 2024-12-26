@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface BookMarkFacade {
     boolean toggle(final Long diaryId);
-    Page<DiaryResDetailDTO> bookMarkFindAllByWithPageable(Pageable pageable);
+    Page<DiaryResDetailDTO> getBookMarks(Pageable pageable);
 }
