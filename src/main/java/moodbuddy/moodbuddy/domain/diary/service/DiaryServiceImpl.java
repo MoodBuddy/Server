@@ -79,14 +79,14 @@ public class DiaryServiceImpl implements DiaryService {
         }
     }
 
-    private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {
-        diaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT)
-                .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
-    }
-
     @Override
     public Diary findDiaryById(Long diaryId) {
         return diaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.PUBLISHED, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
+    }
+
+    private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {
+        diaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT)
+                .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 }

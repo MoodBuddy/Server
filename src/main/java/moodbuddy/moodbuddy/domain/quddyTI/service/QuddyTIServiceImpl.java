@@ -25,7 +25,7 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     private static final String formatMonth = "%02d";
 
     @Override
-    public QuddyTI findByDate(Long userId, String year, String month) {
+    public QuddyTI getQuddyTIByDate(Long userId, String year, String month) {
         return getQuddyTIByUserIdAndDate(userId, year, month);
     }
 

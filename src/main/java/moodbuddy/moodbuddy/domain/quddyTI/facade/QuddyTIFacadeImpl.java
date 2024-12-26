@@ -23,10 +23,10 @@ public class QuddyTIFacadeImpl implements QuddyTIFacade {
     private final QuddyTIMapper quddyTIMapper;
 
     @Override
-    public QuddyTIResDetailDTO findByDate(String year, String month) {
+    public QuddyTIResDetailDTO getQuddyTI(String year, String month) {
         Long userId = JwtUtil.getUserId();
         return quddyTIMapper.toResDetailDTO(
-                quddyTIService.findByDate(userId, year, month)
+                quddyTIService.getQuddyTIByDate(userId, year, month)
         );
     }
 

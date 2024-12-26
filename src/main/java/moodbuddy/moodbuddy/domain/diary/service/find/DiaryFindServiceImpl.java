@@ -33,10 +33,4 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     public Page<DiaryResDetailDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
         return diaryFindRepository.findAllByFilterWithPageable(requestDTO, userId, pageable);
     }
-
-    private void validateDiaryAccess(Diary findDiary, Long userId) {
-        if (!findDiary.getUserId().equals(userId)) {
-            throw new DiaryNoAccessException(ErrorCode.NO_ACCESS_DIARY);
-        }
-    }
 }
