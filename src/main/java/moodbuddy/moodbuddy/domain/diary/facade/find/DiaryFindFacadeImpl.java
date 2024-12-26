@@ -1,7 +1,6 @@
 package moodbuddy.moodbuddy.domain.diary.facade.find;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
@@ -19,20 +18,20 @@ public class DiaryFindFacadeImpl implements DiaryFindFacade {
     private final DiaryFindService diaryFindService;
 
     @Override
-    public Page<DiaryResDetailDTO> findAll(Pageable pageable) {
+    public Page<DiaryResDetailDTO> getDiaries(Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
-        return diaryFindService.findAll(pageable, userId);
+        return diaryFindService.getDiaries(pageable, userId);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> findAllByEmotion(DiaryEmotion diaryEmotion, Pageable pageable) {
+    public Page<DiaryResDetailDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
-        return diaryFindService.findAllByEmotion(diaryEmotion, pageable, userId);
+        return diaryFindService.getDiariesByEmotion(diaryEmotion, pageable, userId);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> findAllByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable) {
+    public Page<DiaryResDetailDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
-        return diaryFindService.findAllByFilter(requestDTO, pageable, userId);
+        return diaryFindService.getDiariesByFilter(requestDTO, pageable, userId);
     }
 }

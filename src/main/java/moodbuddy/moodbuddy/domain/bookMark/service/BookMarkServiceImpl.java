@@ -44,7 +44,7 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     public Page<DiaryResDetailDTO> getBookMarks(Pageable pageable, final Long userId) {
-        return bookMarkRepository.bookMarkFindAllWithPageable(userId, pageable);
+        return bookMarkRepository.findAllWithPageable(userId, pageable);
     }
 
     @Override
