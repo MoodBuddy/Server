@@ -1,9 +1,11 @@
 package moodbuddy.moodbuddy.domain.diary.repository;
 
+import jakarta.persistence.LockModeType;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
@@ -13,6 +15,8 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryRepositoryCustom {
     Optional<Diary> findByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
     List<Diary> findAllByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
+
+    @Lock(LockModeType.OPTIMISTIC)
     Optional<Diary> findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(Long diaryId, DiaryStatus diaryStatus, MoodBuddyStatus moodBuddyStatus);
 
 
