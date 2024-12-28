@@ -5,7 +5,6 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.domain.Page;
@@ -25,7 +24,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
 
     @Override
     public Page<DiaryResDetailDTO> findAllWithPageable(Long userId, Pageable pageable) {
-        List<Diary> diaries = queryFactory.selectFrom(diary)
+        var diaries = queryFactory.selectFrom(diary)
                 .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
                 .where(bookMark.userId.eq(userId)
                         .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
@@ -40,7 +39,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        List<DiaryResDetailDTO> diaryList = diaries.stream().map(d -> {
+        var diaryList = diaries.stream().map(d -> {
             List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
                     .from(diaryImage)
                     .where(diaryImage.diaryId.eq(d.getDiaryId()))
@@ -64,7 +63,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                     .build();
         }).collect(Collectors.toList());
 
-        long total = queryFactory.selectFrom(diary)
+        var total = queryFactory.selectFrom(diary)
                 .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
                 .where(bookMark.userId.eq(userId))
                 .fetchCount();
