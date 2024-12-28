@@ -21,15 +21,15 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     @Override
     @Transactional
     public boolean toggle(final Long diaryId) {
-        final Long userId = JwtUtil.getUserId();
-        Diary findDiary = diaryService.findDiaryById(diaryId);
+        final var userId = JwtUtil.getUserId();
+        var findDiary = diaryService.findDiaryById(diaryId);
         diaryService.validateDiaryAccess(findDiary, userId);
         return bookMarkService.toggle(findDiary, userId);
     }
 
     @Override
     public Page<DiaryResDetailDTO> getBookMarks(Pageable pageable) {
-        final Long userId = JwtUtil.getUserId();
+        final var userId = JwtUtil.getUserId();
         return bookMarkService.getBookMarks(pageable, userId);
     }
 }
