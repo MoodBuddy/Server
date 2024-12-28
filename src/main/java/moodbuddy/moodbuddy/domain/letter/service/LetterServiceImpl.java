@@ -65,7 +65,7 @@ public class LetterServiceImpl implements LetterService {
 
     private Profile getProfileByUserId(Long userId){
         return profileRepository.findByUserId(userId)
-                .orElseThrow(() -> new ProfileNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE));
+                .orElseThrow(() -> new ProfileNotFoundByUserIdException(ErrorCode.PROFILE_NOT_FOUND));
     }
 
     private String getProfileImageUrlByUserId(Long userId){
@@ -161,7 +161,7 @@ public class LetterServiceImpl implements LetterService {
     private void validateUserLetterAvailability(User user){
         log.info("user.getUserLetterNums() : "+user.getUserLetterNums());
         if (user.getUserLetterNums() == null || user.getUserLetterNums() <= MIN_LETTER_NUMS) {
-            throw new LetterNumsException(ErrorCode.INVALID_LETTER_NUMS); // 편지지가 없을 경우 예외 처리
+            throw new LetterNumsException(ErrorCode.LETTER_INVALID_NUMS); // 편지지가 없을 경우 예외 처리
         }
     }
 
@@ -268,7 +268,7 @@ public class LetterServiceImpl implements LetterService {
 
     private User getUserByUserId(Long userId){
         return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER));
+                .orElseThrow(() -> new UserNotFoundByUserIdException(ErrorCode.USER_NOT_FOUND));
     }
 
     private Letter getLetterByIdAndUserId(Long letterId, Long userId){
@@ -289,7 +289,7 @@ public class LetterServiceImpl implements LetterService {
 
     private User getUserByUserIdWithPessimisticLock(Long userId){
         return userRepository.findByUserIdWithPessimisticLock(userId).orElseThrow(
-                () -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER)
+                () -> new UserNotFoundByUserIdException(ErrorCode.USER_NOT_FOUND)
         );
     }
 

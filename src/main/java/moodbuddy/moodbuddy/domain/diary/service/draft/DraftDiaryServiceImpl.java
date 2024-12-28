@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.NOT_FOUND_DRAFT_DIARY;
+import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.DRAFT_DIARY_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)
@@ -72,12 +72,12 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     private Diary findDraftDiaryById(Long diaryId) {
         return draftDiaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.DRAFT, MoodBuddyStatus.ACTIVE)
-                .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DRAFT_DIARY));
+                .orElseThrow(() -> new DiaryNotFoundException(DRAFT_DIARY_NOT_FOUND));
     }
 
     private void validateDiaryAccess(Diary findDiary, Long userId) {
         if (!findDiary.getUserId().equals(userId)) {
-            throw new DiaryNoAccessException(ErrorCode.NO_ACCESS_DIARY);
+            throw new DiaryNoAccessException(ErrorCode.DIARY_NO_ACCESS);
         }
     }
 }
