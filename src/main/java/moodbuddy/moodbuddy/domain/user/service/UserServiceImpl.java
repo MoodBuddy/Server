@@ -412,13 +412,13 @@ public class UserServiceImpl implements UserService {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER)
+                () -> new UserNotFoundByUserIdException(ErrorCode.USER_NOT_FOUND)
         );
         Profile profile = profileRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE)
+                () -> new ProfileNotFoundByUserIdException(ErrorCode.PROFILE_NOT_FOUND)
         );
         ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileImageNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE_IMAGE)
+                () -> new ProfileImageNotFoundByUserIdException(ErrorCode.PROFILE_IMAGE_NOT_FOUND)
         );
 
         profile.setProfileComment(requestDTO.getProfileComment());
@@ -459,13 +459,13 @@ public class UserServiceImpl implements UserService {
         Long userId = JwtUtil.getUserId();
 
         User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER)
+                () -> new UserNotFoundByUserIdException(ErrorCode.USER_NOT_FOUND)
         );
         Profile profile = profileRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE)
+                () -> new ProfileNotFoundByUserIdException(ErrorCode.PROFILE_NOT_FOUND)
         );
         ProfileImage profileImage = profileImageRepository.findByUserId(userId).orElseThrow(
-                () -> new ProfileImageNotFoundByUserIdException(ErrorCode.NOT_FOUND_PROFILE_IMAGE)
+                () -> new ProfileImageNotFoundByUserIdException(ErrorCode.PROFILE_IMAGE_NOT_FOUND)
         );
 
         return createUserResProfileDTO(user, profile, profileImage);
@@ -535,12 +535,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long userId) {
         return userRepository.findByUserId(userId)
-                .orElseThrow(()->new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER));
+                .orElseThrow(()->new UserNotFoundByUserIdException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
     public User getUserByKakaoId(Long kakaoId) {
         return userRepository.findByKakaoId(kakaoId)
-                .orElseThrow(()->new UserNotFoundByUserIdException(ErrorCode.NOT_FOUND_USER));
+                .orElseThrow(()->new UserNotFoundByUserIdException(ErrorCode.USER_NOT_FOUND));
     }
 }

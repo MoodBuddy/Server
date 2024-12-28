@@ -55,6 +55,8 @@ public class QDiary extends EntityPathBase<Diary> {
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
+    public final NumberPath<Integer> version = createNumber("version", Integer.class);
+
     public QDiary(String variable) {
         super(Diary.class, forVariable(variable));
     }

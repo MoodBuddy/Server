@@ -9,7 +9,7 @@ import moodbuddy.moodbuddy.global.common.elasticSearch.diary.repository.DiaryDoc
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.NOT_FOUND_DIARY;
+import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.DIARY_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)
@@ -30,6 +30,6 @@ public class DiaryDocumentServiceImpl implements DiaryDocumentService {
 
     private DiaryDocument findDiaryDocumentById(Long diaryDocumentId) {
         return diaryDocumentRepository.findById(diaryDocumentId)
-                .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
+                .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
     }
 }
