@@ -69,6 +69,10 @@ public class Diary extends BaseEntity {
     @Column(name = "mood_buddy_status")
     private MoodBuddyStatus moodBuddyStatus;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private Integer version;
+
     public static Diary ofPublished(DiaryReqSaveDTO requestDTO, Long userId, String diarySummary, DiarySubject diarySubject) {
         return Diary.builder()
                 .diaryTitle(requestDTO.diaryTitle())

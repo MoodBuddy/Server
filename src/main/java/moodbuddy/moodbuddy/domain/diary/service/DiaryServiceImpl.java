@@ -1,5 +1,6 @@
 package moodbuddy.moodbuddy.domain.diary.service;
 
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
@@ -9,6 +10,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
+import moodbuddy.moodbuddy.global.common.exception.diary.DiaryConcurrentUpdateException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.*;
-import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.NOT_FOUND_DIARY;
+import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.DIARY_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,11 +44,15 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public Diary updateDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults, final Long userId) {
-        Diary findDiary = findDiaryById(requestDTO.diaryId());
-        validateDiaryAccess(findDiary, userId);
-        findDiary.updateDiary(requestDTO, gptResults);
-        deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
-        return findDiary;
+        try {
+            Diary findDiary = findDiaryById(requestDTO.diaryId());
+            validateDiaryAccess(findDiary, userId);
+            findDiary.updateDiary(requestDTO, gptResults);
+            deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
+            return findDiary;
+        } catch (OptimisticLockException ex) {
+            throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);
+        }
     }
 
     @Override
@@ -68,21 +74,21 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public void validateDiaryAccess(Diary findDiary, Long userId) {
         if (!findDiary.getUserId().equals(userId)) {
-            throw new DiaryNoAccessException(ErrorCode.NO_ACCESS_DIARY);
+            throw new DiaryNoAccessException(ErrorCode.DIARY_NO_ACCESS);
         }
     }
 
     @Override
     public void validateExistingDiary(LocalDate diaryDate, Long userId) {
         if (diaryRepository.findByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.PUBLISHED).isPresent()) {
-            throw new DiaryTodayExistingException(ErrorCode.TODAY_EXISTING_DIARY);
+            throw new DiaryTodayExistingException(ErrorCode.DIARY_TODAY_EXISTING);
         }
     }
 
     @Override
     public Diary findDiaryById(Long diaryId) {
         return diaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.PUBLISHED, MoodBuddyStatus.ACTIVE)
-                .orElseThrow(() -> new DiaryNotFoundException(NOT_FOUND_DIARY));
+                .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
     }
 
     private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {

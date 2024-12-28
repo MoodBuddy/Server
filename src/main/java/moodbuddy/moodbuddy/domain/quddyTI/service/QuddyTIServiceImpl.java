@@ -68,13 +68,13 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     private String determineMostFrequentSubject(Map<DiarySubject, Long> subjectCounts) {
         return findMostFrequentEntry(subjectCounts)
                 .map(subject -> subject.name().substring(0, 1))
-                .orElseThrow(() -> new QuddyTIInvalidateException(ErrorCode.INVALIDATE_QUDDYTI));
+                .orElseThrow(() -> new QuddyTIInvalidateException(ErrorCode.QUDDYTI_INVALIDATE));
     }
 
     private String determineMostFrequentEmotion(Map<DiaryEmotion, Long> emotionCounts) {
         return (findMostFrequentEntry(emotionCounts)
                 .map(this::getEmotionAbbreviation)
-                .orElseThrow(() -> new QuddyTIInvalidateException(ErrorCode.INVALIDATE_QUDDYTI)));
+                .orElseThrow(() -> new QuddyTIInvalidateException(ErrorCode.QUDDYTI_INVALIDATE)));
     }
 
     private long calculateTotalCount(Map<?, Long> counts) {
@@ -104,7 +104,7 @@ public class QuddyTIServiceImpl implements QuddyTIService {
 
     private QuddyTI getQuddyTIByUserIdAndDate(Long userId, String year, String month) {
         return quddyTIRepository.findByUserIdAndQuddyTIYearAndQuddyTIMonth(userId, year, month)
-                .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.NOT_FOUND_QUDDYTI));
+                .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.QUDDYTI_NOT_FOUND));
     }
 
     private String formatYear(LocalDate date) {

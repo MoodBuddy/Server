@@ -65,7 +65,7 @@ public class GptServiceImpl implements GptService{
     @Override
     public DiaryResEmotionDTO analyzeEmotion(){
         Diary diary = diaryRepository.findDiarySummaryById(JwtUtil.getUserId())
-                .orElseThrow(() -> new DiaryNotFoundException(ErrorCode.NOT_FOUND_DIARY));
+                .orElseThrow(() -> new DiaryNotFoundException(ErrorCode.DIARY_NOT_FOUND));
 
         List<String> keys = List.of("diaryEmotion", "diaryComment");
         Map<String, String> responseMap = getGPTResponseMap(new GPTRequestDTO(model, diary.getDiaryContent() + EMOTION_ANALYSIS_PROMPT), keys);
