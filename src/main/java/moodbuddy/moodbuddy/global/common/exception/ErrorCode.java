@@ -20,7 +20,8 @@ public enum ErrorCode {
     DIARY_TODAY_EXISTING(409, "DIARY-ERR-409", "오늘 이미 일기를 작성했습니다."),
 
     /** DraftDiary **/
-    DRAFT_DIARY_NOT_FOUND(400, "DIARY-ERR-400", "임시 저장 일기를 찾을 수 없습니다."),
+    DRAFT_DIARY_NOT_FOUND(400, "DRAFT-DIARY-ERR-400", "임시 저장 일기를 찾을 수 없습니다."),
+    DRAFT_DIARY_CONCURRENT_UPDATE(400, "DRAFT-DIARY-ERR-400", "동시에 임시저장 일기를 수정할 수 없습니다."),
 
 
     /** Letter **/
