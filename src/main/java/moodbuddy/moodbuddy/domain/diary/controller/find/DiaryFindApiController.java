@@ -22,7 +22,7 @@ public class DiaryFindApiController {
     private final DiaryFindFacade diaryFindFacade;
 
     /** 구현 완료 **/
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "일기 전체 조회", description = "일기를 모두 조회합니다.")
     public ResponseEntity<Page<DiaryResDetailDTO>> getDiaries(Pageable pageable) {
         return ResponseEntity.ok().body(diaryFindFacade.getDiaries(pageable));
