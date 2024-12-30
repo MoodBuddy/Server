@@ -62,15 +62,10 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
                     .diaryContent(d.getDiaryContent())
                     .diaryWeather(d.getDiaryWeather())
                     .diaryEmotion(d.getDiaryEmotion())
-                    .diaryStatus(d.getDiaryStatus())
-                    .diarySummary(d.getDiarySummary())
-                    .diarySubject(d.getDiarySubject())
-                    .userId(d.getUserId())
                     .diaryImgList(diaryImgList)
                     .diaryBookMarkCheck(d.getDiaryBookMarkCheck())
                     .diaryFont(d.getDiaryFont())
                     .diaryFontSize(d.getDiaryFontSize())
-                    .moodBuddyStatus(d.getMoodBuddyStatus())
                     .build();
         }).collect(Collectors.toList());
 
@@ -105,20 +100,15 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
         List<DiaryResDetailDTO> dtoList = diaries.stream()
                 .map(d -> new DiaryResDetailDTO(
                         d.getDiaryId(),
-                        d.getUserId(),
                         d.getDiaryTitle(),
                         d.getDiaryDate(),
                         d.getDiaryContent(),
                         d.getDiaryWeather(),
                         d.getDiaryEmotion(),
-                        d.getDiaryStatus(),
-                        d.getDiarySummary(),
-                        d.getDiarySubject(),
                         d.getDiaryBookMarkCheck(),
                         diaryImages.getOrDefault(d.getDiaryId(), List.of()),
                         d.getDiaryFont(),
-                        d.getDiaryFontSize(),
-                        d.getMoodBuddyStatus()
+                        d.getDiaryFontSize()
                 ))
                 .collect(Collectors.toList());
 
@@ -187,19 +177,14 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
         List<DiaryResDetailDTO> dtoList = results.stream()
                 .map(d -> DiaryResDetailDTO.builder()
                         .diaryId(d.getDiaryId())
-                        .userId(d.getUserId())
                         .diaryTitle(d.getDiaryTitle())
                         .diaryDate(d.getDiaryDate())
                         .diaryContent(d.getDiaryContent())
                         .diaryWeather(d.getDiaryWeather())
                         .diaryEmotion(d.getDiaryEmotion())
-                        .diaryStatus(d.getDiaryStatus())
-                        .diarySummary(d.getDiarySummary())
-                        .diarySubject(d.getDiarySubject())
                         .diaryImgList(diaryImagesMap.getOrDefault(d.getDiaryId(), List.of()))
                         .diaryFont(d.getDiaryFont())
                         .diaryFontSize(d.getDiaryFontSize())
-                        .moodBuddyStatus(d.getMoodBuddyStatus())
                         .build())
                 .collect(Collectors.toList());
 
