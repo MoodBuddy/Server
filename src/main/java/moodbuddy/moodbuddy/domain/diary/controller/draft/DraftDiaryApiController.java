@@ -48,7 +48,7 @@ public class DraftDiaryApiController {
     }
 
     /** 구현 완료 **/
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "임시 저장 일기 목록 조회", description = "임시 저장 일기를 모두 조회합니다.")
     public ResponseEntity<List<DraftDiaryResFindOneDTO>> getDraftDiaries() {
         return ResponseEntity.ok().body(draftDiaryFacade.getDraftDiaries());

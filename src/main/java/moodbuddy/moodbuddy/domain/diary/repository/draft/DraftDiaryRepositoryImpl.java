@@ -21,24 +21,20 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
     }
 
     @Override
-    public List<DraftDiaryResFindOneDTO> findAllByUserId(Long userId) {
-        return queryFactory
-                .select(Projections.constructor(DraftDiaryResFindOneDTO.class,
+    public List<DraftDiaryResFindOneDTO> getDraftDiaries(Long userId) {
+        return queryFactory.select(Projections.constructor(DraftDiaryResFindOneDTO.class,
                         diary.id,
-                        diary.date,
-                        diary.status
+                        diary.date
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.status.eq(DiaryStatus.DRAFT).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
-                .fetch()
-                .stream()
-                .map(d -> new DraftDiaryResFindOneDTO(d.diaryId(), d.diaryDate(), d.diaryStatus()))
-                .collect(Collectors.toList());
+                        .and(diary.status.eq(DiaryStatus.DRAFT))
+                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                .fetch();
     }
 
     @Override
-    public DraftDiaryResDetailDTO findOneByDiaryId(Long diaryId) {
+    public DraftDiaryResDetailDTO getDraftDiaryById(Long diaryId) {
         var result = queryFactory.select(Projections.constructor(DraftDiaryResDetailDTO.class,
                         diary.id,
                         diary.userId,

@@ -9,7 +9,5 @@ public record DraftDiaryResFindOneDTO(
         @Schema(description = "일기 고유 식별자(diaryId)", example = "1")
         Long diaryId,
         @Schema(description = "일기 날짜", example = "2023-07-02T15:30:00")
-        LocalDate diaryDate,
-        @Schema(description = "일기 상태(DRAFT, PUBLISHED)", example = "DRAFT")
-        DiaryStatus diaryStatus
+        LocalDate diaryDate
 ) {}
