@@ -4,12 +4,10 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import java.util.List;
-import java.util.stream.Collectors;
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
 import static moodbuddy.moodbuddy.domain.diary.domain.image.QDiaryImage.diaryImage;
 
@@ -58,7 +56,7 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
                 .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();
 
-        result.setDiaryImgList(diaryImgList);
+        result.saveDiaryImageUrls(diaryImgList);
 
         return result;
     }
