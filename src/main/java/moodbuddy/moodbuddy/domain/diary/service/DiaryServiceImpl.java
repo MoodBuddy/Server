@@ -67,7 +67,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    @Cacheable(value = "diary", key = "#diaryId", unless = "#result == null")
+    //TODO 캐싱 붙여야 함
     public DiaryResDetailDTO getDiary(final Long diaryId, final Long userId) {
         final Diary findDiary = findDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
