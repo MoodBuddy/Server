@@ -55,7 +55,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                     .diaryBookMarkCheck(d.getBookMark())
                     .diaryFont(d.getFont())
                     .diaryFontSize(d.getFontSize())
-                    .diaryImgList(diaryImgList)
+                    .diaryImages(diaryImgList)
                     .build();
         }).collect(Collectors.toList());
 

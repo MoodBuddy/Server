@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -37,7 +36,7 @@ public class DiaryResDetailDTO {
     private DiaryFontSize diaryFontSize;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @Schema(description = "일기 이미지 List", example = "[이미지 URL, 이미지 URL]")
-    private List<String> diaryImgList;
+    private List<String> diaryImages;
 
 
     public DiaryResDetailDTO(Long diaryId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, Boolean diaryBookMarkCheck, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {
@@ -51,7 +50,7 @@ public class DiaryResDetailDTO {
         this.diaryFont = diaryFont;
         this.diaryFontSize = diaryFontSize;
     }
-    public DiaryResDetailDTO(Long diaryId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, Boolean diaryBookMarkCheck, List<String> diaryImgList, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {
+    public DiaryResDetailDTO(Long diaryId, String diaryTitle, LocalDate diaryDate, String diaryContent, DiaryWeather diaryWeather, DiaryEmotion diaryEmotion, Boolean diaryBookMarkCheck, List<String> diaryImages, DiaryFont diaryFont, DiaryFontSize diaryFontSize) {
         this.diaryId = diaryId;
         this.diaryTitle = diaryTitle;
         this.diaryDate = diaryDate;
@@ -59,7 +58,7 @@ public class DiaryResDetailDTO {
         this.diaryWeather = diaryWeather;
         this.diaryEmotion = diaryEmotion;
         this.diaryBookMarkCheck = diaryBookMarkCheck;
-        this.diaryImgList = diaryImgList;
+        this.diaryImages = diaryImages;
         this.diaryFont = diaryFont;
         this.diaryFontSize = diaryFontSize;
     }

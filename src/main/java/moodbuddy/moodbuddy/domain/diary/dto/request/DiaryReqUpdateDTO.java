@@ -30,6 +30,6 @@ public record DiaryReqUpdateDTO (
         DiaryFontSize diaryFontSize,
         @Schema(description = "새로운 이미지", example = "[이미지 URL, 이미지 URL]")
         @Nullable
-        List<String> newImageURLs
+        List<String> newImageUrls
 ) {
 }

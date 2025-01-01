@@ -90,8 +90,8 @@ public class Diary extends BaseEntity {
                 .font(requestDTO.diaryFont())
                 .fontSize(requestDTO.diaryFontSize())
                 .thumbnail(
-                        (requestDTO.diaryImageURLs() != null && !requestDTO.diaryImageURLs().isEmpty())
-                                ? requestDTO.diaryImageURLs().get(0)
+                        (requestDTO.diaryImageUrls() != null && !requestDTO.diaryImageUrls().isEmpty())
+                                ? requestDTO.diaryImageUrls().get(0)
                                 : null
                 )
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
@@ -124,8 +124,8 @@ public class Diary extends BaseEntity {
         this.font = requestDTO.diaryFont();
         this.fontSize = requestDTO.diaryFontSize();
         this.thumbnail =
-                (requestDTO.newImageURLs() != null && !requestDTO.newImageURLs().isEmpty())
-                        ? requestDTO.newImageURLs().get(0)
+                (requestDTO.newImageUrls() != null && !requestDTO.newImageUrls().isEmpty())
+                        ? requestDTO.newImageUrls().get(0)
                         : null;
     }
 
