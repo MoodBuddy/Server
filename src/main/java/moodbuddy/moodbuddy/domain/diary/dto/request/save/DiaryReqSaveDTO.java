@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.dto.request;
+package moodbuddy.moodbuddy.domain.diary.dto.request.save;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont;

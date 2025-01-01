@@ -10,5 +10,4 @@ public record DiaryResFindDTO (
         String diaryContent,
         @JsonInclude(JsonInclude.Include.NON_NULL)
         String thumbnail
-)
-{}
+) {}
