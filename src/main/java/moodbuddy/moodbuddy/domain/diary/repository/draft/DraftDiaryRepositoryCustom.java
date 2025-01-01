@@ -6,6 +6,6 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneD
 import java.util.List;
 
 public interface DraftDiaryRepositoryCustom {
-    List<DraftDiaryResFindOneDTO> findAllByUserId(Long userId);
-    DraftDiaryResDetailDTO findOneByDiaryId(Long diaryId);
+    List<DraftDiaryResFindOneDTO> getDraftDiaries(Long userId);
+    DraftDiaryResDetailDTO getDraftDiaryById(Long diaryId);
 }

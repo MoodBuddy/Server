@@ -20,7 +20,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
     }
 
     @Override
-    public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
+    public DiaryResDetailDTO getDiaryById(Long diaryId) {
         List<String> diaryImages = queryFactory
                 .select(diaryImage.imageUrl)
                 .from(diaryImage)

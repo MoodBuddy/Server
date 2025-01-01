@@ -52,7 +52,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     public List<DraftDiaryResFindOneDTO> getDraftDiaries(final Long userId) {
-        return draftDiaryRepository.findAllByUserId(userId);
+        return draftDiaryRepository.getDraftDiaries(userId);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     public DraftDiaryResDetailDTO getDraftDiary(Long diaryId, Long userId) {
         final Diary findDiary = findDraftDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
-        return draftDiaryRepository.findOneByDiaryId(diaryId);
+        return draftDiaryRepository.getDraftDiaryById(diaryId);
     }
 
     private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {

@@ -15,7 +15,6 @@ import moodbuddy.moodbuddy.global.common.exception.diary.DiaryConcurrentUpdateEx
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -71,7 +70,7 @@ public class DiaryServiceImpl implements DiaryService {
     public DiaryResDetailDTO getDiary(final Long diaryId, final Long userId) {
         final Diary findDiary = findDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
-        return diaryRepository.findOneByDiaryId(diaryId);
+        return diaryRepository.getDiaryById(diaryId);
     }
 
     @Override
