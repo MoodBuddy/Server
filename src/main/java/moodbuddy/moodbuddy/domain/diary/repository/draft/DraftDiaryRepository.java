@@ -13,6 +13,6 @@ import java.util.Optional;
 
 public interface DraftDiaryRepository extends JpaRepository<Diary, Long>, DraftDiaryRepositoryCustom {
     @Lock(LockModeType.OPTIMISTIC)
-    Optional<Diary> findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(Long diaryId, DiaryStatus diaryStatus, MoodBuddyStatus moodBuddyStatus);
-    List<Diary> findAllByDiaryDateAndUserIdAndDiaryStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
+    Optional<Diary> findByIdAndStatusAndMoodBuddyStatus(Long diaryId, DiaryStatus diaryStatus, MoodBuddyStatus moodBuddyStatus);
+    List<Diary> findAllByDateAndUserIdAndStatus(LocalDate diaryDate, Long userId, DiaryStatus diaryStatus);
 }

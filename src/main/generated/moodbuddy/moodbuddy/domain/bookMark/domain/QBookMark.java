@@ -21,12 +21,12 @@ public class QBookMark extends EntityPathBase<BookMark> {
 
     public final moodbuddy.moodbuddy.global.common.base.QBaseEntity _super = new moodbuddy.moodbuddy.global.common.base.QBaseEntity(this);
 
-    public final NumberPath<Long> bookMarkId = createNumber("bookMarkId", Long.class);
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdTime = _super.createdTime;
 
     public final NumberPath<Long> diaryId = createNumber("diaryId", Long.class);
+
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;

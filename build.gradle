@@ -44,6 +44,8 @@ dependencies {
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.cache:spring-cache'
+    implementation 'redis.clients:jedis'
 
     // 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'

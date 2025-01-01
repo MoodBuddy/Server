@@ -1,13 +1,10 @@
 package moodbuddy.moodbuddy.domain.diary.service.find;
 
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.find.DiaryFindRepository;
-import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,17 +17,17 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     private final DiaryFindRepository diaryFindRepository;
 
     @Override
-    public Page<DiaryResDetailDTO> getDiaries(Pageable pageable, final Long userId) {
-        return diaryFindRepository.findAllByUserIdWithPageable(userId, pageable);
+    public Page<DiaryResFindDTO> getDiaries(Pageable pageable, final Long userId) {
+        return diaryFindRepository.findDiariesWithPageable(userId, pageable);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable, final Long userId) {
-        return diaryFindRepository.findAllByEmotionWithPageable(diaryEmotion, userId, pageable);
+    public Page<DiaryResFindDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable, final Long userId) {
+        return diaryFindRepository.findDiariesByEmotionWithPageable(diaryEmotion, userId, pageable);
     }
 
     @Override
-    public Page<DiaryResDetailDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
-        return diaryFindRepository.findAllByFilterWithPageable(requestDTO, userId, pageable);
+    public Page<DiaryResFindDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
+        return diaryFindRepository.findDiariesByFilterWithPageable(requestDTO, userId, pageable);
     }
 }

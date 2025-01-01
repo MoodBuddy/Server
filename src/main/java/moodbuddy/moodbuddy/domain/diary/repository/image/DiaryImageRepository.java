@@ -9,5 +9,4 @@ import java.util.Optional;
 
 public interface DiaryImageRepository extends JpaRepository<DiaryImage, Long> {
     List<DiaryImage> findAllByDiaryIdAndMoodBuddyStatus(Long diaryId, MoodBuddyStatus status);
-    Optional<DiaryImage> findByDiaryImgURL(String diaryImgURL);
 }

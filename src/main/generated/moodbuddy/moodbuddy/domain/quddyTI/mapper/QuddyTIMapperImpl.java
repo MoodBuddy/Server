@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-12-30T22:37:59+0900",
+    date = "2025-01-01T17:08:39+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.13 (Homebrew)"
 )
 @Component
@@ -35,12 +35,12 @@ public class QuddyTIMapperImpl implements QuddyTIMapper {
         Integer growthCount = null;
         Integer emotionCount = null;
         Integer travelCount = null;
-        String quddyTIType = null;
+        String quddyTI1 = null;
         MoodBuddyStatus moodBuddyStatus = null;
 
         userId = quddyTI.getUserId();
-        quddyTIYear = quddyTI.getQuddyTIYear();
-        quddyTIMonth = quddyTI.getQuddyTIMonth();
+        quddyTIYear = quddyTI.getYear();
+        quddyTIMonth = quddyTI.getMonth();
         diaryFrequency = quddyTI.getDiaryFrequency();
         happinessCount = quddyTI.getHappinessCount();
         angerCount = quddyTI.getAngerCount();
@@ -53,10 +53,10 @@ public class QuddyTIMapperImpl implements QuddyTIMapper {
         growthCount = quddyTI.getGrowthCount();
         emotionCount = quddyTI.getEmotionCount();
         travelCount = quddyTI.getTravelCount();
-        quddyTIType = quddyTI.getQuddyTIType();
+        quddyTI1 = quddyTI.getQuddyTI();
         moodBuddyStatus = quddyTI.getMoodBuddyStatus();
 
-        QuddyTIResDetailDTO quddyTIResDetailDTO = new QuddyTIResDetailDTO( userId, quddyTIYear, quddyTIMonth, diaryFrequency, happinessCount, angerCount, disgustCount, fearCount, neutralCount, sadnessCount, surpriseCount, dailyCount, growthCount, emotionCount, travelCount, quddyTIType, moodBuddyStatus );
+        QuddyTIResDetailDTO quddyTIResDetailDTO = new QuddyTIResDetailDTO( userId, quddyTIYear, quddyTIMonth, diaryFrequency, happinessCount, angerCount, disgustCount, fearCount, neutralCount, sadnessCount, surpriseCount, dailyCount, growthCount, emotionCount, travelCount, quddyTI1, moodBuddyStatus );
 
         return quddyTIResDetailDTO;
     }

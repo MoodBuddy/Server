@@ -22,46 +22,42 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
 
     @Override
     public List<DraftDiaryResFindOneDTO> findAllByUserId(Long userId) {
-        List<DraftDiaryResFindOneDTO> result = queryFactory
+        return queryFactory
                 .select(Projections.constructor(DraftDiaryResFindOneDTO.class,
-                        diary.diaryId,
-                        diary.diaryDate,
-                        diary.diaryStatus
+                        diary.id,
+                        diary.date,
+                        diary.status
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.DRAFT).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
+                        .and(diary.status.eq(DiaryStatus.DRAFT).and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE))))
                 .fetch()
                 .stream()
                 .map(d -> new DraftDiaryResFindOneDTO(d.diaryId(), d.diaryDate(), d.diaryStatus()))
                 .collect(Collectors.toList());
-
-        return result;
     }
 
     @Override
     public DraftDiaryResDetailDTO findOneByDiaryId(Long diaryId) {
-        System.out.println("======");
-        System.out.println(diaryId);
-        DraftDiaryResDetailDTO result = queryFactory.select(Projections.constructor(DraftDiaryResDetailDTO.class,
-                        diary.diaryId,
+        var result = queryFactory.select(Projections.constructor(DraftDiaryResDetailDTO.class,
+                        diary.id,
                         diary.userId,
-                        diary.diaryTitle,
-                        diary.diaryDate,
-                        diary.diaryContent,
-                        diary.diaryWeather,
-                        diary.diaryStatus,
-                        diary.diaryFont,
-                        diary.diaryFontSize,
+                        diary.title,
+                        diary.date,
+                        diary.content,
+                        diary.weather,
+                        diary.status,
+                        diary.font,
+                        diary.fontSize,
                         diary.moodBuddyStatus
                 ))
                 .from(diary)
-                .where(diary.diaryId.eq(diaryId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.DRAFT))
+                .where(diary.id.eq(diaryId)
+                        .and(diary.status.eq(DiaryStatus.DRAFT))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
 
-        List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
+        var diaryImgList = queryFactory.select(diaryImage.imageUrl)
                 .from(diaryImage)
                 .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();

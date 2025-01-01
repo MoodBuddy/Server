@@ -26,9 +26,9 @@ public class QDiaryImage extends EntityPathBase<DiaryImage> {
 
     public final NumberPath<Long> diaryId = createNumber("diaryId", Long.class);
 
-    public final StringPath diaryImgURL = createString("diaryImgURL");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath imageUrl = createString("imageUrl");
 
     public final EnumPath<moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus> moodBuddyStatus = createEnum("moodBuddyStatus", moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus.class);
 

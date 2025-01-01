@@ -2,7 +2,6 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
@@ -36,11 +35,11 @@ public class DiaryFacadeImpl implements DiaryFacade {
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         var diary = diaryService.saveDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         if(requestDTO.diaryImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
+            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getId());
         }
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
-        return new DiaryResSaveDTO(diary.getDiaryId());
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override
@@ -48,12 +47,12 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResSaveDTO updateDiary(DiaryReqUpdateDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
         var diary = diaryService.updateDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryImageService.deleteAll(diary.getDiaryId());
+        diaryImageService.deleteAll(diary.getId());
         if(requestDTO.newImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
+            diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getId());
         }
         diaryDocumentService.save(diary);
-        return new DiaryResSaveDTO(diary.getDiaryId());
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override
@@ -64,7 +63,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
 //        diaryDocumentService.delete(diaryId);
-        checkTodayDiary(findDiary.getDiaryDate(), userId, true);
+        checkTodayDiary(findDiary.getDate(), userId, true);
     }
 
     @Override

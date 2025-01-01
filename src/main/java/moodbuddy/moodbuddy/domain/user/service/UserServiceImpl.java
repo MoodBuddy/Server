@@ -123,8 +123,8 @@ public class UserServiceImpl implements UserService {
             for(Diary d : diaryList){
                 // emotionNum에 현재 Diary의 key가 없다면, key의 value를 1로 설정
                 // 이미 현재 Diary의 key가 있다면, 그 key의 value를 + 1
-                log.info("d.getDiaryEmotion() : "+d.getDiaryEmotion());
-                emotionNum.merge(d.getDiaryEmotion(), 1, Integer::sum);
+                log.info("d.getDiaryEmotion() : "+d.getEmotion());
+                emotionNum.merge(d.getEmotion(), 1, Integer::sum);
             }
             log.info("emotionNum : "+emotionNum);
             // diaryEmotion 개수 중 최댓값 찾기
@@ -177,9 +177,9 @@ public class UserServiceImpl implements UserService {
 
             List<UserResCalendarMonthDTO> diaryResCalendarMonthDTOList = monthlyDiaryList.stream()
                     .map(diary -> UserResCalendarMonthDTO.builder()
-                            .diaryId(diary.getDiaryId())
-                            .diaryDate(diary.getDiaryDate())
-                            .diaryEmotion(diary.getDiaryEmotion())
+                            .diaryId(diary.getId())
+                            .diaryDate(diary.getDate())
+                            .diaryEmotion(diary.getEmotion())
                             .build())
                     .collect(Collectors.toList());
 
@@ -203,9 +203,9 @@ public class UserServiceImpl implements UserService {
 
             // summaryDiary가 존재하면 그에 맞게 DTO를 build하여 반환하고, 그렇지 않으면 빈 DTO를 반환한다.
             return summaryDiary.map(diary -> UserResCalendarSummaryDTO.builder()
-                            .diaryId(diary.getDiaryId())
-                            .diaryTitle(diary.getDiaryTitle())
-                            .diarySummary(diary.getDiarySummary())
+                            .diaryId(diary.getId())
+                            .diaryTitle(diary.getTitle())
+                            .diarySummary(diary.getSummary())
                             .build())
                     .orElse(UserResCalendarSummaryDTO.builder().build());
         } catch(Exception e){
@@ -314,7 +314,7 @@ public class UserServiceImpl implements UserService {
 
         // 일기 데이터를 이용하여 감정별로 횟수를 세기
         for (Diary diary : diaries) {
-            DiaryEmotion emotion = diary.getDiaryEmotion();
+            DiaryEmotion emotion = diary.getEmotion();
             if (emotion != null && emotionCountMap.containsKey(emotion)) {
                 emotionCountMap.put(emotion, emotionCountMap.get(emotion) + 1);
             }
@@ -364,7 +364,7 @@ public class UserServiceImpl implements UserService {
 
         // diary 객체를 이용하여 일기 작성 횟수 세기
         for (Diary diary : diaries) {
-            int monthValue = diary.getDiaryDate().getMonthValue();
+            int monthValue = diary.getDate().getMonthValue();
             yearCountMap.put(monthValue, yearCountMap.get(monthValue) + 1);
         }
 
@@ -392,7 +392,7 @@ public class UserServiceImpl implements UserService {
         }
 
         for (Diary diary : diaries) {
-            DiaryEmotion emotion = diary.getDiaryEmotion();
+            DiaryEmotion emotion = diary.getEmotion();
             if (emotion != null && emotionCountMap.containsKey(emotion)) {
                 emotionCountMap.put(emotion, emotionCountMap.get(emotion) + 1);
             }

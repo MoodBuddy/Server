@@ -13,8 +13,8 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 public class BookMark extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "book_mark_id")
-    private Long bookMarkId;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;

@@ -17,7 +17,7 @@ public class QQuddyTI extends EntityPathBase<QuddyTI> {
 
     private static final long serialVersionUID = 917241680L;
 
-    public static final QQuddyTI quddyTI = new QQuddyTI("quddyTI");
+    public static final QQuddyTI quddyTI1 = new QQuddyTI("quddyTI1");
 
     public final moodbuddy.moodbuddy.global.common.base.QBaseEntity _super = new moodbuddy.moodbuddy.global.common.base.QBaseEntity(this);
 
@@ -42,15 +42,13 @@ public class QQuddyTI extends EntityPathBase<QuddyTI> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath month = createString("month");
+
     public final EnumPath<moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus> moodBuddyStatus = createEnum("moodBuddyStatus", moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus.class);
 
     public final NumberPath<Integer> neutralCount = createNumber("neutralCount", Integer.class);
 
-    public final StringPath quddyTIMonth = createString("quddyTIMonth");
-
-    public final StringPath quddyTIType = createString("quddyTIType");
-
-    public final StringPath quddyTIYear = createString("quddyTIYear");
+    public final StringPath quddyTI = createString("quddyTI");
 
     public final NumberPath<Integer> sadnessCount = createNumber("sadnessCount", Integer.class);
 
@@ -62,6 +60,8 @@ public class QQuddyTI extends EntityPathBase<QuddyTI> {
     public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
+
+    public final StringPath year = createString("year");
 
     public QQuddyTI(String variable) {
         super(QuddyTI.class, forVariable(variable));
