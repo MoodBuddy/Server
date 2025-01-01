@@ -19,24 +19,24 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
 
     @Override
     public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
-        DiaryResDetailDTO diaryResDetailDTO = queryFactory.select(Projections.constructor(DiaryResDetailDTO.class,
-                        diary.diaryId,
-                        diary.diaryTitle,
-                        diary.diaryDate,
-                        diary.diaryContent,
-                        diary.diaryWeather,
-                        diary.diaryEmotion,
-                        diary.diaryBookMarkCheck,
-                        diary.diaryFont,
-                        diary.diaryFontSize
+        var diaryResDetailDTO = queryFactory.select(Projections.constructor(DiaryResDetailDTO.class,
+                        diary.id,
+                        diary.title,
+                        diary.date,
+                        diary.content,
+                        diary.weather,
+                        diary.emotion,
+                        diary.bookMark,
+                        diary.font,
+                        diary.fontSize
                 ))
                 .from(diary)
-                .where(diary.diaryId.eq(diaryId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
+                .where(diary.id.eq(diaryId)
+                        .and(diary.status.eq(DiaryStatus.PUBLISHED))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
 
-        List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
+        var diaryImgList = queryFactory.select(diaryImage.imageUrl)
                 .from(diaryImage)
                 .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();

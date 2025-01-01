@@ -71,12 +71,12 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     }
 
     private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {
-        draftDiaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT)
+        draftDiaryRepository.findAllByDateAndUserIdAndStatus(diaryDate, userId, DiaryStatus.DRAFT)
                 .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 
     private Diary findDraftDiaryById(Long diaryId) {
-        return draftDiaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.DRAFT, MoodBuddyStatus.ACTIVE)
+        return draftDiaryRepository.findByIdAndStatusAndMoodBuddyStatus(diaryId, DiaryStatus.DRAFT, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DraftDiaryNotFoundException(DRAFT_DIARY_NOT_FOUND));
     }
 

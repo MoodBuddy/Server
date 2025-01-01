@@ -33,9 +33,9 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
         final Long userId = JwtUtil.getUserId();
         Diary diary = draftDiaryService.saveDraftDiary(requestDTO, userId);
         if(requestDTO.diaryImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
+            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getId());
         }
-        return new DiaryResSaveDTO(diary.getDiaryId());
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override
@@ -43,12 +43,12 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     public DiaryResSaveDTO updateDraftDiary(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
         Diary diary = draftDiaryService.updateDraftDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryImageService.deleteAll(diary.getDiaryId());
+        diaryImageService.deleteAll(diary.getId());
         if(requestDTO.newImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
+            diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getId());
         }
         diaryDocumentService.save(diary);
-        return new DiaryResSaveDTO(diary.getDiaryId());
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override

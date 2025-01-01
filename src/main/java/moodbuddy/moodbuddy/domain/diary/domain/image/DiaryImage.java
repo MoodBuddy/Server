@@ -14,23 +14,23 @@ import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 public class DiaryImage extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "diary_image_id")
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "diary_id")
     private Long diaryId;
 
-    @Column(name = "diary_img_url")
-    private String diaryImgURL;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "mood_buddy_status")
     private MoodBuddyStatus moodBuddyStatus;
 
-    public static DiaryImage of(Long diaryId, String diaryImgURL) {
+    public static DiaryImage of(Long diaryId, String imageUrl) {
         return DiaryImage.builder()
                 .diaryId(diaryId)
-                .diaryImgURL(diaryImgURL)
+                .imageUrl(imageUrl)
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();
     }

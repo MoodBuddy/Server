@@ -21,34 +21,34 @@ public class QDiary extends EntityPathBase<Diary> {
 
     public final moodbuddy.moodbuddy.global.common.base.QBaseEntity _super = new moodbuddy.moodbuddy.global.common.base.QBaseEntity(this);
 
+    public final BooleanPath bookMark = createBoolean("bookMark");
+
+    public final StringPath content = createString("content");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdTime = _super.createdTime;
 
-    public final BooleanPath diaryBookMarkCheck = createBoolean("diaryBookMarkCheck");
+    public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
-    public final StringPath diaryContent = createString("diaryContent");
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion> emotion = createEnum("emotion", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion.class);
 
-    public final DatePath<java.time.LocalDate> diaryDate = createDate("diaryDate", java.time.LocalDate.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont> font = createEnum("font", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont.class);
 
-    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion> diaryEmotion = createEnum("diaryEmotion", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion.class);
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize> fontSize = createEnum("fontSize", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize.class);
 
-    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont> diaryFont = createEnum("diaryFont", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont.class);
-
-    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize> diaryFontSize = createEnum("diaryFontSize", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize.class);
-
-    public final NumberPath<Long> diaryId = createNumber("diaryId", Long.class);
-
-    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus> diaryStatus = createEnum("diaryStatus", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus.class);
-
-    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject> diarySubject = createEnum("diarySubject", moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject.class);
-
-    public final StringPath diarySummary = createString("diarySummary");
-
-    public final StringPath diaryTitle = createString("diaryTitle");
-
-    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather> diaryWeather = createEnum("diaryWeather", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather.class);
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final EnumPath<moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus> moodBuddyStatus = createEnum("moodBuddyStatus", moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus.class);
+
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus> status = createEnum("status", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus.class);
+
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject> subject = createEnum("subject", moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject.class);
+
+    public final StringPath summary = createString("summary");
+
+    public final StringPath thumbnail = createString("thumbnail");
+
+    public final StringPath title = createString("title");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;
@@ -56,6 +56,8 @@ public class QDiary extends EntityPathBase<Diary> {
     public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public final NumberPath<Integer> version = createNumber("version", Integer.class);
+
+    public final EnumPath<moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather> weather = createEnum("weather", moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather.class);
 
     public QDiary(String variable) {
         super(Diary.class, forVariable(variable));

@@ -25,9 +25,9 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     @Override
     public Page<DiaryResDetailDTO> findAllWithPageable(Long userId, Pageable pageable) {
         var diaries = queryFactory.selectFrom(diary)
-                .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
+                .join(bookMark).on(diary.id.eq(bookMark.diaryId))
                 .where(bookMark.userId.eq(userId)
-                        .and(diary.diaryStatus.eq(DiaryStatus.PUBLISHED))
+                        .and(diary.status.eq(DiaryStatus.PUBLISHED))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .orderBy(pageable.getSort().stream()
                         .map(order -> new OrderSpecifier(
@@ -40,27 +40,27 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                 .fetch();
 
         var diaryList = diaries.stream().map(d -> {
-            List<String> diaryImgList = queryFactory.select(diaryImage.diaryImgURL)
+            List<String> diaryImgList = queryFactory.select(diaryImage.imageUrl)
                     .from(diaryImage)
-                    .where(diaryImage.diaryId.eq(d.getDiaryId()))
+                    .where(diaryImage.diaryId.eq(d.getId()))
                     .fetch();
 
             return DiaryResDetailDTO.builder()
-                    .diaryId(d.getDiaryId())
-                    .diaryTitle(d.getDiaryTitle())
-                    .diaryDate(d.getDiaryDate())
-                    .diaryContent(d.getDiaryContent())
-                    .diaryWeather(d.getDiaryWeather())
-                    .diaryEmotion(d.getDiaryEmotion())
-                    .diaryBookMarkCheck(d.getDiaryBookMarkCheck())
-                    .diaryFont(d.getDiaryFont())
-                    .diaryFontSize(d.getDiaryFontSize())
+                    .diaryId(d.getId())
+                    .diaryTitle(d.getTitle())
+                    .diaryDate(d.getDate())
+                    .diaryContent(d.getContent())
+                    .diaryWeather(d.getWeather())
+                    .diaryEmotion(d.getEmotion())
+                    .diaryBookMarkCheck(d.getBookMark())
+                    .diaryFont(d.getFont())
+                    .diaryFontSize(d.getFontSize())
                     .diaryImgList(diaryImgList)
                     .build();
         }).collect(Collectors.toList());
 
         var total = queryFactory.selectFrom(diary)
-                .join(bookMark).on(diary.diaryId.eq(bookMark.diaryId))
+                .join(bookMark).on(diary.id.eq(bookMark.diaryId))
                 .where(bookMark.userId.eq(userId))
                 .fetchCount();
 
