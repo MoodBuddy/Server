@@ -34,8 +34,8 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final var userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         var diary = diaryService.saveDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        if(requestDTO.diaryImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getId());
+        if(requestDTO.diaryImageUrls() != null) {
+            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
@@ -48,8 +48,8 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final var userId = JwtUtil.getUserId();
         var diary = diaryService.updateDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
         diaryImageService.deleteAll(diary.getId());
-        if(requestDTO.newImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getId());
+        if(requestDTO.newImageUrls() != null) {
+            diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
         return new DiaryResSaveDTO(diary.getId());

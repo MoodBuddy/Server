@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
-import java.util.List;
+
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
 import static moodbuddy.moodbuddy.domain.diary.domain.image.QDiaryImage.diaryImage;
 
@@ -41,7 +41,7 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                 .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();
 
-        diaryResDetailDTO.setDiaryImgList(diaryImgList);
+        diaryResDetailDTO.setDiaryImages(diaryImgList);
 
         return diaryResDetailDTO;
     }
