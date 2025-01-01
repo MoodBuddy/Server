@@ -35,15 +35,13 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
     public DraftDiaryResDetailDTO getDraftDiaryById(Long diaryId) {
         var result = queryFactory.select(Projections.constructor(DraftDiaryResDetailDTO.class,
                         diary.id,
-                        diary.userId,
                         diary.title,
                         diary.date,
                         diary.content,
                         diary.weather,
-                        diary.status,
+                        diary.emotion,
                         diary.font,
-                        diary.fontSize,
-                        diary.moodBuddyStatus
+                        diary.fontSize
                 ))
                 .from(diary)
                 .where(diary.id.eq(diaryId)
