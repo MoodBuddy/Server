@@ -6,6 +6,7 @@ import moodbuddy.moodbuddy.domain.bookMark.domain.BookMark;
 import moodbuddy.moodbuddy.domain.bookMark.repository.BookMarkRepository;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,8 +43,8 @@ public class BookMarkServiceImpl implements BookMarkService {
     }
 
     @Override
-    public Page<DiaryResDetailDTO> getBookMarks(Pageable pageable, final Long userId) {
-        return bookMarkRepository.findAllWithPageable(userId, pageable);
+    public Page<DiaryResFindDTO> getBookMarks(Pageable pageable, final Long userId) {
+        return bookMarkRepository.getBookMarksWithPageable(userId, pageable);
     }
 
     @Override

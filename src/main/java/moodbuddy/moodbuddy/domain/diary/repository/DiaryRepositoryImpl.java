@@ -7,6 +7,8 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 
+import java.util.List;
+
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
 import static moodbuddy.moodbuddy.domain.diary.domain.image.QDiaryImage.diaryImage;
 
@@ -19,7 +21,13 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
 
     @Override
     public DiaryResDetailDTO findOneByDiaryId(Long diaryId) {
-        var diaryResDetailDTO = queryFactory.select(Projections.constructor(DiaryResDetailDTO.class,
+        List<String> diaryImages = queryFactory
+                .select(diaryImage.imageUrl)
+                .from(diaryImage)
+                .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                .fetch();
+
+       return queryFactory.select(Projections.constructor(DiaryResDetailDTO.class,
                         diary.id,
                         diary.title,
                         diary.date,
@@ -35,14 +43,5 @@ public class DiaryRepositoryImpl implements DiaryRepositoryCustom {
                         .and(diary.status.eq(DiaryStatus.PUBLISHED))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
-
-        var diaryImgList = queryFactory.select(diaryImage.imageUrl)
-                .from(diaryImage)
-                .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
-                .fetch();
-
-        diaryResDetailDTO.setDiaryImages(diaryImgList);
-
-        return diaryResDetailDTO;
     }
 }

@@ -17,16 +17,19 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     private final DiaryFindRepository diaryFindRepository;
 
     @Override
+    //TODO 캐싱 붙여야 함
     public Page<DiaryResFindDTO> getDiaries(Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesWithPageable(userId, pageable);
     }
 
     @Override
+    //TODO 캐싱 붙여야 함
     public Page<DiaryResFindDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesByEmotionWithPageable(diaryEmotion, userId, pageable);
     }
 
     @Override
+    //TODO 캐싱 붙여야 함
     public Page<DiaryResFindDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesByFilterWithPageable(requestDTO, userId, pageable);
     }
