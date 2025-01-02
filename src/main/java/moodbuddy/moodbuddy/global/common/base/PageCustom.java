@@ -2,15 +2,16 @@ package moodbuddy.moodbuddy.global.common.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor
 public class PageCustom<T> {
-    private final List<T> content;
-    private final int totalPages;
-    private final long totalElements;
-    private final int size;
-    private final int number;
+    private List<T> content;
+    private int totalPages;
+    private long totalElements;
+    private int size;
+    private int number;
 }

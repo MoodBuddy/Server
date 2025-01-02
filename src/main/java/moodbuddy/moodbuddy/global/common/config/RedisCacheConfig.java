@@ -16,26 +16,25 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-
 import java.time.Duration;
 
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
 
-//    // 시간 관련된 값을 캐싱하지 않는다면 해당 설정을 적용하지 않아도된다.
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        objectMapper.registerModule(new JavaTimeModule());
-//        objectMapper.activateDefaultTyping(
-//                objectMapper.getPolymorphicTypeValidator(),
-//                ObjectMapper.DefaultTyping.EVERYTHING,
-//                JsonTypeInfo.As.WRAPPER_OBJECT
-//        );
-//        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//        return objectMapper;
-//    }
+    // 시간 관련된 값을 캐싱하지 않는다면 해당 설정을 적용하지 않아도된다.
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.activateDefaultTyping(
+                objectMapper.getPolymorphicTypeValidator(),
+                ObjectMapper.DefaultTyping.EVERYTHING,
+                JsonTypeInfo.As.WRAPPER_OBJECT
+        );
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return objectMapper;
+    }
 
     // spring의 캐시 타입 Redis로 설정한다. (이 과정이 있다면 spring.cache.type 설정 생략 가능)
     @Bean
@@ -57,7 +56,7 @@ public class RedisCacheConfig {
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())) // 키를 String으로 직렬화해 저장
-//                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()))) // 객체를 JSON으로 바꿔서 Redis에 저장
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()))) // 객체를 JSON으로 바꿔서 Redis에 저장
                 .entryTtl(Duration.ofDays(1L));
     }
 
