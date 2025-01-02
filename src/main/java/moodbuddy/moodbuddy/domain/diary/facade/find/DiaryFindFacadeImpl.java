@@ -5,8 +5,8 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
 import moodbuddy.moodbuddy.domain.diary.service.find.DiaryFindService;
+import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,19 +18,19 @@ public class DiaryFindFacadeImpl implements DiaryFindFacade {
     private final DiaryFindService diaryFindService;
 
     @Override
-    public Page<DiaryResFindDTO> getDiaries(Pageable pageable) {
+    public PageCustom<DiaryResFindDTO> getDiaries(Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
         return diaryFindService.getDiaries(pageable, userId);
     }
 
     @Override
-    public Page<DiaryResFindDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable) {
+    public PageCustom<DiaryResFindDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
         return diaryFindService.getDiariesByEmotion(diaryEmotion, pageable, userId);
     }
 
     @Override
-    public Page<DiaryResFindDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable) {
+    public PageCustom<DiaryResFindDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
         return diaryFindService.getDiariesByFilter(requestDTO, pageable, userId);
     }
