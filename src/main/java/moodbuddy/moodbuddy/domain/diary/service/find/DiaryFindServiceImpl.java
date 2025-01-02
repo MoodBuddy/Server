@@ -18,19 +18,19 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     private final DiaryFindRepository diaryFindRepository;
 
     @Override
-//    @Cacheable(cacheNames = "getDiaries", key = "#userId", unless = "#result == null")
+    @Cacheable(cacheNames = "getDiaries", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
     public PageCustom<DiaryResFindDTO> getDiaries(Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesWithPageable(userId, pageable);
     }
 
     @Override
-//    @Cacheable(cacheNames = "getDiariesByEmotion", key = "#userId + #pageable.pageNumber", unless = "#result == null")
+    @Cacheable(cacheNames = "getDiariesByEmotion", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
     public PageCustom<DiaryResFindDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesByEmotionWithPageable(diaryEmotion, userId, pageable);
     }
 
     @Override
-//    @Cacheable(cacheNames = "getDiariesByFilter", key = "#userId + #pageable.pageNumber", unless = "#result == null")
+    @Cacheable(cacheNames = "getDiariesByFilter", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
     public PageCustom<DiaryResFindDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesByFilterWithPageable(requestDTO, userId, pageable);
     }
