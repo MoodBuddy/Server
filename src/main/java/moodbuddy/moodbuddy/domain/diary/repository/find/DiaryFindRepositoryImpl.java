@@ -10,7 +10,7 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
-import org.springframework.data.domain.Page;
+import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
     }
 
     @Override
-    public Page<DiaryResFindDTO> findDiariesWithPageable(Long userId, Pageable pageable) {
+    public PageCustom<DiaryResFindDTO> findDiariesWithPageable(Long userId, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
                         diary.id,
                         diary.title,
@@ -40,12 +40,13 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
                 .fetch();
 
         long total = getTotal(userId);
+        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
 
-        return new PageImpl<>(results, pageable, total);
+        return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     @Override
-    public Page<DiaryResFindDTO> findDiariesByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
+    public PageCustom<DiaryResFindDTO> findDiariesByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
                         diary.id,
                         diary.title,
@@ -63,12 +64,13 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
                 .fetch();
 
         long total = getTotal(userId);
+        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
 
-        return new PageImpl<>(results, pageable, total);
+        return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     @Override
-    public Page<DiaryResFindDTO> findDiariesByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable) {
+    public PageCustom<DiaryResFindDTO> findDiariesByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
                         diary.id,
                         diary.title,
@@ -92,8 +94,9 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
                 .fetch();
 
         long total = getTotal(userId);
+        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
 
-        return new PageImpl<>(results, pageable, total);
+        return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     private BooleanExpression filterKeyWord(String keyWord) {
