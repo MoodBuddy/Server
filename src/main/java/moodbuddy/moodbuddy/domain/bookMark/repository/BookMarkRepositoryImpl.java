@@ -6,8 +6,7 @@ import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
@@ -19,7 +18,7 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     }
 
     @Override
-    public Page<DiaryResFindDTO> getBookMarksWithPageable(Long userId, Pageable pageable) {
+    public PageCustom<DiaryResFindDTO> getBookMarksWithPageable(Long userId, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
                         diary.id,
                         diary.title,
@@ -37,8 +36,9 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                 .fetch();
 
         long total = getTotal(userId);
+        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
 
-        return new PageImpl<>(results, pageable, total);
+        return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
 
     private long getTotal(Long userId) {
