@@ -11,6 +11,7 @@ import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
+import moodbuddy.moodbuddy.global.common.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final BookMarkService bookMarkService;
     private final UserService userService;
     private final GptService gptService;
+    private final RedisService redisService;
 
     @Override
     @Transactional
@@ -39,6 +41,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         }
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
+        redisService.deleteCaches(userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -52,6 +55,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
             diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
+        redisService.deleteCaches(userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -64,6 +68,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         diaryImageService.deleteAll(diaryId);
 //        diaryDocumentService.delete(diaryId);
         checkTodayDiary(findDiary.getDate(), userId, true);
+        redisService.deleteCaches(userId);
     }
 
     @Override
