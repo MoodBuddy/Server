@@ -15,8 +15,8 @@ import moodbuddy.moodbuddy.global.common.exception.diary.DiaryConcurrentUpdateEx
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -33,7 +33,6 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"getDiaries", "getDiariesByEmotion", "getDiariesByFilter"}, key = "#userId+#pageable.offset+#pageable.pageSize")
     public Diary saveDiary(DiaryReqSaveDTO requestDTO, Map<String, String> gptResults, final Long userId) {
         Diary diary = diaryRepository.save(Diary.ofPublished(
                 requestDTO,
@@ -47,7 +46,6 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    @CacheEvict(cacheNames = {"getDiaries", "getDiariesByEmotion", "getDiariesByFilter"}, key = "#userId+#pageable.offset+#pageable.pageSize")
     public Diary updateDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults, final Long userId) {
         try {
             Diary findDiary = findDiaryById(requestDTO.diaryId());
