@@ -19,8 +19,8 @@ public class DiaryCountRepositoryImpl implements DiaryCountRepositoryCustom {
     public long countByEmotionAndDateRange(DiaryEmotion emotion, LocalDate start, LocalDate end) {
         QDiary qDiary = diary;
         return queryFactory.selectFrom(qDiary)
-                .where(qDiary.diaryDate.between(start, end)
-                        .and(qDiary.diaryEmotion.eq(emotion)))
+                .where(qDiary.date.between(start, end)
+                        .and(qDiary.emotion.eq(emotion)))
                 .fetchCount();
     }
 
@@ -28,8 +28,8 @@ public class DiaryCountRepositoryImpl implements DiaryCountRepositoryCustom {
     public long countBySubjectAndDateRange(DiarySubject subject, LocalDate start, LocalDate end) {
         QDiary qDiary = diary;
         return queryFactory.selectFrom(qDiary)
-                .where(qDiary.diaryDate.between(start, end)
-                        .and(qDiary.diarySubject.eq(subject)))
+                .where(qDiary.date.between(start, end)
+                        .and(qDiary.subject.eq(subject)))
                 .fetchCount();
     }
 }

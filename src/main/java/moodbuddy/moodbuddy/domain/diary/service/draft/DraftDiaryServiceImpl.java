@@ -4,9 +4,9 @@ import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DraftDiaryReqSelectDeleteDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.draft.DraftDiaryRepository;
@@ -52,7 +52,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     public List<DraftDiaryResFindOneDTO> getDraftDiaries(final Long userId) {
-        return draftDiaryRepository.findAllByUserId(userId);
+        return draftDiaryRepository.getDraftDiaries(userId);
     }
 
     @Override
@@ -67,16 +67,16 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     public DraftDiaryResDetailDTO getDraftDiary(Long diaryId, Long userId) {
         final Diary findDiary = findDraftDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
-        return draftDiaryRepository.findOneByDiaryId(diaryId);
+        return draftDiaryRepository.getDraftDiaryById(diaryId);
     }
 
     private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {
-        draftDiaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT)
+        draftDiaryRepository.findAllByDateAndUserIdAndStatus(diaryDate, userId, DiaryStatus.DRAFT)
                 .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 
     private Diary findDraftDiaryById(Long diaryId) {
-        return draftDiaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.DRAFT, MoodBuddyStatus.ACTIVE)
+        return draftDiaryRepository.findByIdAndStatusAndMoodBuddyStatus(diaryId, DiaryStatus.DRAFT, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DraftDiaryNotFoundException(DRAFT_DIARY_NOT_FOUND));
     }
 

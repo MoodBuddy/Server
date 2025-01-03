@@ -103,7 +103,7 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     }
 
     private QuddyTI getQuddyTIByUserIdAndDate(Long userId, String year, String month) {
-        return quddyTIRepository.findByUserIdAndQuddyTIYearAndQuddyTIMonth(userId, year, month)
+        return quddyTIRepository.findByUserIdAndYearAndMonth(userId, year, month)
                 .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.QUDDYTI_NOT_FOUND));
     }
 
