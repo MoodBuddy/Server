@@ -24,13 +24,16 @@ public class DiaryFindServiceImpl implements DiaryFindService {
     }
 
     @Override
-    @Cacheable(cacheNames = "getDiariesByEmotion", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
+    @Cacheable(cacheNames = "getDiariesByEmotion", key = "'userId:'+#userId+'_'+'diaryEmotion:'+#diaryEmotion+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
     public PageCustom<DiaryResFindDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesByEmotionWithPageable(diaryEmotion, userId, pageable);
     }
 
     @Override
-    @Cacheable(cacheNames = "getDiariesByFilter", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
+    @Cacheable(
+            cacheNames = "getDiariesByFilter",
+            key = "'userId:' + #userId + '_'+'filter:' + (#requestDTO.diaryEmotion() ?: 'defaultEmotion') + (#requestDTO.diarySubject() ?: 'defaultSubject') + (#requestDTO.keyWord() ?: 'defaultKeyword') + (#requestDTO.year() ?: 'defaultYear') + (#requestDTO.month() ?: 'defaultMonth') + '_'+'pageable.offset:' + #pageable.offset + '_'+'pageable.pageSize:' + #pageable.pageSize", unless = "#result == null"
+    )
     public PageCustom<DiaryResFindDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable, final Long userId) {
         return diaryFindRepository.findDiariesByFilterWithPageable(requestDTO, userId, pageable);
     }
