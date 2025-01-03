@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.bookMark.facade.BookMarkFacade;
 import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
-import org.springframework.data.domain.Page;
+import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,7 @@ public class BookMarkApiController {
     /** 구현 완료 **/
     @GetMapping("")
     @Operation(summary = "북마크 전체 조회", description = "북마크 전체 조회합니다.")
-    public ResponseEntity<Page<DiaryResFindDTO>> getBookMarks(Pageable pageable) {
+    public ResponseEntity<PageCustom<DiaryResFindDTO>> getBookMarks(Pageable pageable) {
         return ResponseEntity.ok().body(bookMarkFacade.getBookMarks(pageable));
     }
 }
