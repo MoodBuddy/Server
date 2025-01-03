@@ -13,10 +13,15 @@ public class RedisServiceImpl implements RedisService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void deleteCaches(Long userId) {
+    public void deleteDiaryCaches(Long userId) {
         deleteCacheByUserIdAndCacheName(userId, "getDiaries");
         deleteCacheByUserIdAndCacheName(userId, "getDiariesByEmotion");
         deleteCacheByUserIdAndCacheName(userId, "getDiariesByFilter");
+    }
+
+    @Override
+    public void deleteBookMarkCaches(Long userId) {
+        deleteCacheByUserIdAndCacheName(userId, "getBookMarks");
     }
     private void deleteCacheByUserIdAndCacheName(Long userId, String cacheName) {
         String pattern = cacheName + "::userId:" + userId + "*";

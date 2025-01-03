@@ -41,7 +41,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         }
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
-        redisService.deleteCaches(userId);
+        redisService.deleteDiaryCaches(userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -55,7 +55,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
             diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
-        redisService.deleteCaches(userId);
+        redisService.deleteDiaryCaches(userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -68,7 +68,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         diaryImageService.deleteAll(diaryId);
 //        diaryDocumentService.delete(diaryId);
         checkTodayDiary(findDiary.getDate(), userId, true);
-        redisService.deleteCaches(userId);
+        redisService.deleteDiaryCaches(userId);
     }
 
     @Override
