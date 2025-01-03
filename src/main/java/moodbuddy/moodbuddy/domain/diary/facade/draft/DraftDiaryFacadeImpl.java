@@ -50,7 +50,7 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
             diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
-        redisService.deleteCaches(userId);
+        redisService.deleteDiaryCaches(userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 

@@ -25,7 +25,7 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
         final var userId = JwtUtil.getUserId();
         var findDiary = diaryService.findDiaryById(diaryId);
         diaryService.validateDiaryAccess(findDiary, userId);
-        redisService.deleteCaches(userId);
+        redisService.deleteBookMarkCaches(userId);
         return bookMarkService.toggle(findDiary, userId);
     }
 
