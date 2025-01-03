@@ -44,8 +44,8 @@ public class DiaryFindApiController {
                                                                    @RequestParam(value = "keyWord", required = false) String keyWord,
                                                                    @RequestParam(value = "year", required = false) Integer year,
                                                                    @RequestParam(value = "month", required = false) Integer month,
-                                                                   @RequestParam(value = "diaryEmotion", required = false) DiaryEmotion diaryEmotion,
-                                                                   @RequestParam(value = "diarySubject", required = false) DiarySubject diarySubject, Pageable pageable) {
+                                                                   @RequestParam(value = "emotion", required = false) DiaryEmotion diaryEmotion,
+                                                                   @RequestParam(value = "subject", required = false) DiarySubject diarySubject, Pageable pageable) {
         DiaryReqFilterDTO diaryReqFilterDTO = getDiaryReqFilterDTO(keyWord, year, month, diaryEmotion, diarySubject);
         return ResponseEntity.ok().body(diaryFindFacade.getDiariesByFilter(diaryReqFilterDTO, pageable));
     }
