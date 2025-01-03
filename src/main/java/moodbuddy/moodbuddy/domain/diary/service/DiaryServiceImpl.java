@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
-import moodbuddy.moodbuddy.domain.diary.dto.request.*;
+import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
@@ -14,6 +15,8 @@ import moodbuddy.moodbuddy.global.common.exception.diary.DiaryConcurrentUpdateEx
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -65,10 +68,11 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Cacheable(cacheNames = "getDiary", key = "'userId:'+#userId+'_'+'diaryId:'+#diaryId", unless = "#result == null")
     public DiaryResDetailDTO getDiary(final Long diaryId, final Long userId) {
         final Diary findDiary = findDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
-        return diaryRepository.findOneByDiaryId(diaryId);
+        return diaryRepository.getDiaryById(diaryId);
     }
 
     @Override
@@ -80,19 +84,19 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public void validateExistingDiary(LocalDate diaryDate, Long userId) {
-        if (diaryRepository.findByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.PUBLISHED).isPresent()) {
+        if (diaryRepository.findByDateAndUserIdAndStatus(diaryDate, userId, DiaryStatus.PUBLISHED).isPresent()) {
             throw new DiaryTodayExistingException(ErrorCode.DIARY_TODAY_EXISTING);
         }
     }
 
     @Override
     public Diary findDiaryById(Long diaryId) {
-        return diaryRepository.findByDiaryIdAndDiaryStatusAndMoodBuddyStatus(diaryId, DiaryStatus.PUBLISHED, MoodBuddyStatus.ACTIVE)
+        return diaryRepository.findByIdAndStatusAndMoodBuddyStatus(diaryId, DiaryStatus.PUBLISHED, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
     }
 
     private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {
-        diaryRepository.findAllByDiaryDateAndUserIdAndDiaryStatus(diaryDate, userId, DiaryStatus.DRAFT)
+        diaryRepository.findAllByDateAndUserIdAndStatus(diaryDate, userId, DiaryStatus.DRAFT)
                 .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 }

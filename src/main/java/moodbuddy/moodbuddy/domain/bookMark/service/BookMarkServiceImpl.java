@@ -6,11 +6,11 @@ import moodbuddy.moodbuddy.domain.bookMark.domain.BookMark;
 import moodbuddy.moodbuddy.domain.bookMark.repository.BookMarkRepository;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
+import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,7 +22,7 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Transactional
     @Override
     public boolean toggle(Diary diary, final Long userId) {
-        var optionalBookMark = bookMarkRepository.findByUserIdAndDiaryId(userId, diary.getDiaryId());
+        var optionalBookMark = bookMarkRepository.findByUserIdAndDiaryId(userId, diary.getId());
         if(optionalBookMark.isPresent()) {
             return cancelToggle(diary, optionalBookMark.get());
         }
@@ -31,7 +31,7 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     private boolean saveToggle(Diary diary, Long userId) {
         diary.updateDiaryBookMarkCheck(true);
-        var newBookmark = BookMark.of(userId, diary.getDiaryId());
+        var newBookmark = BookMark.of(userId, diary.getId());
         bookMarkRepository.save(newBookmark);
         return true;
     }
@@ -43,8 +43,8 @@ public class BookMarkServiceImpl implements BookMarkService {
     }
 
     @Override
-    public Page<DiaryResDetailDTO> getBookMarks(Pageable pageable, final Long userId) {
-        return bookMarkRepository.findAllWithPageable(userId, pageable);
+    public Page<DiaryResFindDTO> getBookMarks(Pageable pageable, final Long userId) {
+        return bookMarkRepository.getBookMarksWithPageable(userId, pageable);
     }
 
     @Override

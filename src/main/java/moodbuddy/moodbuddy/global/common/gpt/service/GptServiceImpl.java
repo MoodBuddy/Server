@@ -68,14 +68,14 @@ public class GptServiceImpl implements GptService{
                 .orElseThrow(() -> new DiaryNotFoundException(ErrorCode.DIARY_NOT_FOUND));
 
         List<String> keys = List.of("diaryEmotion", "diaryComment");
-        Map<String, String> responseMap = getGPTResponseMap(new GPTRequestDTO(model, diary.getDiaryContent() + EMOTION_ANALYSIS_PROMPT), keys);
+        Map<String, String> responseMap = getGPTResponseMap(new GPTRequestDTO(model, diary.getContent() + EMOTION_ANALYSIS_PROMPT), keys);
 
         diary.updateDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("diaryEmotion")));
         diaryRepository.save(diary);
 
         return DiaryResEmotionDTO.builder()
                 .diaryEmotion(responseMap.get("diaryEmotion"))
-                .diaryDate(diary.getDiaryDate())
+                .diaryDate(diary.getDate())
                 .diaryComment(responseMap.get("diaryComment"))
                 .build();
     }

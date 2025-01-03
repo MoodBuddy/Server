@@ -60,17 +60,17 @@ public class DiaryDocument {
 
     public static DiaryDocument from(Diary diary) {
         return DiaryDocument.builder()
-                .diaryTitle(diary.getDiaryTitle())
-                .diaryDate(diary.getDiaryDate())
-                .diaryContent(diary.getDiaryContent().toString())
-                .diaryWeather(diary.getDiaryWeather().toString())
+                .diaryTitle(diary.getTitle())
+                .diaryDate(diary.getDate())
+                .diaryContent(diary.getContent().toString())
+                .diaryWeather(diary.getWeather().toString())
                 .diaryStatus(DiaryStatus.PUBLISHED.toString())
-                .diarySummary(diary.getDiarySummary())
-                .diarySubject(diary.getDiarySubject().toString())
+                .diarySummary(diary.getSummary())
+                .diarySubject(diary.getSubject().toString())
                 .userId(diary.getUserId())
                 .diaryBookMarkCheck(false)
-                .diaryFont(diary.getDiaryFont().toString())
-                .diaryFontSize(diary.getDiaryFontSize().toString())
+                .diaryFont(diary.getFont().toString())
+                .diaryFontSize(diary.getFontSize().toString())
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();
     }

@@ -24,11 +24,11 @@ public class QuddyTI extends BaseEntity {
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
-    @Column(name = "quddy_ti_year", columnDefinition = "varchar(4)")
-    private String quddyTIYear;
+    @Column(name = "year", columnDefinition = "varchar(4)")
+    private String year;
 
-    @Column(name = "quddy_ti_month", columnDefinition = "varchar(2)")
-    private String quddyTIMonth;
+    @Column(name = "month", columnDefinition = "varchar(2)")
+    private String month;
 
     @Column(name = "diary_frequency", columnDefinition = "int")
     private Integer diaryFrequency;
@@ -59,8 +59,8 @@ public class QuddyTI extends BaseEntity {
     private Integer surpriseCount;
 
     /** 쿼디티아이 **/
-    @Column(name = "quddy_ti_type", columnDefinition = "varchar(10)")
-    private String quddyTIType ;
+    @Column(name = "quddy_ti", columnDefinition = "varchar(10)")
+    private String quddyTI;
 
     /** 쿼디티아이 상태 **/
     @Enumerated(EnumType.STRING)
@@ -70,8 +70,8 @@ public class QuddyTI extends BaseEntity {
     public static QuddyTI of(Long userId, String year, String month) {
         return QuddyTI.builder()
                 .userId(userId)
-                .quddyTIYear(year)
-                .quddyTIMonth(month)
+                .year(year)
+                .month(month)
                 .diaryFrequency(0)
                 .dailyCount(0)
                 .growthCount(0)
@@ -84,7 +84,7 @@ public class QuddyTI extends BaseEntity {
                 .neutralCount(0)
                 .sadnessCount(0)
                 .surpriseCount(0)
-                .quddyTIType(null)
+                .quddyTI(null)
                 .moodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
                 .build();
     }
@@ -101,7 +101,7 @@ public class QuddyTI extends BaseEntity {
         this.growthCount = subjectCounts.getOrDefault(DiarySubject.GROWTH, 0L).intValue();
         this.emotionCount = subjectCounts.getOrDefault(DiarySubject.EMOTION, 0L).intValue();
         this.travelCount = subjectCounts.getOrDefault(DiarySubject.TRAVEL, 0L).intValue();
-        this.quddyTIType = quddyTIType;
+        this.quddyTI = quddyTIType;
         this.moodBuddyStatus = MoodBuddyStatus.ACTIVE;
         this.diaryFrequency = (int) emotionCounts.values().stream().mapToLong(Long::longValue).sum();
     }

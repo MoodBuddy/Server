@@ -2,9 +2,8 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqSaveDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.request.DiaryReqUpdateDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
@@ -12,6 +11,7 @@ import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
+import moodbuddy.moodbuddy.global.common.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +27,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final BookMarkService bookMarkService;
     private final UserService userService;
     private final GptService gptService;
+    private final RedisService redisService;
 
     @Override
     @Transactional
@@ -35,12 +36,13 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final var userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         var diary = diaryService.saveDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        if(requestDTO.diaryImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageURLs(), diary.getDiaryId());
+        if(requestDTO.diaryImageUrls() != null) {
+            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
-        return new DiaryResSaveDTO(diary.getDiaryId());
+        redisService.deleteCaches(userId);
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override
@@ -48,12 +50,13 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResSaveDTO updateDiary(DiaryReqUpdateDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
         var diary = diaryService.updateDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
-        diaryImageService.deleteAll(diary.getDiaryId());
-        if(requestDTO.newImageURLs() != null) {
-            diaryImageService.saveAll(requestDTO.newImageURLs(), diary.getDiaryId());
+        diaryImageService.deleteAll(diary.getId());
+        if(requestDTO.newImageUrls() != null) {
+            diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
-        return new DiaryResSaveDTO(diary.getDiaryId());
+        redisService.deleteCaches(userId);
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override
@@ -64,7 +67,8 @@ public class DiaryFacadeImpl implements DiaryFacade {
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
 //        diaryDocumentService.delete(diaryId);
-        checkTodayDiary(findDiary.getDiaryDate(), userId, true);
+        checkTodayDiary(findDiary.getDate(), userId, true);
+        redisService.deleteCaches(userId);
     }
 
     @Override

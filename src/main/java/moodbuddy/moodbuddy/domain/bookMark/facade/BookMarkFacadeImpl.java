@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     }
 
     @Override
-    public Page<DiaryResDetailDTO> getBookMarks(Pageable pageable) {
+    public Page<DiaryResFindDTO> getBookMarks(Pageable pageable) {
         final var userId = JwtUtil.getUserId();
         return bookMarkService.getBookMarks(pageable, userId);
     }

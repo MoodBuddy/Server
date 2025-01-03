@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.dto.request;
+package moodbuddy.moodbuddy.domain.diary.dto.request.save;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont;
@@ -24,5 +24,5 @@ public record DiaryReqSaveDTO (
         DiaryFontSize diaryFontSize,
         @Schema(description = "일기 사진 URL 리스트", example = "[이미지 URL, 이미지 URL]")
         @Nullable
-        List<String> diaryImageURLs
+        List<String> diaryImageUrls
 ) {}
