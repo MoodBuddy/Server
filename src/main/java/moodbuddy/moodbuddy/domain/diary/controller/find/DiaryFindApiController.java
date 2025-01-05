@@ -21,14 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class DiaryFindApiController {
     private final DiaryFindFacade diaryFindFacade;
 
-    /** 구현 완료 **/
     @GetMapping("")
     @Operation(summary = "일기 전체 조회", description = "일기를 모두 조회합니다.")
     public ResponseEntity<PageCustom<DiaryResFindDTO>> getDiaries(Pageable pageable) {
         return ResponseEntity.ok().body(diaryFindFacade.getDiaries(pageable));
     }
 
-    /** 구현 완료 **/
     @GetMapping("/emotion")
     @Operation(summary = "일기 감정으로 일기 전체 조회", description = "감정이 똑같은 일기를 모두 조회합니다.")
     public ResponseEntity<PageCustom<DiaryResFindDTO>> getDiariesByEmotion(
@@ -37,7 +35,6 @@ public class DiaryFindApiController {
         return ResponseEntity.ok().body(diaryFindFacade.getDiariesByEmotion(emotion, pageable));
     }
 
-    /** 구현 완료 **/
     @GetMapping("/filter")
     @Operation(summary = "일기 필터링으로 전체 조회", description = "여러 필터링을 선택하여 일기를 모두 조회합니다.")
     public ResponseEntity<PageCustom<DiaryResFindDTO>> getDiariesByFilter(@Parameter(description = "필터링 데이터를 담고 있는 DTO")
