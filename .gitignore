@@ -42,3 +42,4 @@ src/test
 .vscode/
 
 .DS_Store
+*.hprof
