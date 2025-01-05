@@ -129,6 +129,7 @@ public class JwtUtil {
 
     public static Long getUserId() {
         String token = JwtUtil.getAccessToken();
+        log.info("[AccessToken] getUserId(): {}", token);
 
         Claims body = Jwts.parserBuilder()
                 .setSigningKey(JWT_SECRET_KEY)
@@ -136,7 +137,11 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return body.get("id", Long.class);
+        Long userId = body.get("id", Long.class);
+
+        log.info("[JWT 토큰에서 userId 추출] getUserId(): {}", userId);
+
+        return userId;
     }
 
     public static String getAccessToken() {

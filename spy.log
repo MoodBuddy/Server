@@ -1,0 +1,7 @@
+1736061665229|4|rollback|connection 229949|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
+1736061665229|4|rollback|connection 229951|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
+1736061665229|5|rollback|connection 229947|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
+1736061665230|5|rollback|connection 229948|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
+1736061665229|5|rollback|connection 229946|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
+1736061665229|5|rollback|connection 229945|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
+1736061665230|5|rollback|connection 229950|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||

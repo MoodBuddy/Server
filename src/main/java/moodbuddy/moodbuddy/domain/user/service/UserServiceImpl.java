@@ -522,7 +522,7 @@ public class UserServiceImpl implements UserService {
     /** 테스트를 위한 임시 자체 로그인 **/
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
-        return UserMapper.toUserResLoginDTO(getUserByKakaoId(userReqLoginDTO.getKakaoId()));
+        return UserMapper.toUserResLoginDTO(getUserById(userReqLoginDTO.getUserId()));
     }
 
     /** 테스트를 위한 임시 자체 회원가입 **/

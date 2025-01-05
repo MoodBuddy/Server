@@ -33,8 +33,8 @@ public class DiaryFindApiController {
     @Operation(summary = "일기 감정으로 일기 전체 조회", description = "감정이 똑같은 일기를 모두 조회합니다.")
     public ResponseEntity<PageCustom<DiaryResFindDTO>> getDiariesByEmotion(
             @Parameter(description = "검색하고 싶은 감정(HAPPY, ANGRY, AVERSION, SURPRISED, CALMNESS, DEPRESSION, FEAR)", example = "HAPPY")
-            @RequestParam("diaryEmotion") DiaryEmotion diaryEmotion, Pageable pageable) {
-        return ResponseEntity.ok().body(diaryFindFacade.getDiariesByEmotion(diaryEmotion, pageable));
+            @RequestParam("emotion") DiaryEmotion emotion, Pageable pageable) {
+        return ResponseEntity.ok().body(diaryFindFacade.getDiariesByEmotion(emotion, pageable));
     }
 
     /** 구현 완료 **/
@@ -44,8 +44,8 @@ public class DiaryFindApiController {
                                                                    @RequestParam(value = "keyWord", required = false) String keyWord,
                                                                    @RequestParam(value = "year", required = false) Integer year,
                                                                    @RequestParam(value = "month", required = false) Integer month,
-                                                                   @RequestParam(value = "emotion", required = false) DiaryEmotion diaryEmotion,
-                                                                   @RequestParam(value = "subject", required = false) DiarySubject diarySubject, Pageable pageable) {
-        return ResponseEntity.ok().body(diaryFindFacade.getDiariesByFilter(DiaryReqFilterDTO.of(keyWord, year, month, diaryEmotion, diarySubject), pageable));
+                                                                   @RequestParam(value = "emotion", required = false) DiaryEmotion emotion,
+                                                                   @RequestParam(value = "subject", required = false) DiarySubject subject, Pageable pageable) {
+        return ResponseEntity.ok().body(diaryFindFacade.getDiariesByFilter(DiaryReqFilterDTO.of(keyWord, year, month, emotion, subject), pageable));
     }
 }
