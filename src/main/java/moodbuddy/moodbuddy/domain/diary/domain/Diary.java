@@ -76,15 +76,16 @@ public class Diary extends BaseEntity {
     @Column(name = "version", nullable = false)
     private Integer version;
 
-    public static Diary ofPublished(DiaryReqSaveDTO requestDTO, Long userId, String diarySummary, DiarySubject diarySubject) {
+    public static Diary ofPublished(DiaryReqSaveDTO requestDTO, Long userId) {
         return Diary.builder()
                 .title(requestDTO.diaryTitle())
                 .date(requestDTO.diaryDate())
                 .content(requestDTO.diaryContent())
                 .weather(requestDTO.diaryWeather())
+                .emotion(null)
                 .status(DiaryStatus.PUBLISHED)
-                .summary(diarySummary)
-                .subject(diarySubject)
+                .summary(null)
+                .subject(null)
                 .userId(userId)
                 .bookMark(false)
                 .font(requestDTO.diaryFont())
@@ -113,19 +114,19 @@ public class Diary extends BaseEntity {
                 .build();
     }
 
-    public void updateDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults) {
+    public void updateDiary(DiaryReqUpdateDTO requestDTO) {
         this.title = requestDTO.diaryTitle();
         this.date = requestDTO.diaryDate();
         this.content = requestDTO.diaryContent();
         this.weather = requestDTO.diaryWeather();
-        this.summary = gptResults.get("summary");
+        this.summary = null;
         this.status = DiaryStatus.PUBLISHED;
-        this.subject = DiarySubject.valueOf(gptResults.get("subject"));
+        this.subject = null;
         this.font = requestDTO.diaryFont();
         this.fontSize = requestDTO.diaryFontSize();
         this.thumbnail =
                 (requestDTO.newImageUrls() != null && !requestDTO.newImageUrls().isEmpty())
-                        ? requestDTO.newImageUrls().get(0)
+                        ? requestDTO.newImageUrls().getFirst()
                         : null;
     }
 

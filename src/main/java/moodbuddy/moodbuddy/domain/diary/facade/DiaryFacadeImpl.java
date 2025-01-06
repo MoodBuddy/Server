@@ -37,7 +37,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         //TODO 일기 저장, 이미지 저장, 일라스틱서치 저장 분리할 필요가 있음.
         final var userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
-        var diary = diaryService.saveDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        var diary = diaryService.saveDiary(requestDTO, userId);
         if(requestDTO.diaryImageUrls() != null) {
             diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
         }
@@ -52,7 +52,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     @Transactional
     public DiaryResSaveDTO updateDiary(DiaryReqUpdateDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        var diary = diaryService.updateDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        var diary = diaryService.updateDiary(requestDTO, userId);
         diaryImageService.deleteAll(diary.getId());
         if(requestDTO.newImageUrls() != null) {
             diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
@@ -80,6 +80,12 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResDetailDTO getDiary(final Long diaryId) {
         final var userId = JwtUtil.getUserId();
         return diaryService.getDiary(diaryId, userId);
+    }
+
+    @Override
+    public void analyze(Long diaryId) {
+        final var userId = JwtUtil.getUserId();
+        diaryService.getDiary(diaryId, userId);
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {

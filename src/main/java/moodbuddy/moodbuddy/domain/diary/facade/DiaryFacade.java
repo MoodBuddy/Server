@@ -10,4 +10,5 @@ public interface DiaryFacade {
     DiaryResSaveDTO updateDiary(DiaryReqUpdateDTO requestDTO);
     void deleteDiary(final Long diaryId);
     DiaryResDetailDTO getDiary(final Long diaryId);
+    void analyze(Long diaryId);
 }

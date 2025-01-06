@@ -26,6 +26,16 @@ public class DiaryApiController {
         return ResponseEntity.ok().body(diaryFacade.saveDiary(requestDTO));
     }
 
+    @PostMapping("/analyze/{diaryId}")
+    @Operation(summary = "일기 분석", description = "작성된 일기를 분석합니다.")
+    public ResponseEntity<?> analyzeDiary(@Parameter(description = "일기 고유 식별자")
+                                         @PathVariable("diaryId") Long diaryId) {
+        diaryFacade.analyze(diaryId);
+        return ResponseEntity.ok().body("일기 분석 완료.");
+    }
+
+    //TODO 롤백 API 만들어야 함.
+
     @PostMapping("/update")
     @Operation(summary = "일기 수정", description = "기존 일기를 수정합니다.")
     public ResponseEntity<DiaryResSaveDTO> updateDiary(@Parameter(description = "수정된 일기 정보를 담고 있는 DTO")

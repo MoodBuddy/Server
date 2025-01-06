@@ -33,24 +33,21 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary saveDiary(DiaryReqSaveDTO requestDTO, Map<String, String> gptResults, final Long userId) {
+    public Diary saveDiary(DiaryReqSaveDTO requestDTO, final Long userId) {
         Diary diary = diaryRepository.save(Diary.ofPublished(
                 requestDTO,
-                userId,
-                gptResults.get(DIARY_SUMMARY),
-                DiarySubject.valueOf(gptResults.get(DIARY_SUBJECT))
-        ));
+                userId));
         deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
         return diary;
     }
 
     @Override
     @Transactional
-    public Diary updateDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults, final Long userId) {
+    public Diary updateDiary(DiaryReqUpdateDTO requestDTO, final Long userId) {
         try {
             Diary findDiary = findDiaryById(requestDTO.diaryId());
             validateDiaryAccess(findDiary, userId);
-            findDiary.updateDiary(requestDTO, gptResults);
+            findDiary.updateDiary(requestDTO);
             deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
             return findDiary;
         } catch (OptimisticLockException ex) {

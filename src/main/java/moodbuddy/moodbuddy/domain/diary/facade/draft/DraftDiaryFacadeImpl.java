@@ -44,7 +44,7 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     @Transactional
     public DiaryResSaveDTO updateDraftDiary(DiaryReqUpdateDTO requestDTO) {
         final Long userId = JwtUtil.getUserId();
-        Diary diary = draftDiaryService.updateDraftDiary(requestDTO, gptService.analyzeDiaryContent(requestDTO.diaryContent()), userId);
+        Diary diary = draftDiaryService.updateDraftDiary(requestDTO, userId);
         diaryImageService.deleteAll(diary.getId());
         if(requestDTO.newImageUrls() != null) {
             diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());

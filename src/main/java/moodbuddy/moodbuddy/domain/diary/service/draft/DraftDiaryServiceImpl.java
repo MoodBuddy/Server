@@ -38,11 +38,11 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     @Transactional
-    public Diary updateDraftDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults, Long userId) {
+    public Diary updateDraftDiary(DiaryReqUpdateDTO requestDTO, Long userId) {
         try {
             Diary findDiary = findDraftDiaryById(requestDTO.diaryId());
             validateDiaryAccess(findDiary, userId);
-            findDiary.updateDiary(requestDTO, gptResults);
+            findDiary.updateDiary(requestDTO);
             deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
             return findDiary;
         } catch (OptimisticLockException ex) {

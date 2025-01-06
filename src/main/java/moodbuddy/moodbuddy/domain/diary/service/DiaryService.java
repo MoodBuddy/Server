@@ -9,10 +9,10 @@ import java.util.Map;
 
 public interface DiaryService {
     // 일기 저장
-    Diary saveDiary(DiaryReqSaveDTO diaryReqSaveDTO, Map<String, String> gptResults, final Long userId);
+    Diary saveDiary(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);
 
     // 일기 수정
-    Diary updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, Map<String, String> gptResults, final Long userId);
+    Diary updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, final Long userId);
 
     // 일기 삭제
     Diary deleteDiary(Long diaryId, Long userId);
