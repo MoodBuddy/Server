@@ -8,16 +8,10 @@ import java.time.LocalDate;
 import java.util.Map;
 
 public interface DiaryService {
-    // 일기 저장
-    Diary saveDiary(DiaryReqSaveDTO diaryReqSaveDTO, Map<String, String> gptResults, final Long userId);
-
-    // 일기 수정
-    Diary updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, Map<String, String> gptResults, final Long userId);
-
-    // 일기 삭제
+    Diary saveDiary(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);
+    Diary updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, final Long userId);
     Diary deleteDiary(Long diaryId, Long userId);
     DiaryResDetailDTO getDiary(final Long diaryId, final Long userId);
-
     Diary findDiaryById(Long diaryId);
     void validateDiaryAccess(Diary findDiary, Long userId);
     void validateExistingDiary(LocalDate diaryDate, Long userId);

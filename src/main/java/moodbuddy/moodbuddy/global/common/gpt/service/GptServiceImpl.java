@@ -5,14 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.dto.response.emotion.DiaryResEmotionDTO;
+import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
+import moodbuddy.moodbuddy.domain.diary.dto.response.emotion.DiaryResAnalyzeDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.gpt.ParsingContentException;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTRequestDTO;
 import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,22 @@ public class GptServiceImpl implements GptService{
     @Value("${gpt.api.url}")
     private String apiUrl;
 
+    private static final String FULL_ANALYSIS_PROMPT = """
+        이 일기 내용을 분석하여 다음 데이터를 제공해줘:
+        1. 주제: "DAILY", "GROWTH", "EMOTION", "TRAVEL" 중에서 선택해 줘.
+        2. 요약: 일기를 한 문장으로 요약.
+        3. 감정: "HAPPINESS", "ANGER", "DISGUST", "FEAR", "NEUTRAL", "SADNESS", "SURPRISE" 중에서 선택해 줘.
+        4. 감정 코멘트: 해당 감정에 따른 한 줄 코멘트(20자 제한, 한 줄만 작성).
+
+        형식:
+        {
+          "subject": "주제 값",
+          "summary": "요약 내용",
+          "emotion": "감정 값",
+          "comment": "감정 코멘트"
+        }
+    """;
+
     // 일기 주제 + 요약 프롬프트
     private static final String CONTENT_ANALYSIS_PROMPT = " 이 일기 내용을 분석하여, 주제에 해당하는 값을 다음 중에서 선택해 줘: \"일상\", \"성장\", \"감정\", \"여행\". 주제 값은 \"DAILY\", \"GROWTH\", \"EMOTION\", \"TRAVEL\" 중 하나로 출력해 줘." +
             " 그리고 이 일기를 서술형인 한 문장으로 요약해 주고, 요약 내용은 반드시 한 문장이어야 하며, 무조건 요약한 내용만 출력해 줘." +
@@ -56,29 +71,47 @@ public class GptServiceImpl implements GptService{
         this.diaryRepository = diaryRepository;
     }
 
-    @Override
-    public Map<String, String> analyzeDiaryContent(String diaryContent){
-        List<String> keys = List.of("subject", "summary");
-        return getGPTResponseMap(new GPTRequestDTO(model, diaryContent + CONTENT_ANALYSIS_PROMPT), keys);
-    }
 
-    @Override
-    public DiaryResEmotionDTO analyzeEmotion(){
-        Diary diary = diaryRepository.findDiarySummaryById(JwtUtil.getUserId())
-                .orElseThrow(() -> new DiaryNotFoundException(ErrorCode.DIARY_NOT_FOUND));
+    public DiaryResAnalyzeDTO analyzeDiary(Diary diary) {
+        List<String> keys = List.of("subject", "summary", "emotion", "comment");
+        Map<String, String> gptResponse = getGPTResponseMap(
+                new GPTRequestDTO(model, diary.getContent() + FULL_ANALYSIS_PROMPT),
+                keys
+        );
 
-        List<String> keys = List.of("diaryEmotion", "diaryComment");
-        Map<String, String> responseMap = getGPTResponseMap(new GPTRequestDTO(model, diary.getContent() + EMOTION_ANALYSIS_PROMPT), keys);
+        diary.analyzeDiaryResult(gptResponse);
 
-        diary.updateDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("diaryEmotion")));
-        diaryRepository.save(diary);
-
-        return DiaryResEmotionDTO.builder()
-                .diaryEmotion(responseMap.get("diaryEmotion"))
-                .diaryDate(diary.getDate())
-                .diaryComment(responseMap.get("diaryComment"))
+        return DiaryResAnalyzeDTO.builder()
+                .diarySubject(DiarySubject.valueOf(gptResponse.get("subject")))
+                .diarySummary(gptResponse.get("summary"))
+                .diaryEmotion(DiaryEmotion.valueOf(gptResponse.get("emotion")))
+                .diaryComment(gptResponse.get("comment"))
                 .build();
     }
+
+//    @Override
+//    public Map<String, String> analyzeDiaryContent(String diaryContent){
+//        List<String> keys = List.of("subject", "summary");
+//        return getGPTResponseMap(new GPTRequestDTO(model, diaryContent + CONTENT_ANALYSIS_PROMPT), keys);
+//    }
+//
+//    @Override
+//    public DiaryResAnalyzeDTO analyzeEmotion(){
+//        Diary diary = diaryRepository.findDiarySummaryById(JwtUtil.getUserId())
+//                .orElseThrow(() -> new DiaryNotFoundException(ErrorCode.DIARY_NOT_FOUND));
+//
+//        List<String> keys = List.of("diaryEmotion", "diaryComment");
+//        Map<String, String> responseMap = getGPTResponseMap(new GPTRequestDTO(model, diary.getContent() + EMOTION_ANALYSIS_PROMPT), keys);
+//
+//        diary.updateDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("diaryEmotion")));
+//        diaryRepository.save(diary);
+//
+//        return DiaryResAnalyzeDTO.builder()
+//                .diaryEmotion(responseMap.get("diaryEmotion"))
+//                .diaryDate(diary.getDate())
+//                .diaryComment(responseMap.get("diaryComment"))
+//                .build();
+//    }
 
     private Map<String, String> getGPTResponseMap(GPTRequestDTO gptRequestDTO, List<String> keys) {
         return gptWebClient.post()

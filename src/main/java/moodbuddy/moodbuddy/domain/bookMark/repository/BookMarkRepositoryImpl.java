@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +18,8 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
     }
 
     @Override
-    public PageCustom<DiaryResFindDTO> getBookMarksWithPageable(Long userId, Pageable pageable) {
-        var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
+    public PageCustom<DiaryResQueryDTO> getBookMarksWithPageable(Long userId, Pageable pageable) {
+        var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
                         diary.date,

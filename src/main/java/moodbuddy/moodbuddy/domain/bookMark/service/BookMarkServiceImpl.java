@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.bookMark.domain.BookMark;
 import moodbuddy.moodbuddy.domain.bookMark.repository.BookMarkRepository;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +44,7 @@ public class BookMarkServiceImpl implements BookMarkService {
 
     @Override
     @Cacheable(cacheNames = "getBookMarks", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
-    public PageCustom<DiaryResFindDTO> getBookMarks(Pageable pageable, final Long userId) {
+    public PageCustom<DiaryResQueryDTO> getBookMarks(Pageable pageable, final Long userId) {
         return bookMarkRepository.getBookMarksWithPageable(userId, pageable);
     }
 

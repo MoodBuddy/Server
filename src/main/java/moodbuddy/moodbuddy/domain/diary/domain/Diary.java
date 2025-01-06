@@ -76,15 +76,16 @@ public class Diary extends BaseEntity {
     @Column(name = "version", nullable = false)
     private Integer version;
 
-    public static Diary ofPublished(DiaryReqSaveDTO requestDTO, Long userId, String diarySummary, DiarySubject diarySubject) {
+    public static Diary ofPublished(DiaryReqSaveDTO requestDTO, Long userId) {
         return Diary.builder()
                 .title(requestDTO.diaryTitle())
                 .date(requestDTO.diaryDate())
                 .content(requestDTO.diaryContent())
                 .weather(requestDTO.diaryWeather())
+                .emotion(null)
                 .status(DiaryStatus.PUBLISHED)
-                .summary(diarySummary)
-                .subject(diarySubject)
+                .summary(null)
+                .subject(null)
                 .userId(userId)
                 .bookMark(false)
                 .font(requestDTO.diaryFont())
@@ -104,7 +105,10 @@ public class Diary extends BaseEntity {
                 .date(requestDTO.diaryDate())
                 .content(requestDTO.diaryContent())
                 .weather(requestDTO.diaryWeather())
+                .emotion(null)
                 .status(DiaryStatus.DRAFT)
+                .summary(null)
+                .subject(null)
                 .userId(userId)
                 .bookMark(false)
                 .font(requestDTO.diaryFont())
@@ -113,24 +117,27 @@ public class Diary extends BaseEntity {
                 .build();
     }
 
-    public void updateDiary(DiaryReqUpdateDTO requestDTO, Map<String, String> gptResults) {
+    public void updateDiary(DiaryReqUpdateDTO requestDTO) {
         this.title = requestDTO.diaryTitle();
         this.date = requestDTO.diaryDate();
         this.content = requestDTO.diaryContent();
         this.weather = requestDTO.diaryWeather();
-        this.summary = gptResults.get("summary");
+        this.emotion = null;
         this.status = DiaryStatus.PUBLISHED;
-        this.subject = DiarySubject.valueOf(gptResults.get("subject"));
+        this.summary = null;
+        this.subject = null;
         this.font = requestDTO.diaryFont();
         this.fontSize = requestDTO.diaryFontSize();
         this.thumbnail =
                 (requestDTO.newImageUrls() != null && !requestDTO.newImageUrls().isEmpty())
-                        ? requestDTO.newImageUrls().get(0)
+                        ? requestDTO.newImageUrls().getFirst()
                         : null;
     }
 
-    public void updateDiaryEmotion(DiaryEmotion diaryEmotion) {
-        this.emotion = diaryEmotion;
+    public void analyzeDiaryResult(Map<String, String> gptResponse) {
+        this.subject = DiarySubject.valueOf(gptResponse.get("subject"));
+        this.summary = gptResponse.get("summary");
+        this.emotion = DiaryEmotion.valueOf(gptResponse.get("emotion"));
     }
     public void updateDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.bookMark = diaryBookMarkCheck; }
     public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
