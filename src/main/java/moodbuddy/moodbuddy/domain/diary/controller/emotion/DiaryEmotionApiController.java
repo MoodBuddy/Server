@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DiaryEmotionApiController {
     private final GptService gptService;
-    @PostMapping("/emotion")
-    @Operation(description = "일기 감정 분석")
-    public ResponseEntity<DiaryResAnalyzeDTO> emotion() throws JsonProcessingException {
-        return ResponseEntity.ok(gptService.analyzeEmotion());
-    }
+//    @PostMapping("/emotion")
+//    @Operation(description = "일기 감정 분석")
+//    public ResponseEntity<DiaryResAnalyzeDTO> emotion() throws JsonProcessingException {
+//        return ResponseEntity.ok(gptService.analyzeEmotion());
+//    }
 }
