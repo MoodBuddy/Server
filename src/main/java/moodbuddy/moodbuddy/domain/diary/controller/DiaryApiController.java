@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.emotion.DiaryResAnalyzeDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.facade.DiaryFacade;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,9 @@ public class DiaryApiController {
 
     @PostMapping("/analyze/{diaryId}")
     @Operation(summary = "일기 분석", description = "작성된 일기를 분석합니다.")
-    public ResponseEntity<?> analyzeDiary(@Parameter(description = "일기 고유 식별자")
+    public ResponseEntity<DiaryResAnalyzeDTO> analyzeDiary(@Parameter(description = "일기 고유 식별자")
                                          @PathVariable("diaryId") Long diaryId) {
-        diaryFacade.analyze(diaryId);
-        return ResponseEntity.ok().body("일기 분석 완료.");
+        return ResponseEntity.ok().body(diaryFacade.analyze(diaryId));
     }
 
     //TODO 롤백 API 만들어야 함.

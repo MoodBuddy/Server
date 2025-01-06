@@ -6,6 +6,7 @@ import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.emotion.DiaryResAnalyzeDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
@@ -83,9 +84,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
     }
 
     @Override
-    public void analyze(Long diaryId) {
-        final var userId = JwtUtil.getUserId();
-        diaryService.getDiary(diaryId, userId);
+    @Transactional
+    public DiaryResAnalyzeDTO analyze(Long diaryId) {
+        return gptService.analyzeDiary(diaryService.findDiaryById(diaryId));
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
