@@ -29,7 +29,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryImageService diaryImageService;
     private final BookMarkService bookMarkService;
     private final UserService userService;
-    private final GptService gptService;
     private final RedisService redisService;
 
     @Override
@@ -81,12 +80,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResDetailDTO getDiary(final Long diaryId) {
         final var userId = JwtUtil.getUserId();
         return diaryService.getDiary(diaryId, userId);
-    }
-
-    @Override
-    @Transactional
-    public DiaryResAnalyzeDTO analyze(Long diaryId) {
-        return gptService.analyzeDiary(diaryService.findDiaryById(diaryId));
     }
 
     private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
