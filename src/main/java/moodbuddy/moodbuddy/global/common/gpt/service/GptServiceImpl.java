@@ -37,7 +37,7 @@ public class GptServiceImpl implements GptService{
 
     private static final String FULL_ANALYSIS_PROMPT = """
         이 일기 내용을 분석하여 다음 데이터를 제공해줘:
-        1. 주제: "일상", "성장", "감정", "여행" 중에서 선택해 줘.
+        1. 주제: "DAILY", "GROWTH", "EMOTION", "TRAVEL" 중에서 선택해 줘.
         2. 요약: 일기를 한 문장으로 요약.
         3. 감정: "HAPPINESS", "ANGER", "DISGUST", "FEAR", "NEUTRAL", "SADNESS", "SURPRISE" 중에서 선택해 줘.
         4. 감정 코멘트: 해당 감정에 따른 한 줄 코멘트(20자 제한, 한 줄만 작성).
@@ -74,19 +74,18 @@ public class GptServiceImpl implements GptService{
 
     public DiaryResAnalyzeDTO analyzeDiary(Diary diary) {
         List<String> keys = List.of("subject", "summary", "emotion", "comment");
-        Map<String, String> responseMap = getGPTResponseMap(
+        Map<String, String> gptResponse = getGPTResponseMap(
                 new GPTRequestDTO(model, diary.getContent() + FULL_ANALYSIS_PROMPT),
                 keys
         );
 
-        diary.updateDiaryEmotion(DiaryEmotion.valueOf(responseMap.get("diaryEmotion")));
-        diaryRepository.save(diary);
+        diary.analyzeDiaryResult(gptResponse);
 
         return DiaryResAnalyzeDTO.builder()
-                .diarySubject(DiarySubject.valueOf(responseMap.get("subject")))
-                .diarySummary(responseMap.get("summary"))
-                .diaryEmotion(DiaryEmotion.valueOf(responseMap.get("emotion")))
-                .diaryComment(responseMap.get("comment"))
+                .diarySubject(DiarySubject.valueOf(gptResponse.get("subject")))
+                .diarySummary(gptResponse.get("summary"))
+                .diaryEmotion(DiaryEmotion.valueOf(gptResponse.get("emotion")))
+                .diaryComment(gptResponse.get("comment"))
                 .build();
     }
 

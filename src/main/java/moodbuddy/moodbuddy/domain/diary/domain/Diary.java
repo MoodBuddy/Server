@@ -122,8 +122,9 @@ public class Diary extends BaseEntity {
         this.date = requestDTO.diaryDate();
         this.content = requestDTO.diaryContent();
         this.weather = requestDTO.diaryWeather();
-        this.summary = null;
+        this.emotion = null;
         this.status = DiaryStatus.PUBLISHED;
+        this.summary = null;
         this.subject = null;
         this.font = requestDTO.diaryFont();
         this.fontSize = requestDTO.diaryFontSize();
@@ -133,8 +134,10 @@ public class Diary extends BaseEntity {
                         : null;
     }
 
-    public void updateDiaryEmotion(DiaryEmotion diaryEmotion) {
-        this.emotion = diaryEmotion;
+    public void analyzeDiaryResult(Map<String, String> gptResponse) {
+        this.subject = DiarySubject.valueOf(gptResponse.get("subject"));
+        this.summary = gptResponse.get("summary");
+        this.emotion = DiaryEmotion.valueOf(gptResponse.get("emotion"));
     }
     public void updateDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.bookMark = diaryBookMarkCheck; }
     public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
