@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.repository.find;
+package moodbuddy.moodbuddy.domain.diary.repository.query;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -8,23 +8,22 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
 
-public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
+public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-    public DiaryFindRepositoryImpl(EntityManager em) {
+    public DiaryQueryRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
     @Override
-    public PageCustom<DiaryResFindDTO> findDiariesWithPageable(Long userId, Pageable pageable) {
-        var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
+    public PageCustom<DiaryResQueryDTO> findDiariesWithPageable(Long userId, Pageable pageable) {
+        var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
                         diary.date,
@@ -46,8 +45,8 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
     }
 
     @Override
-    public PageCustom<DiaryResFindDTO> findDiariesByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
-        var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
+    public PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
+        var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
                         diary.date,
@@ -70,8 +69,8 @@ public class DiaryFindRepositoryImpl implements DiaryFindRepositoryCustom {
     }
 
     @Override
-    public PageCustom<DiaryResFindDTO> findDiariesByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable) {
-        var results = queryFactory.select(Projections.constructor(DiaryResFindDTO.class,
+    public PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable) {
+        var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
                         diary.date,

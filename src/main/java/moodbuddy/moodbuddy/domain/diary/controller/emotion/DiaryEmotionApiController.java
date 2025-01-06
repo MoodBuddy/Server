@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DiaryEmotionApiController {
     private final GptService gptService;
-    //클라이언트가 일기 작성 -> 일기 요약본 flask서버로 전달 -> flask 서버에서는 모델을 통한 감정 분석 후 결과를 리턴
     @PostMapping("/emotion")
     @Operation(description = "일기 감정 분석")
     public ResponseEntity<DiaryResEmotionDTO> emotion() throws JsonProcessingException {

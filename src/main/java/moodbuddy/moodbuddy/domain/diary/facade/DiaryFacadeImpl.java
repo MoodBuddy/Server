@@ -1,6 +1,7 @@
 package moodbuddy.moodbuddy.domain.diary.facade;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;
     private final DiaryDocumentService diaryDocumentService;
@@ -42,6 +44,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
         redisService.deleteDiaryCaches(userId);
+        log.info("[일기 저장] saveDiary(): diaryId: {}, userId: {}", diary.getId(), userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -56,6 +59,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         }
         diaryDocumentService.save(diary);
         redisService.deleteDiaryCaches(userId);
+        log.info("[일기 수정] updateDiary(): diaryId: {}, userId: {}", diary.getId(), userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -68,6 +72,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         diaryImageService.deleteAll(diaryId);
 //        diaryDocumentService.delete(diaryId);
         checkTodayDiary(findDiary.getDate(), userId, true);
+        log.info("[일기 삭제] deleteDiary(): diaryId: {}, userId: {}", diaryId, userId);
         redisService.deleteDiaryCaches(userId);
     }
 

@@ -2,7 +2,7 @@ package moodbuddy.moodbuddy.domain.bookMark.facade;
 
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
-import moodbuddy.moodbuddy.domain.diary.dto.response.find.DiaryResFindDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import moodbuddy.moodbuddy.global.common.redis.service.RedisService;
@@ -30,7 +30,7 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     }
 
     @Override
-    public PageCustom<DiaryResFindDTO> getBookMarks(Pageable pageable) {
+    public PageCustom<DiaryResQueryDTO> getBookMarks(Pageable pageable) {
         final var userId = JwtUtil.getUserId();
         return bookMarkService.getBookMarks(pageable, userId);
     }
