@@ -96,7 +96,6 @@ public class Diary extends BaseEntity {
 
     public void updateDiary(DiaryReqUpdateDTO requestDTO) {
         this.title = requestDTO.diaryTitle();
-        this.date = requestDTO.diaryDate();
         this.content = requestDTO.diaryContent();
         this.weather = requestDTO.diaryWeather();
         this.emotion = null;
@@ -105,8 +104,8 @@ public class Diary extends BaseEntity {
         this.font = requestDTO.diaryFont();
         this.fontSize = requestDTO.diaryFontSize();
         this.thumbnail =
-                (requestDTO.newImageUrls() != null && !requestDTO.newImageUrls().isEmpty())
-                        ? requestDTO.newImageUrls().getFirst()
+                (requestDTO.diaryImageUrls() != null && !requestDTO.diaryImageUrls().isEmpty())
+                        ? requestDTO.diaryImageUrls().getFirst()
                         : null;
     }
 

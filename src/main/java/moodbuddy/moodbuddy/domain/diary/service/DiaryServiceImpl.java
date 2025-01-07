@@ -43,7 +43,7 @@ public class DiaryServiceImpl implements DiaryService {
             Diary findDiary = findDiaryById(requestDTO.diaryId());
             validateDiaryAccess(findDiary, userId);
             findDiary.updateDiary(requestDTO);
-            deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
+            deleteTodayDraftDiaries(findDiary.getDate(), userId);
             return findDiary;
         } catch (OptimisticLockException ex) {
             throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);

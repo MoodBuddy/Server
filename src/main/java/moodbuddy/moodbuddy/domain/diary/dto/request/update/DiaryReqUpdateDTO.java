@@ -6,7 +6,6 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 
 import javax.annotation.Nullable;
-import java.time.LocalDate;
 import java.util.List;
 
 public record DiaryReqUpdateDTO (
@@ -14,9 +13,6 @@ public record DiaryReqUpdateDTO (
         Long diaryId,
         @Schema(description = "수정할 일기 제목", example = "쿼카의 하카")
         String diaryTitle,
-        //TODO 일기 날짜 수정은 기획과 논의할 필요가 있음
-        @Schema(description = "수정할 일기 날짜", example = "2023-07-02T15:30:00")
-        LocalDate diaryDate,
         @Schema(description = "수정할 일기 내용", example = "쿼카쿼카쿼카쿼카쿼카쿼카")
         String diaryContent,
         @Schema(description = "수정할 일기 날씨(CLEAR, CLOUDY, RAIN, SNOW)", example = "CLEAR")
@@ -27,6 +23,6 @@ public record DiaryReqUpdateDTO (
         DiaryFontSize diaryFontSize,
         @Schema(description = "새로운 이미지", example = "[이미지 URL, 이미지 URL]")
         @Nullable
-        List<String> newImageUrls
+        List<String> diaryImageUrls
 ) {
 }

@@ -46,8 +46,8 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
         final Long userId = JwtUtil.getUserId();
         Diary diary = draftDiaryService.updateDraftDiary(requestDTO, userId);
         diaryImageService.deleteAll(diary.getId());
-        if(requestDTO.newImageUrls() != null) {
-            diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
+        if(requestDTO.diaryImageUrls() != null) {
+            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
         redisService.deleteDiaryCaches(userId);

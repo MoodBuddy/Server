@@ -6,13 +6,11 @@ import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.emotion.DiaryResAnalyzeDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
 import moodbuddy.moodbuddy.global.common.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
@@ -54,8 +52,8 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final var userId = JwtUtil.getUserId();
         var diary = diaryService.updateDiary(requestDTO, userId);
         diaryImageService.deleteAll(diary.getId());
-        if(requestDTO.newImageUrls() != null) {
-            diaryImageService.saveAll(requestDTO.newImageUrls(), diary.getId());
+        if(requestDTO.diaryImageUrls() != null) {
+            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
         }
         diaryDocumentService.save(diary);
         redisService.deleteDiaryCaches(userId);

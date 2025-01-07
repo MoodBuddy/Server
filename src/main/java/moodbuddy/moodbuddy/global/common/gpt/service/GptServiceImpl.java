@@ -35,7 +35,7 @@ public class GptServiceImpl implements GptService{
     @Value("${gpt.api.url}")
     private String apiUrl;
 
-    private static final String FULL_ANALYSIS_PROMPT = "다음 일기를 분석해줘. 주제는 DAILY, GROWTH, EMOTION, TRAVEL 중 하나, 요약은 한 문장, 감정은 HAPPINESS, ANGER, 등 중 하나, 감정 코멘트는 20자. 응답 형식은 JSON으로: {\"subject\":\"\", \"summary\":\"\", \"emotion\":\"\", \"comment\":\"\"}";
+    private static final String FULL_ANALYSIS_PROMPT = "다음 일기를 한글로 분석해줘. 주제는 DAILY, GROWTH, EMOTION, TRAVEL 중 하나, 요약은 한 문장, 감정은 HAPPINESS, ANGER, DISGUST, FEAR, NEUTRAL, SADNESS, SURPRISE 중 하나, 감정 코멘트는 20자. 응답 형식은 JSON으로: {\"subject\":\"\", \"summary\":\"\", \"emotion\":\"\", \"comment\":\"\"}";
 
 //    // 일기 주제 + 요약 프롬프트
 //    private static final String CONTENT_ANALYSIS_PROMPT = " 이 일기 내용을 분석하여, 주제에 해당하는 값을 다음 중에서 선택해 줘: \"일상\", \"성장\", \"감정\", \"여행\". 주제 값은 \"DAILY\", \"GROWTH\", \"EMOTION\", \"TRAVEL\" 중 하나로 출력해 줘." +
