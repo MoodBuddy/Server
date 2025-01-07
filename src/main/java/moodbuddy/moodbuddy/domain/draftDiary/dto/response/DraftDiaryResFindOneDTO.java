@@ -1,7 +1,6 @@
-package moodbuddy.moodbuddy.domain.diary.dto.response.draft;
+package moodbuddy.moodbuddy.domain.draftDiary.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 
 import java.time.LocalDate;
 

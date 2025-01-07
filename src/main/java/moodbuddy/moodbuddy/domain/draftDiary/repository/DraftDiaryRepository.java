@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.repository.draft;
+package moodbuddy.moodbuddy.domain.draftDiary.repository;
 
 import jakarta.persistence.LockModeType;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;

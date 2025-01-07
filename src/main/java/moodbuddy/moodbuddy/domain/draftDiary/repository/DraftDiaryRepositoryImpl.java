@@ -1,11 +1,11 @@
-package moodbuddy.moodbuddy.domain.diary.repository.draft;
+package moodbuddy.moodbuddy.domain.draftDiary.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import java.util.List;
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;

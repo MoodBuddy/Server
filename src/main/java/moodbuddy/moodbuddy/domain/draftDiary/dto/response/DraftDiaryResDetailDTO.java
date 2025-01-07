@@ -1,9 +1,9 @@
-package moodbuddy.moodbuddy.domain.diary.dto.response.draft;
+package moodbuddy.moodbuddy.domain.draftDiary.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+
 import java.time.LocalDate;
 import java.util.List;
 
