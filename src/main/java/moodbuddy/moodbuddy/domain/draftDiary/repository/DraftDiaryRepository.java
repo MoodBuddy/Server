@@ -1,8 +1,9 @@
 package moodbuddy.moodbuddy.domain.draftDiary.repository;
 
 import jakarta.persistence.LockModeType;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.draftDiary.domain.DraftDiary;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 

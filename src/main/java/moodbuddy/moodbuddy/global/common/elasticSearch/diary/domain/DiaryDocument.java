@@ -2,7 +2,7 @@ package moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain;
 
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;

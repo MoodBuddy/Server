@@ -1,6 +1,6 @@
 package moodbuddy.moodbuddy.domain.draftDiary.facade;
 
-import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface DraftDiaryFacade {
     DraftDiaryResSaveDTO saveDraftDiary(DraftDiaryReqSaveDTO requestDTO);
-    DiaryResSaveDTO updateDraftDiary(DiaryReqUpdateDTO requestDTO);
+    DiaryResSaveDTO publishDraftDiary(DraftDiaryReqPublishDTO requestDTO);
     List<DraftDiaryResFindOneDTO> getDraftDiaries();
     void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO);
     DraftDiaryResDetailDTO getDraftDiary(Long diaryId);

@@ -3,7 +3,7 @@ package moodbuddy.moodbuddy.domain.profile.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 @Entity
 @Table(name = "profile_image")
 @Getter
@@ -11,7 +11,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProfileImage extends BaseEntity {
+public class ProfileImage extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_image_id")

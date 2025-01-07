@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.*;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 
 @Entity
 @Getter
@@ -14,7 +14,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @AllArgsConstructor
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

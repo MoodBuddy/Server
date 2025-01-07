@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSaveDTO;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 
 import java.time.LocalDate;
 
@@ -15,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "draft_diary")
-public class DraftDiary extends BaseEntity {
+public class DraftDiary extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

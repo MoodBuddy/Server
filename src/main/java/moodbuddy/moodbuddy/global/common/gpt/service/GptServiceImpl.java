@@ -27,7 +27,6 @@ import java.util.Map;
 @Slf4j
 public class GptServiceImpl implements GptService{
     private final WebClient gptWebClient;
-    private final DiaryRepository diaryRepository;
 
     @Value("${gpt.model}")
     private String model;
@@ -52,9 +51,8 @@ public class GptServiceImpl implements GptService{
     private static final int RETRY_ATTEMPTS = 3;
     private static final int RETRY_DELAY_SECONDS = 5;
 
-    public GptServiceImpl(@Qualifier("gptWebClient") WebClient gptWebClient, DiaryRepository diaryRepository) {
+    public GptServiceImpl(@Qualifier("gptWebClient") WebClient gptWebClient) {
         this.gptWebClient = gptWebClient;
-        this.diaryRepository = diaryRepository;
     }
 
 

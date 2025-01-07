@@ -5,8 +5,12 @@ import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.domain.draftDiary.domain.DraftDiary;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
+import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -17,7 +21,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "diary")
-public class Diary extends BaseEntity {
+public class Diary extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -73,6 +77,28 @@ public class Diary extends BaseEntity {
     private Integer version;
 
     public static Diary of(DiaryReqSaveDTO requestDTO, Long userId) {
+        return Diary.builder()
+                .title(requestDTO.diaryTitle())
+                .date(requestDTO.diaryDate())
+                .content(requestDTO.diaryContent())
+                .weather(requestDTO.diaryWeather())
+                .emotion(null)
+                .summary(null)
+                .subject(null)
+                .userId(userId)
+                .bookMark(false)
+                .font(requestDTO.diaryFont())
+                .fontSize(requestDTO.diaryFontSize())
+                .thumbnail(
+                        (requestDTO.diaryImageUrls() != null && !requestDTO.diaryImageUrls().isEmpty())
+                                ? requestDTO.diaryImageUrls().getFirst()
+                                : null
+                )
+                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
+                .build();
+    }
+
+    public static Diary publish(Long userId, DraftDiaryReqPublishDTO requestDTO) {
         return Diary.builder()
                 .title(requestDTO.diaryTitle())
                 .date(requestDTO.diaryDate())

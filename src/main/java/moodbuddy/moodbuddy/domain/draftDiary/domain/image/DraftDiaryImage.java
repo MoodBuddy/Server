@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.domain.image;
+package moodbuddy.moodbuddy.domain.draftDiary.domain.image;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,16 +9,16 @@ import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 @Getter
 @Builder
 @AllArgsConstructor
-@Table(name = "diary_image")
+@Table(name = "draft_diary_image")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DiaryImage extends BaseTimeEntity {
+public class DraftDiaryImage extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "diary_id")
-    private Long diaryId;
+    @Column(name = "draft_diary_id")
+    private Long draftDiaryId;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -27,9 +27,9 @@ public class DiaryImage extends BaseTimeEntity {
     @Column(name = "mood_buddy_status")
     private MoodBuddyStatus moodBuddyStatus;
 
-    public static DiaryImage of(Long diaryId, String imageUrl) {
-        return DiaryImage.builder()
-                .diaryId(diaryId)
+    public static DraftDiaryImage of(Long draftDiaryId, String imageUrl) {
+        return DraftDiaryImage.builder()
+                .draftDiaryId(draftDiaryId)
                 .imageUrl(imageUrl)
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();

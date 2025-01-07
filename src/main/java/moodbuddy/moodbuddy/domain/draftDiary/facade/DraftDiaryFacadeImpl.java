@@ -1,9 +1,9 @@
 package moodbuddy.moodbuddy.domain.draftDiary.facade;
 
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
-import moodbuddy.moodbuddy.domain.draftDiary.domain.DraftDiary;
+import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
+import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO;
@@ -11,13 +11,13 @@ import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDT
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
-import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
-import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
+import moodbuddy.moodbuddy.domain.draftDiary.service.image.DraftDiaryImageService;
+import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -25,51 +25,61 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     private final DraftDiaryService draftDiaryService;
-    private final DiaryDocumentService diaryDocumentService;
     private final DiaryImageService diaryImageService;
+    private final DiaryService diaryService;
+    private final DraftDiaryImageService draftDiaryImageService;
+    private final UserService userService;
     private final RedisService redisService;
 
     @Override
     @Transactional
     public DraftDiaryResSaveDTO saveDraftDiary(DraftDiaryReqSaveDTO requestDTO) {
-        final Long userId = JwtUtil.getUserId();
-        DraftDiary draftDiary = draftDiaryService.saveDraftDiary(requestDTO, userId);
+        final var userId = JwtUtil.getUserId();
+        var draftDiary = draftDiaryService.saveDraftDiary(requestDTO, userId);
         if(requestDTO.diaryImageUrls() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageUrls(), draftDiary.getId());
-        } // TODO 해결해야 함
+            draftDiaryImageService.saveAll(requestDTO.diaryImageUrls(), draftDiary.getId());
+        }
         return new DraftDiaryResSaveDTO(draftDiary.getId());
     }
 
     @Override
     @Transactional
-    public DiaryResSaveDTO updateDraftDiary(DiaryReqUpdateDTO requestDTO) {
-        final Long userId = JwtUtil.getUserId();
-        Diary diary = draftDiaryService.updateDraftDiary(requestDTO, userId);
-        diaryImageService.deleteAll(diary.getId());
+    public DiaryResSaveDTO publishDraftDiary(DraftDiaryReqPublishDTO requestDTO) {
+        final var userId = JwtUtil.getUserId();
+        diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
+        var diaryId = draftDiaryService.publishDraftDiary(requestDTO, userId);
+        draftDiaryImageService.deleteAll(diaryId);
         if(requestDTO.diaryImageUrls() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
+            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diaryId);
         }
-        diaryDocumentService.save(diary);
+        checkTodayDiary(requestDTO.diaryDate(), userId);
         redisService.deleteDiaryCaches(userId);
-        return new DiaryResSaveDTO(diary.getId());
+        return new DiaryResSaveDTO(diaryId);
     }
 
     @Override
     public List<DraftDiaryResFindOneDTO> getDraftDiaries() {
-        final Long userId = JwtUtil.getUserId();
+        final var userId = JwtUtil.getUserId();
         return draftDiaryService.getDraftDiaries(userId);
     }
 
     @Override
     @Transactional
     public void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO) {
-        final Long userId = JwtUtil.getUserId();
+        final var userId = JwtUtil.getUserId();
         draftDiaryService.deleteDraftDiaries(requestDTO, userId);
     }
 
     @Override
     public DraftDiaryResDetailDTO getDraftDiary(Long diaryId) {
-        final Long userId = JwtUtil.getUserId();
+        final var userId = JwtUtil.getUserId();
         return draftDiaryService.getDraftDiary(diaryId, userId);
+    }
+    private void checkTodayDiary(LocalDate diaryDate, Long userId) {
+        var today = LocalDate.now();
+        if (diaryDate.isEqual(today)) {
+            userService.changeCount(userId, false);
+            userService.setUserCheckTodayDairy(userId, false);
+        }
     }
 }

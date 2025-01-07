@@ -7,7 +7,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryConcurrentUpdateException;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
@@ -24,13 +24,10 @@ import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.DIARY_NOT_FO
 @RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
-    private final String DIARY_SUMMARY = "summary";
-    private final String DIARY_SUBJECT = "subject";
 
     @Override
     @Transactional
     public Diary saveDiary(DiaryReqSaveDTO requestDTO, final Long userId) {
-        deleteTodayDraftDiaries(requestDTO.diaryDate(), userId);
         return diaryRepository.save(Diary.of(
                 requestDTO,
                 userId));
@@ -40,10 +37,9 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public Diary updateDiary(DiaryReqUpdateDTO requestDTO, final Long userId) {
         try {
-            Diary findDiary = findDiaryById(requestDTO.diaryId());
+            var findDiary = findDiaryById(requestDTO.diaryId());
             validateDiaryAccess(findDiary, userId);
             findDiary.updateDiary(requestDTO);
-            deleteTodayDraftDiaries(findDiary.getDate(), userId);
             return findDiary;
         } catch (OptimisticLockException ex) {
             throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);
@@ -53,7 +49,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public Diary deleteDiary(Long diaryId, Long userId) {
-        final Diary findDiary = findDiaryById(diaryId);
+        final var findDiary = findDiaryById(diaryId);
         validateDiaryAccess(findDiary, userId);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         return findDiary;
@@ -85,10 +81,5 @@ public class DiaryServiceImpl implements DiaryService {
     public Diary findDiaryById(Long diaryId) {
         return diaryRepository.findByIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
-    }
-
-    private void deleteTodayDraftDiaries(LocalDate diaryDate, Long userId) {
-        diaryRepository.findAllByDateAndUserId(diaryDate, userId)
-                .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 }

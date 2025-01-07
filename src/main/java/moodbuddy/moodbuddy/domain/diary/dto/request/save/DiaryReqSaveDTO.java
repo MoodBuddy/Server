@@ -1,10 +1,9 @@
 package moodbuddy.moodbuddy.domain.diary.dto.request.save;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
-
 import javax.annotation.Nullable;
 import java.time.LocalDate;
 import java.util.List;

@@ -3,7 +3,7 @@ package moodbuddy.moodbuddy.global.common.elasticSearch.diary.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain.DiaryDocument;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.repository.DiaryDocumentRepository;
 import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;

@@ -3,12 +3,14 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
+import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
 import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.redis.service.RedisService;
@@ -16,6 +18,7 @@ import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ import java.time.LocalDate;
 @Slf4j
 public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;
+    private final DraftDiaryService draftDiaryService;
     private final DiaryDocumentService diaryDocumentService;
     private final DiaryImageService diaryImageService;
     private final BookMarkService bookMarkService;
@@ -36,13 +40,12 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final var userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
         var diary = diaryService.saveDiary(requestDTO, userId);
-        if(requestDTO.diaryImageUrls() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
-        }
+        saveDiaryImages(requestDTO.diaryImageUrls(), diary);
         diaryDocumentService.save(diary);
         checkTodayDiary(requestDTO.diaryDate(), userId, false);
-        redisService.deleteDiaryCaches(userId);
-        log.info("[일기 저장] saveDiary(): diaryId: {}, userId: {}", diary.getId(), userId);
+
+        deleteData(userId, requestDTO.diaryDate());
+        log.info("[일기 저장] saveDiary(): draftDiaryId: {}, userId: {}", diary.getId(), userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -52,12 +55,11 @@ public class DiaryFacadeImpl implements DiaryFacade {
         final var userId = JwtUtil.getUserId();
         var diary = diaryService.updateDiary(requestDTO, userId);
         diaryImageService.deleteAll(diary.getId());
-        if(requestDTO.diaryImageUrls() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diary.getId());
-        }
+        saveDiaryImages(requestDTO.diaryImageUrls(), diary);
         diaryDocumentService.save(diary);
-        redisService.deleteDiaryCaches(userId);
-        log.info("[일기 수정] updateDiary(): diaryId: {}, userId: {}", diary.getId(), userId);
+
+        deleteData(userId, diary.getDate());
+        log.info("[일기 수정] updateDiary(): draftDiaryId: {}, userId: {}", diary.getId(), userId);
         return new DiaryResSaveDTO(diary.getId());
     }
 
@@ -68,9 +70,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
         var findDiary = diaryService.deleteDiary(diaryId, userId);
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
-//        diaryDocumentService.delete(diaryId);
+//        diaryDocumentService.delete(draftDiaryId);
         checkTodayDiary(findDiary.getDate(), userId, true);
-        log.info("[일기 삭제] deleteDiary(): diaryId: {}, userId: {}", diaryId, userId);
+        log.info("[일기 삭제] deleteDiary(): draftDiaryId: {}, userId: {}", diaryId, userId);
         redisService.deleteDiaryCaches(userId);
     }
 
@@ -85,6 +87,17 @@ public class DiaryFacadeImpl implements DiaryFacade {
         if (diaryDate.isEqual(today)) {
             userService.changeCount(userId, check);
             userService.setUserCheckTodayDairy(userId, check);
+        }
+    }
+
+    private void deleteData(Long userId, LocalDate requestDTO) {
+        draftDiaryService.deleteTodayDraftDiaries(userId, requestDTO);
+        redisService.deleteDiaryCaches(userId);
+    }
+
+    private void saveDiaryImages(List<String> requestDTO, Diary diary) {
+        if (requestDTO != null) {
+            diaryImageService.saveAll(requestDTO, diary.getId());
         }
     }
 }

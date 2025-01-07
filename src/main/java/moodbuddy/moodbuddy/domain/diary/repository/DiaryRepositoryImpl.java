@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
 import static moodbuddy.moodbuddy.domain.diary.domain.image.QDiaryImage.diaryImage;
 

@@ -5,10 +5,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDTO;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import java.util.List;
-import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
-import static moodbuddy.moodbuddy.domain.diary.domain.image.QDiaryImage.diaryImage;
+import static moodbuddy.moodbuddy.domain.draftDiary.domain.QDraftDiary.draftDiary;
+import static moodbuddy.moodbuddy.domain.draftDiary.domain.image.QDraftDiaryImage.draftDiaryImage;
 
 public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -20,38 +20,37 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
     @Override
     public List<DraftDiaryResFindOneDTO> getDraftDiaries(Long userId) {
         return queryFactory.select(Projections.constructor(DraftDiaryResFindOneDTO.class,
-                        diary.id,
-                        diary.date
+                        draftDiary.id,
+                        draftDiary.date
                 ))
-                .from(diary)
-                .where(diary.userId.eq(userId)
-                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                .from(draftDiary)
+                .where(draftDiary.userId.eq(userId)
+                        .and(draftDiary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();
     }
 
     @Override
-    public DraftDiaryResDetailDTO getDraftDiaryById(Long diaryId) {
+    public DraftDiaryResDetailDTO getDraftDiaryById(Long draftDiaryId) {
         var result = queryFactory.select(Projections.constructor(DraftDiaryResDetailDTO.class,
-                        diary.id,
-                        diary.title,
-                        diary.date,
-                        diary.content,
-                        diary.weather,
-                        diary.emotion,
-                        diary.font,
-                        diary.fontSize
+                        draftDiary.id,
+                        draftDiary.title,
+                        draftDiary.date,
+                        draftDiary.content,
+                        draftDiary.weather,
+                        draftDiary.font,
+                        draftDiary.fontSize
                 ))
-                .from(diary)
-                .where(diary.id.eq(diaryId)
-                        .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                .from(draftDiary)
+                .where(draftDiary.id.eq(draftDiaryId)
+                        .and(draftDiary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
 
-        var diaryImgList = queryFactory.select(diaryImage.imageUrl)
-                .from(diaryImage)
-                .where(diaryImage.diaryId.eq(diaryId).and(diaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+        var diaryImgList = queryFactory.select(draftDiaryImage.imageUrl)
+                .from(draftDiaryImage)
+                .where(draftDiaryImage.draftDiaryId.eq(draftDiaryId).and(draftDiaryImage.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();
 
-        result.saveDiaryImageUrls(diaryImgList);
+        result.saveDraftDiaryImageUrls(diaryImgList);
 
         return result;
     }

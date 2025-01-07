@@ -8,7 +8,7 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
 import org.springframework.data.domain.Pageable;
 import java.util.Optional;

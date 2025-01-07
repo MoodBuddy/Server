@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
+
 import java.time.LocalDate;
 import java.util.List;
 

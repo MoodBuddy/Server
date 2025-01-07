@@ -1,15 +1,15 @@
 package moodbuddy.moodbuddy.domain.diary.dto.request.update;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
+import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public record DiaryReqUpdateDTO (
-        @Schema(description = "수정할 일기 고유 식별자(diaryId)", example = "1")
+        @Schema(description = "수정할 일기 고유 식별자(draftDiaryId)", example = "1")
         Long diaryId,
         @Schema(description = "수정할 일기 제목", example = "쿼카의 하카")
         String diaryTitle,
