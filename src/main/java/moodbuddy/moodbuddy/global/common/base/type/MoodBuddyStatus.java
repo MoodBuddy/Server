@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.global.common.base;
+package moodbuddy.moodbuddy.global.common.base.type;
 
 public enum MoodBuddyStatus {
     ACTIVE, DIS_ACTIVE

@@ -1,19 +1,19 @@
-package moodbuddy.moodbuddy.domain.diary.controller.draft;
+package moodbuddy.moodbuddy.domain.draftDiary.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.request.draft.DraftDiaryReqSelectDeleteDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResDetailDTO;
-import moodbuddy.moodbuddy.domain.diary.dto.response.draft.DraftDiaryResFindOneDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSaveDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSelectDeleteDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
-import moodbuddy.moodbuddy.domain.diary.facade.draft.DraftDiaryFacade;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResSaveDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.facade.DraftDiaryFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -25,16 +25,16 @@ public class DraftDiaryApiController {
 
     @PostMapping("/save")
     @Operation(summary = "일기 임시 저장", description = "일기를 임시 저장합니다.")
-    public ResponseEntity<DiaryResSaveDTO> saveDraftDiary(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
-                                                       @RequestBody DiaryReqSaveDTO requestDTO) {
+    public ResponseEntity<DraftDiaryResSaveDTO> saveDraftDiary(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
+                                                       @RequestBody DraftDiaryReqSaveDTO requestDTO) {
         return ResponseEntity.ok().body(draftDiaryFacade.saveDraftDiary(requestDTO));
     }
 
-    @PostMapping("/update")
+    @PostMapping("/publish")
     @Operation(summary = "임시 저장 일기 -> 일기 저장으로 변경", description = "임시 저장 일기 -> 일기 저장으로 변경합니다.")
-    public ResponseEntity<DiaryResSaveDTO> updateDraftDiary(@Parameter(description = "변경할 일기 정보를 담고 있는 DTO")
-                                                    @RequestBody DiaryReqUpdateDTO requestDTO) {
-        return ResponseEntity.ok().body(draftDiaryFacade.updateDraftDiary(requestDTO));
+    public ResponseEntity<DiaryResSaveDTO> publishDraftDiary(@Parameter(description = "변경할 일기 정보를 담고 있는 DTO")
+                                                    @RequestBody DraftDiaryReqPublishDTO requestDTO) {
+        return ResponseEntity.ok().body(draftDiaryFacade.publishDraftDiary(requestDTO));
     }
 
     @GetMapping("/{diaryId}")

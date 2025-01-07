@@ -1,6 +1,6 @@
 package moodbuddy.moodbuddy.domain.quddyTI.dto.response;
 
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 
 public record QuddyTIResDetailDTO(
         Long userId,

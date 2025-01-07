@@ -5,7 +5,6 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import java.time.LocalDate;
-import java.util.Map;
 
 public interface DiaryService {
     Diary saveDiary(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);

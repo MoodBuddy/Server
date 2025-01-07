@@ -3,7 +3,7 @@ package moodbuddy.moodbuddy.domain.diary.service.image;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.image.DiaryImage;
 import moodbuddy.moodbuddy.domain.diary.repository.image.DiaryImageRepository;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;

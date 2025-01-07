@@ -3,7 +3,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.domain.monthcomment.domain.MonthComment;
 import moodbuddy.moodbuddy.domain.monthcomment.repository.MonthCommentRepository;
@@ -353,7 +352,7 @@ public class UserServiceImpl implements UserService {
         Long userId = JwtUtil.getUserId();
         int yearValue = year.getYear();
 
-        List<Diary> diaries = diaryRepository.findAllByYearAndDiaryStatus(userId, yearValue, DiaryStatus.PUBLISHED);
+        List<Diary> diaries = diaryRepository.findAllByYear(userId, yearValue);
 
         Map<Integer, Integer> yearCountMap = new HashMap<>();
 

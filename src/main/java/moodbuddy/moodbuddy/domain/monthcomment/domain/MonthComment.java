@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 
 
 @Entity
@@ -14,7 +14,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "month_comment")
-public class MonthComment extends BaseEntity {
+public class MonthComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "quddy_ti")
-public class QuddyTI extends BaseEntity {
+public class QuddyTI extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

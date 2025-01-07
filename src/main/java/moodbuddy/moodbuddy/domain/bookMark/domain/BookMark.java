@@ -2,7 +2,7 @@ package moodbuddy.moodbuddy.domain.bookMark.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import moodbuddy.moodbuddy.global.common.base.BaseEntity;
+import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 
 @Entity
 @Getter
@@ -10,7 +10,7 @@ import moodbuddy.moodbuddy.global.common.base.BaseEntity;
 @AllArgsConstructor
 @Table(name = "book_mark")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookMark extends BaseEntity {
+public class BookMark extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -2,8 +2,7 @@ package moodbuddy.moodbuddy.domain.diary.repository;
 
 import jakarta.persistence.LockModeType;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
-import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -13,11 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryRepositoryCustom {
-    Optional<Diary> findByDateAndUserIdAndStatus(LocalDate date, Long userId, DiaryStatus status);
-    List<Diary> findAllByDateAndUserIdAndStatus(LocalDate date, Long userId, DiaryStatus status);
+    Optional<Diary> findByDateAndUserId(LocalDate date, Long userId);
 
     @Lock(LockModeType.OPTIMISTIC)
-    Optional<Diary> findByIdAndStatusAndMoodBuddyStatus(Long id, DiaryStatus status, MoodBuddyStatus moodBuddyStatus);
+    Optional<Diary> findByIdAndMoodBuddyStatus(Long id, MoodBuddyStatus moodBuddyStatus);
 
 
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId AND DATE_FORMAT(date, '%Y-%m') = :month AND status = :status", nativeQuery = true)
@@ -33,8 +31,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryReposi
     @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND YEAR(d.date) = :year AND MONTH(d.date) = :month")
     List<Diary> findDiaryEmotionByUserIdAndMonth(@Param("userId") Long userId, @Param("year") int year, @Param("month") int month);
 
-    @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND YEAR(d.date) = :year AND d.status = :status")
-    List<Diary> findAllByYearAndDiaryStatus(@Param("userId") Long userId, @Param("year") int year, @Param("status") DiaryStatus status);
+    @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND YEAR(d.date) = :year")
+    List<Diary> findAllByYear(@Param("userId") Long userId, @Param("year") int year);
 
     @Query("SELECT d FROM Diary d WHERE d.userId = :userId AND DATE_FORMAT(d.date, '%Y-%m') = :month AND d.emotion is not null")
     List<Diary> findDiaryEmotionAllByUserIdAndMonth(@Param("userId") Long userId, @Param("month") LocalDate month);
