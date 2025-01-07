@@ -57,8 +57,8 @@ public class ApiExceptionHandler {
 //                HttpStatus.valueOf(errorCode.getStatus())
 //        );
 //    }
-//    @ExceptionHandler(DiaryNoAccessException.class)
-//    public ResponseEntity<ApiErrorResponse> handleException(DiaryNoAccessException ex) {
+//    @ExceptionHandler(DraftDiaryNoAccessException.class)
+//    public ResponseEntity<ApiErrorResponse> handleException(DraftDiaryNoAccessException ex) {
 //        ErrorCode errorCode = ex.getErrorCode();
 //        return new ResponseEntity<>(
 //                new ApiErrorResponse(

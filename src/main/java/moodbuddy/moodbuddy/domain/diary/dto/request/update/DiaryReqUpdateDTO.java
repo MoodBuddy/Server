@@ -3,7 +3,6 @@ package moodbuddy.moodbuddy.domain.diary.dto.request.update;
 import io.swagger.v3.oas.annotations.media.Schema;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFont;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryFontSize;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 
 import javax.annotation.Nullable;
@@ -22,8 +21,6 @@ public record DiaryReqUpdateDTO (
         String diaryContent,
         @Schema(description = "수정할 일기 날씨(CLEAR, CLOUDY, RAIN, SNOW)", example = "CLEAR")
         DiaryWeather diaryWeather,
-        @Schema(description = "수정할 일기 상태(DRAFT, PUBLISHED)", example = "DRAFT")
-        DiaryStatus diaryStatus,
         @Schema(description = "일기 폰트", example = "INTER")
         DiaryFont diaryFont,
         @Schema(description = "일기 폰트 사이즈", example = "PX30")

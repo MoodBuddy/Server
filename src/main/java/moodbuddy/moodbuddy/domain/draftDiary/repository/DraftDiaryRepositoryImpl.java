@@ -3,7 +3,6 @@ package moodbuddy.moodbuddy.domain.draftDiary.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
@@ -26,7 +25,6 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.status.eq(DiaryStatus.DRAFT))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetch();
     }
@@ -45,7 +43,6 @@ public class DraftDiaryRepositoryImpl implements DraftDiaryRepositoryCustom {
                 ))
                 .from(diary)
                 .where(diary.id.eq(diaryId)
-                        .and(diary.status.eq(DiaryStatus.DRAFT))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .fetchOne();
 

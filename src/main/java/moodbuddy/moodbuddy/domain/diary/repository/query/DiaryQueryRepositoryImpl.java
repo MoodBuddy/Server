@@ -5,7 +5,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
@@ -32,7 +31,6 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 ))
                 .from(diary)
                 .where(diary.userId.eq(userId)
-                        .and(diary.status.eq(DiaryStatus.PUBLISHED))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -56,7 +54,6 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 .from(diary)
                 .where(diary.userId.eq(userId)
                         .and(diary.emotion.eq(emotion))
-                        .and(diary.status.eq(DiaryStatus.PUBLISHED))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -80,7 +77,6 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 .from(diary)
                 .where(
                         diary.userId.eq(userId),
-                        diary.status.eq(DiaryStatus.PUBLISHED),
                         diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE),
                         filterKeyWord(filterDTO.keyWord()),
                         filterYear(filterDTO.year()),
@@ -133,7 +129,6 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 queryFactory.select(diary.count())
                         .from(diary)
                         .where(diary.userId.eq(userId)
-                                .and(diary.status.eq(DiaryStatus.PUBLISHED))
                                 .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                         .fetchOne()
         ).orElse(0L);

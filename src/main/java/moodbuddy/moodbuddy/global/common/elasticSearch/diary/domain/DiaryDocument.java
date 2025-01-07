@@ -2,7 +2,6 @@ package moodbuddy.moodbuddy.global.common.elasticSearch.diary.domain;
 
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -35,9 +34,6 @@ public class DiaryDocument {
     private String diaryEmotion;
 
     @Field(type = FieldType.Keyword)
-    private String diaryStatus;
-
-    @Field(type = FieldType.Keyword)
     private String diarySubject;
 
     @Field(type = FieldType.Text)
@@ -65,7 +61,6 @@ public class DiaryDocument {
                 .diaryContent(diary.getContent().toString())
                 .diaryWeather(diary.getWeather().toString())
                 .diaryEmotion(null)
-                .diaryStatus(DiaryStatus.PUBLISHED.toString())
                 .diarySummary(null)
                 .diarySubject(null)
                 .userId(diary.getUserId())

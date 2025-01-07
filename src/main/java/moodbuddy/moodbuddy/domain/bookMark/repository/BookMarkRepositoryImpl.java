@@ -3,7 +3,6 @@ package moodbuddy.moodbuddy.domain.bookMark.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryStatus;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.global.common.base.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
@@ -29,7 +28,6 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                 .from(diary)
                 .where(diary.userId.eq(userId)
                         .and(diary.bookMark.eq(true))
-                        .and(diary.status.eq(DiaryStatus.PUBLISHED))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -46,7 +44,6 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                 queryFactory.select(diary.count())
                         .from(diary)
                         .where(diary.userId.eq(userId)
-                                .and(diary.status.eq(DiaryStatus.PUBLISHED))
                                 .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
                         .fetchOne()
         ).orElse(0L);

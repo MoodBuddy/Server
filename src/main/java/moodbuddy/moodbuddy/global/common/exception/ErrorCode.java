@@ -21,7 +21,8 @@ public enum ErrorCode {
 
     /** DraftDiary **/
     DRAFT_DIARY_NOT_FOUND(400, "DRAFT-DIARY-ERR-400", "임시 저장 일기를 찾을 수 없습니다."),
-    DRAFT_DIARY_CONCURRENT_UPDATE(400, "DRAFT-DIARY-ERR-400", "동시에 임시저장 일기를 수정할 수 없습니다."),
+    DRAFT_DIARY_NO_ACCESS(403, "DRAFT-DIARY-ERR-403", "접근할 수 없는 임시 저장 일기입니다."),
+    DRAFT_DIARY_CONCURRENT_UPDATE(400, "DRAFT-DIARY-ERR-400", "동시에 임시 저장 일기를 수정할 수 없습니다."),
 
 
     /** Letter **/

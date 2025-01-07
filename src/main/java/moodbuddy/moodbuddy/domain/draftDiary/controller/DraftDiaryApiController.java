@@ -5,11 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSelectDeleteDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.facade.DraftDiaryFacade;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +27,8 @@ public class DraftDiaryApiController {
 
     @PostMapping("/save")
     @Operation(summary = "일기 임시 저장", description = "일기를 임시 저장합니다.")
-    public ResponseEntity<DiaryResSaveDTO> saveDraftDiary(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
-                                                       @RequestBody DiaryReqSaveDTO requestDTO) {
+    public ResponseEntity<DraftDiaryResSaveDTO> saveDraftDiary(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
+                                                       @RequestBody DraftDiaryReqSaveDTO requestDTO) {
         return ResponseEntity.ok().body(draftDiaryFacade.saveDraftDiary(requestDTO));
     }
 
