@@ -31,10 +31,10 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     @Transactional
-    public DraftDiary saveDraftDiary(final Long userId, DraftDiaryReqSaveDTO requestDTO) {
+    public Long saveDraftDiary(final Long userId, DraftDiaryReqSaveDTO requestDTO) {
         return draftDiaryRepository.save((DraftDiary.of(
                 requestDTO,
-                userId)));
+                userId))).getId();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
         try {
             var draftDiary = findDraftDiaryById(requestDTO.diaryId());
             validateDraftDiaryAccess(userId, draftDiary);
-            deleteTodayDraftDiaries(userId, draftDiary.getDate());
+            deleteDraftDiariesByDate(userId, draftDiary.getDate());
             return diaryRepository.save(Diary.publish(userId, requestDTO)).getId();
         } catch (OptimisticLockException ex) {
             throw new DraftDiaryConcurrentUpdateException(ErrorCode.DRAFT_DIARY_CONCURRENT_UPDATE);
@@ -71,7 +71,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     }
 
     @Override
-    public void deleteTodayDraftDiaries(final Long userId, LocalDate draftDiaryDate) {
+    public void deleteDraftDiariesByDate(final Long userId, LocalDate draftDiaryDate) {
         draftDiaryRepository.findAllByUserIdAndDate(userId, draftDiaryDate)
                 .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }

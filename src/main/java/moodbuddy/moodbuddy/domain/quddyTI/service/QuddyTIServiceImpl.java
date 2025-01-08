@@ -43,7 +43,7 @@ public class QuddyTIServiceImpl implements QuddyTIService {
         updateLastMonth(quddyTI, emotionCounts, subjectCounts, quddyTIType);
     }
 
-    private QuddyTI findAndValidateQuddyTI(final Long userId, LocalDate[] dateRange) {
+    private QuddyTI findAndValidateQuddyTI(Long userId, LocalDate[] dateRange) {
         return getQuddyTIByUserIdAndDate(userId, formatYear(dateRange[0]), formatMonth(dateRange[1]));
     }
 

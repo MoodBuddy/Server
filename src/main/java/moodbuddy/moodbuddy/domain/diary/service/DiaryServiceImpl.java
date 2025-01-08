@@ -27,20 +27,20 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary saveDiary(final Long userId, DiaryReqSaveDTO requestDTO) {
+    public Long saveDiary(final Long userId, DiaryReqSaveDTO requestDTO) {
         return diaryRepository.save(Diary.of(
                 requestDTO,
-                userId));
+                userId)).getId();
     }
 
     @Override
     @Transactional
-    public Diary updateDiary(final Long userId,  DiaryReqUpdateDTO requestDTO) {
+    public Long updateDiary(final Long userId,  DiaryReqUpdateDTO requestDTO) {
         try {
             var findDiary = findDiaryById(requestDTO.diaryId());
             validateDiaryAccess(userId, findDiary);
             findDiary.updateDiary(requestDTO);
-            return findDiary;
+            return findDiary.getId();
         } catch (OptimisticLockException ex) {
             throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);
         }
@@ -48,11 +48,11 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary deleteDiary(final Long userId,  final Long diaryId) {
+    public LocalDate deleteDiary(final Long userId,  final Long diaryId) {
         final var findDiary = findDiaryById(diaryId);
         validateDiaryAccess(userId, findDiary);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
-        return findDiary;
+        return findDiary.getDate();
     }
 
     @Override

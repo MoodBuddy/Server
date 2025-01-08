@@ -35,11 +35,11 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     @Transactional
     public DraftDiaryResSaveDTO saveDraftDiary(DraftDiaryReqSaveDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        var draftDiary = draftDiaryService.saveDraftDiary(userId, requestDTO);
+        var draftDiaryId = draftDiaryService.saveDraftDiary(userId, requestDTO);
         if(requestDTO.diaryImageUrls() != null) {
-            draftDiaryImageService.saveAll(draftDiary.getId(), requestDTO.diaryImageUrls());
+            draftDiaryImageService.saveAll(draftDiaryId, requestDTO.diaryImageUrls());
         }
-        return new DraftDiaryResSaveDTO(draftDiary.getId());
+        return new DraftDiaryResSaveDTO(draftDiaryId);
     }
 
     @Override
