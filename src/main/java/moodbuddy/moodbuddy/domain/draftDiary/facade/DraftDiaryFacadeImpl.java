@@ -35,24 +35,24 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     @Transactional
     public DraftDiaryResSaveDTO saveDraftDiary(DraftDiaryReqSaveDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        var draftDiary = draftDiaryService.saveDraftDiary(requestDTO, userId);
+        var draftDiaryId = draftDiaryService.saveDraftDiary(userId, requestDTO);
         if(requestDTO.diaryImageUrls() != null) {
-            draftDiaryImageService.saveAll(requestDTO.diaryImageUrls(), draftDiary.getId());
+            draftDiaryImageService.saveAll(draftDiaryId, requestDTO.diaryImageUrls());
         }
-        return new DraftDiaryResSaveDTO(draftDiary.getId());
+        return new DraftDiaryResSaveDTO(draftDiaryId);
     }
 
     @Override
     @Transactional
     public DiaryResSaveDTO publishDraftDiary(DraftDiaryReqPublishDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
-        var diaryId = draftDiaryService.publishDraftDiary(requestDTO, userId);
+        diaryService.validateExistingDiary(userId, requestDTO.diaryDate());
+        var diaryId = draftDiaryService.publishDraftDiary(userId, requestDTO);
         draftDiaryImageService.deleteAll(diaryId);
         if(requestDTO.diaryImageUrls() != null) {
-            diaryImageService.saveAll(requestDTO.diaryImageUrls(), diaryId);
+            diaryImageService.saveAll(diaryId, requestDTO.diaryImageUrls());
         }
-        checkTodayDiary(requestDTO.diaryDate(), userId);
+        checkTodayDiary(userId, requestDTO.diaryDate());
         redisService.deleteDiaryCaches(userId);
         return new DiaryResSaveDTO(diaryId);
     }
@@ -67,15 +67,15 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     @Transactional
     public void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        draftDiaryService.deleteDraftDiaries(requestDTO, userId);
+        draftDiaryService.deleteDraftDiaries(userId, requestDTO);
     }
 
     @Override
     public DraftDiaryResDetailDTO getDraftDiary(Long diaryId) {
         final var userId = JwtUtil.getUserId();
-        return draftDiaryService.getDraftDiary(diaryId, userId);
+        return draftDiaryService.getDraftDiary(userId, diaryId);
     }
-    private void checkTodayDiary(LocalDate diaryDate, Long userId) {
+    private void checkTodayDiary(Long userId, LocalDate diaryDate) {
         var today = LocalDate.now();
         if (diaryDate.isEqual(today)) {
             userService.changeCount(userId, false);

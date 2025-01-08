@@ -25,22 +25,22 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     private static final String formatMonth = "%02d";
 
     @Override
-    public QuddyTI getQuddyTIByDate(Long userId, String year, String month) {
+    public QuddyTI getQuddyTIByDate(final Long userId, String year, String month) {
         return getQuddyTIByUserIdAndDate(userId, year, month);
     }
 
     @Override
     @Transactional
-    public void createNewMonth(Long userId, LocalDate currentDate) {
+    public void createNewMonth(final Long userId, LocalDate currentDate) {
         quddyTIRepository.save(QuddyTI.of(userId, formatYear(currentDate), formatMonth(currentDate)));
     }
 
     @Override
     @Transactional
-    public void processLastMonth(Long userId, LocalDate[] dateRange, Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
+    public void processLastMonth(final Long userId, LocalDate[] dateRange, Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
         String quddyTIType = generateType(emotionCounts, subjectCounts);
-        QuddyTI quddyTI = findAndValidateQuddyTI(userId, dateRange);
-        updateLastMonth(quddyTI, emotionCounts, subjectCounts, quddyTIType);
+        QuddyTI findQuddyTI = findAndValidateQuddyTI(userId, dateRange);
+        updateLastMonth(findQuddyTI, emotionCounts, subjectCounts, quddyTIType);
     }
 
     private QuddyTI findAndValidateQuddyTI(Long userId, LocalDate[] dateRange) {

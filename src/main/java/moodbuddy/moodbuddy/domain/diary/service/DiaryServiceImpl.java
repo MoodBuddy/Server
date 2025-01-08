@@ -27,20 +27,20 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary saveDiary(DiaryReqSaveDTO requestDTO, final Long userId) {
+    public Long saveDiary(final Long userId, DiaryReqSaveDTO requestDTO) {
         return diaryRepository.save(Diary.of(
                 requestDTO,
-                userId));
+                userId)).getId();
     }
 
     @Override
     @Transactional
-    public Diary updateDiary(DiaryReqUpdateDTO requestDTO, final Long userId) {
+    public Long updateDiary(final Long userId,  DiaryReqUpdateDTO requestDTO) {
         try {
             var findDiary = findDiaryById(requestDTO.diaryId());
-            validateDiaryAccess(findDiary, userId);
+            validateDiaryAccess(userId, findDiary);
             findDiary.updateDiary(requestDTO);
-            return findDiary;
+            return findDiary.getId();
         } catch (OptimisticLockException ex) {
             throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);
         }
@@ -48,37 +48,37 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Diary deleteDiary(Long diaryId, Long userId) {
+    public LocalDate deleteDiary(final Long userId,  final Long diaryId) {
         final var findDiary = findDiaryById(diaryId);
-        validateDiaryAccess(findDiary, userId);
+        validateDiaryAccess(userId, findDiary);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
-        return findDiary;
+        return findDiary.getDate();
     }
 
     @Override
     @Cacheable(cacheNames = "getDiary", key = "'userId:'+#userId+'_'+'diaryId:'+#diaryId", unless = "#result == null")
-    public DiaryResDetailDTO getDiary(final Long diaryId, final Long userId) {
+    public DiaryResDetailDTO getDiary(final Long userId, final Long diaryId) {
         final Diary findDiary = findDiaryById(diaryId);
-        validateDiaryAccess(findDiary, userId);
+        validateDiaryAccess(userId, findDiary);
         return diaryRepository.getDiaryById(diaryId);
     }
 
     @Override
-    public void validateDiaryAccess(Diary findDiary, Long userId) {
+    public void validateDiaryAccess(final Long userId,  Diary findDiary) {
         if (!findDiary.getUserId().equals(userId)) {
             throw new DiaryNoAccessException(ErrorCode.DIARY_NO_ACCESS);
         }
     }
 
     @Override
-    public void validateExistingDiary(LocalDate diaryDate, Long userId) {
-        if (diaryRepository.findByDateAndUserId(diaryDate, userId).isPresent()) {
+    public void validateExistingDiary(final Long userId,  LocalDate diaryDate) {
+        if (diaryRepository.findByUserIdAndDate(userId, diaryDate).isPresent()) {
             throw new DiaryTodayExistingException(ErrorCode.DIARY_TODAY_EXISTING);
         }
     }
 
     @Override
-    public Diary findDiaryById(Long diaryId) {
+    public Diary findDiaryById(final Long diaryId) {
         return diaryRepository.findByIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
     }

@@ -7,11 +7,11 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import java.time.LocalDate;
 
 public interface DiaryService {
-    Diary saveDiary(DiaryReqSaveDTO diaryReqSaveDTO, final Long userId);
-    Diary updateDiary(DiaryReqUpdateDTO diaryReqUpdateDTO, final Long userId);
-    Diary deleteDiary(Long diaryId, Long userId);
-    DiaryResDetailDTO getDiary(final Long diaryId, final Long userId);
+    Long saveDiary(final Long userId, DiaryReqSaveDTO diaryReqSaveDTO);
+    Long updateDiary(final Long userId, DiaryReqUpdateDTO diaryReqUpdateDTO);
+    LocalDate deleteDiary(final Long userId, final Long diaryId);
+    DiaryResDetailDTO getDiary(final Long userId, final Long diaryId);
     Diary findDiaryById(Long diaryId);
-    void validateDiaryAccess(Diary findDiary, Long userId);
-    void validateExistingDiary(LocalDate diaryDate, Long userId);
+    void validateDiaryAccess(final Long userId, Diary findDiary);
+    void validateExistingDiary(final Long userId, LocalDate diaryDate);
 }

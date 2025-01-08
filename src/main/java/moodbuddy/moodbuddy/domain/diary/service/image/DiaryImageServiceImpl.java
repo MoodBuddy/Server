@@ -16,7 +16,7 @@ public class DiaryImageServiceImpl implements DiaryImageService {
 
     @Override
     @Transactional
-    public void saveAll(List<String> imageURLs, Long diaryId) {
+    public void saveAll(final Long diaryId, List<String> imageURLs) {
         for (String imageURL : imageURLs) {
             diaryImageRepository.save(DiaryImage.of(diaryId, imageURL));
         }

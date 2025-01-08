@@ -24,7 +24,7 @@ public class QuddyTIFacadeImpl implements QuddyTIFacade {
 
     @Override
     public QuddyTIResDetailDTO getQuddyTIByDate(String year, String month) {
-        Long userId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
         return quddyTIMapper.toResDetailDTO(
                 quddyTIService.getQuddyTIByDate(userId, year, month)
         );
@@ -33,7 +33,7 @@ public class QuddyTIFacadeImpl implements QuddyTIFacade {
     @Override
     @Transactional
     public void createAndUpadteQuddyTI() {
-        Long userId = JwtUtil.getUserId();
+        final Long userId = JwtUtil.getUserId();
         quddyTIService.createNewMonth(userId, LocalDate.now());
         LocalDate[] dates = getLastMonthDates();
         Map<DiaryEmotion, Long> emotionCounts = diaryCountService.getEmotionCountsByDate(dates);

@@ -19,7 +19,7 @@ public class DraftDiaryImageServiceImpl implements DraftDiaryImageService {
 
     @Override
     @Transactional
-    public void saveAll(List<String> imageURLs, Long draftDiaryId) {
+    public void saveAll(final Long draftDiaryId, List<String> imageURLs) {
         for (String imageURL : imageURLs) {
             draftDiaryImageRepository.save(DraftDiaryImage.of(draftDiaryId, imageURL));
         }

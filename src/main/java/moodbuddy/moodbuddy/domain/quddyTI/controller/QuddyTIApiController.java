@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class QuddyTIApiController {
     private final QuddyTIFacade quddyTIFacade;
 
-    /** 구현 완료 **/
     @GetMapping("/")
     @Operation(summary = "쿼디티아이 날짜 별 조회", description = "쿼디티아이를 날짜 별로 조회합니다.")
     public ResponseEntity<QuddyTIResDetailDTO> getQuddyTIByDate(

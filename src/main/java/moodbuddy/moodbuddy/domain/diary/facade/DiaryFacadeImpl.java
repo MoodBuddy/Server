@@ -3,7 +3,6 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
@@ -38,51 +37,43 @@ public class DiaryFacadeImpl implements DiaryFacade {
     public DiaryResSaveDTO saveDiary(DiaryReqSaveDTO requestDTO) {
         //TODO 일기 저장, 이미지 저장, 일라스틱서치 저장 분리할 필요가 있음.
         final var userId = JwtUtil.getUserId();
-        diaryService.validateExistingDiary(requestDTO.diaryDate(), userId);
-        var diary = diaryService.saveDiary(requestDTO, userId);
-        saveDiaryImages(requestDTO.diaryImageUrls(), diary);
-        diaryDocumentService.save(diary);
-        checkTodayDiary(requestDTO.diaryDate(), userId, false);
-
+        diaryService.validateExistingDiary(userId, requestDTO.diaryDate());
+        var diaryId = diaryService.saveDiary(userId, requestDTO);
+        saveDiaryImages(diaryId, requestDTO.diaryImageUrls());
+        checkTodayDiary(userId, requestDTO.diaryDate(), false);
         deleteData(userId, requestDTO.diaryDate());
-        log.info("[일기 저장] saveDiary(): draftDiaryId: {}, userId: {}", diary.getId(), userId);
-        return new DiaryResSaveDTO(diary.getId());
+        return new DiaryResSaveDTO(diaryId);
     }
 
     @Override
     @Transactional
     public DiaryResSaveDTO updateDiary(DiaryReqUpdateDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        var diary = diaryService.updateDiary(requestDTO, userId);
-        diaryImageService.deleteAll(diary.getId());
-        saveDiaryImages(requestDTO.diaryImageUrls(), diary);
-        diaryDocumentService.save(diary);
-
-        deleteData(userId, diary.getDate());
-        log.info("[일기 수정] updateDiary(): draftDiaryId: {}, userId: {}", diary.getId(), userId);
-        return new DiaryResSaveDTO(diary.getId());
+        var diaryId = diaryService.updateDiary(userId, requestDTO);
+        diaryImageService.deleteAll(diaryId);
+        saveDiaryImages(diaryId, requestDTO.diaryImageUrls());
+        deleteData(userId, requestDTO.diaryDate());
+        return new DiaryResSaveDTO(diaryId);
     }
 
     @Override
     @Transactional
     public void deleteDiary(final Long diaryId) {
         final var userId = JwtUtil.getUserId();
-        var findDiary = diaryService.deleteDiary(diaryId, userId);
+        var diaryDate = diaryService.deleteDiary(userId, diaryId);
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
-//        diaryDocumentService.delete(draftDiaryId);
-        checkTodayDiary(findDiary.getDate(), userId, true);
-        log.info("[일기 삭제] deleteDiary(): draftDiaryId: {}, userId: {}", diaryId, userId);
+        checkTodayDiary(userId, diaryDate, true);
         redisService.deleteDiaryCaches(userId);
     }
 
     @Override
     public DiaryResDetailDTO getDiary(final Long diaryId) {
         final var userId = JwtUtil.getUserId();
-        return diaryService.getDiary(diaryId, userId);
+        return diaryService.getDiary(userId, diaryId);
     }
 
-    private void checkTodayDiary(LocalDate diaryDate, Long userId, boolean check) {
+    private void checkTodayDiary(final Long userId, LocalDate diaryDate, boolean check) {
         var today = LocalDate.now();
         if (diaryDate.isEqual(today)) {
             userService.changeCount(userId, check);
@@ -90,14 +81,14 @@ public class DiaryFacadeImpl implements DiaryFacade {
         }
     }
 
-    private void deleteData(Long userId, LocalDate requestDTO) {
-        draftDiaryService.deleteTodayDraftDiaries(userId, requestDTO);
+    private void deleteData(final Long userId, LocalDate date) {
+        draftDiaryService.deleteDraftDiariesByDate(userId, date);
         redisService.deleteDiaryCaches(userId);
     }
 
-    private void saveDiaryImages(List<String> requestDTO, Diary diary) {
+    private void saveDiaryImages(Long diaryId, List<String> requestDTO) {
         if (requestDTO != null) {
-            diaryImageService.saveAll(requestDTO, diary.getId());
+            diaryImageService.saveAll(diaryId, requestDTO);
         }
     }
 }

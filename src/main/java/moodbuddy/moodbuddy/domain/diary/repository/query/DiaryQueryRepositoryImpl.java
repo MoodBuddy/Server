@@ -43,7 +43,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     }
 
     @Override
-    public PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable) {
+    public PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(Long userId, DiaryEmotion emotion, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
@@ -66,7 +66,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     }
 
     @Override
-    public PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable) {
+    public PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(Long userId, DiaryReqFilterDTO filterDTO, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
