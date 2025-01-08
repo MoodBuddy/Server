@@ -39,8 +39,8 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     @Transactional
     public void processLastMonth(final Long userId, LocalDate[] dateRange, Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
         String quddyTIType = generateType(emotionCounts, subjectCounts);
-        QuddyTI quddyTI = findAndValidateQuddyTI(userId, dateRange);
-        updateLastMonth(quddyTI, emotionCounts, subjectCounts, quddyTIType);
+        QuddyTI findQuddyTI = findAndValidateQuddyTI(userId, dateRange);
+        updateLastMonth(findQuddyTI, emotionCounts, subjectCounts, quddyTIType);
     }
 
     private QuddyTI findAndValidateQuddyTI(Long userId, LocalDate[] dateRange) {

@@ -22,17 +22,17 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Transactional
     @Override
     public boolean toggle(Diary diary, final Long userId) {
-        var optionalBookMark = bookMarkRepository.findByUserIdAndDiaryId(userId, diary.getId());
-        if(optionalBookMark.isPresent()) {
-            return cancelToggle(diary, optionalBookMark.get());
+        var findBookMark = bookMarkRepository.findByUserIdAndDiaryId(userId, diary.getId());
+        if(findBookMark.isPresent()) {
+            return cancelToggle(diary, findBookMark.get());
         }
         return saveToggle(diary, userId);
     }
 
     private boolean saveToggle(Diary diary, Long userId) {
         diary.updateDiaryBookMarkCheck(true);
-        var newBookmark = BookMark.of(userId, diary.getId());
-        bookMarkRepository.save(newBookmark);
+        var bookMark = BookMark.of(userId, diary.getId());
+        bookMarkRepository.save(bookMark);
         return true;
     }
 
@@ -51,8 +51,8 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Override
     @Transactional
     public void deleteByDiaryId(Long diaryId) {
-        var optionalBookMark = bookMarkRepository.findByDiaryId(diaryId);
-        if(optionalBookMark.isPresent()) {
+        var findBookMark = bookMarkRepository.findByDiaryId(diaryId);
+        if(findBookMark.isPresent()) {
             bookMarkRepository.deleteByDiaryId(diaryId);
         }
     }

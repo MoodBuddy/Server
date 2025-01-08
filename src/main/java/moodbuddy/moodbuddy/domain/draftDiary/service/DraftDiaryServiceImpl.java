@@ -41,9 +41,9 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     @Transactional
     public Long publishDraftDiary(final Long userId, DraftDiaryReqPublishDTO requestDTO) {
         try {
-            var draftDiary = findDraftDiaryById(requestDTO.diaryId());
-            validateDraftDiaryAccess(userId, draftDiary);
-            deleteDraftDiariesByDate(userId, draftDiary.getDate());
+            var findDraftDiary = findDraftDiaryById(requestDTO.diaryId());
+            validateDraftDiaryAccess(userId, findDraftDiary);
+            deleteDraftDiariesByDate(userId, findDraftDiary.getDate());
             return diaryRepository.save(Diary.publish(userId, requestDTO)).getId();
         } catch (OptimisticLockException ex) {
             throw new DraftDiaryConcurrentUpdateException(ErrorCode.DRAFT_DIARY_CONCURRENT_UPDATE);
@@ -65,8 +65,8 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     public DraftDiaryResDetailDTO getDraftDiary(final Long userId, final Long diaryId) {
-        final var draftDiary = findDraftDiaryById(diaryId);
-        validateDraftDiaryAccess(userId, draftDiary);
+        final var findDraftDiary = findDraftDiaryById(diaryId);
+        validateDraftDiaryAccess(userId, findDraftDiary);
         return draftDiaryRepository.getDraftDiaryById(diaryId);
     }
 
