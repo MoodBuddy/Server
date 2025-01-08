@@ -72,13 +72,13 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public void validateExistingDiary(final Long userId,  LocalDate diaryDate) {
-        if (diaryRepository.findByDateAndUserId(diaryDate, userId).isPresent()) {
+        if (diaryRepository.findByUserIdAndDate(userId, diaryDate).isPresent()) {
             throw new DiaryTodayExistingException(ErrorCode.DIARY_TODAY_EXISTING);
         }
     }
 
     @Override
-    public Diary findDiaryById(Long diaryId) {
+    public Diary findDiaryById(final Long diaryId) {
         return diaryRepository.findByIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
     }

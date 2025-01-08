@@ -79,7 +79,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         return diaryService.getDiary(userId, diaryId);
     }
 
-    private void checkTodayDiary(Long userId, LocalDate diaryDate, boolean check) {
+    private void checkTodayDiary(final Long userId, LocalDate diaryDate, boolean check) {
         var today = LocalDate.now();
         if (diaryDate.isEqual(today)) {
             userService.changeCount(userId, check);
@@ -87,7 +87,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
         }
     }
 
-    private void deleteData(Long userId, LocalDate requestDTO) {
+    private void deleteData(final Long userId, LocalDate requestDTO) {
         draftDiaryService.deleteTodayDraftDiaries(userId, requestDTO);
         redisService.deleteDiaryCaches(userId);
     }

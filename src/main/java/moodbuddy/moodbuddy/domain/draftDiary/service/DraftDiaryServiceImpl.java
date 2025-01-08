@@ -13,7 +13,6 @@ import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDT
 import moodbuddy.moodbuddy.domain.draftDiary.repository.DraftDiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
 import moodbuddy.moodbuddy.global.common.exception.diary.draft.DraftDiaryConcurrentUpdateException;
 import moodbuddy.moodbuddy.global.common.exception.diary.draft.DraftDiaryNotFoundException;
 import moodbuddy.moodbuddy.global.common.exception.draftDiary.DraftDiaryNoAccessException;
@@ -72,17 +71,17 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     }
 
     @Override
-    public void deleteTodayDraftDiaries(Long userId, LocalDate draftDiaryDate) {
-        draftDiaryRepository.findAllByDateAndUserId(draftDiaryDate, userId)
+    public void deleteTodayDraftDiaries(final Long userId, LocalDate draftDiaryDate) {
+        draftDiaryRepository.findAllByUserIdAndDate(userId, draftDiaryDate)
                 .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 
-    private DraftDiary findDraftDiaryById(Long diaryId) {
+    private DraftDiary findDraftDiaryById(final Long diaryId) {
         return draftDiaryRepository.findByIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DraftDiaryNotFoundException(DRAFT_DIARY_NO_ACCESS));
     }
 
-    private void validateDraftDiaryAccess(Long userId, DraftDiary draftDiary) {
+    private void validateDraftDiaryAccess(final Long userId, DraftDiary draftDiary) {
         if (!draftDiary.getUserId().equals(userId)) {
             throw new DraftDiaryNoAccessException(ErrorCode.DRAFT_DIARY_NO_ACCESS);
         }

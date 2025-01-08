@@ -37,7 +37,7 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
         final var userId = JwtUtil.getUserId();
         var draftDiary = draftDiaryService.saveDraftDiary(userId, requestDTO);
         if(requestDTO.diaryImageUrls() != null) {
-            draftDiaryImageService.saveAll(requestDTO.diaryImageUrls(), draftDiary.getId());
+            draftDiaryImageService.saveAll(draftDiary.getId(), requestDTO.diaryImageUrls());
         }
         return new DraftDiaryResSaveDTO(draftDiary.getId());
     }

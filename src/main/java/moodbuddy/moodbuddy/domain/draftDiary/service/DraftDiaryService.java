@@ -16,5 +16,5 @@ public interface DraftDiaryService {
     List<DraftDiaryResFindOneDTO> getDraftDiaries(final Long userId);
     void deleteDraftDiaries(final Long userId, DraftDiaryReqSelectDeleteDTO requestDTO);
     DraftDiaryResDetailDTO getDraftDiary(final Long userId,  final Long diaryId);
-    void deleteTodayDraftDiaries(Long userId, LocalDate draftDiaryDate);
+    void deleteTodayDraftDiaries(final Long userId, LocalDate draftDiaryDate);
 }

@@ -15,5 +15,5 @@ public interface DraftDiaryFacade {
     DiaryResSaveDTO publishDraftDiary(DraftDiaryReqPublishDTO requestDTO);
     List<DraftDiaryResFindOneDTO> getDraftDiaries();
     void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO);
-    DraftDiaryResDetailDTO getDraftDiary(Long diaryId);
+    DraftDiaryResDetailDTO getDraftDiary(final Long diaryId);
 }
