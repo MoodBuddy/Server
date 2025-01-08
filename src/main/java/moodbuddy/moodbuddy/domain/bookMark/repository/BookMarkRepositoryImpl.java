@@ -33,8 +33,8 @@ public class BookMarkRepositoryImpl implements BookMarkRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = getTotal(userId);
-        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
+        var total = getTotal(userId);
+        var totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
 
         return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
