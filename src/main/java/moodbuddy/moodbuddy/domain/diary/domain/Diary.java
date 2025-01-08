@@ -5,7 +5,6 @@ import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
-import moodbuddy.moodbuddy.domain.draftDiary.domain.DraftDiary;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
 import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
@@ -13,6 +12,7 @@ import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -77,45 +77,36 @@ public class Diary extends BaseTimeEntity {
     private Integer version;
 
     public static Diary of(DiaryReqSaveDTO requestDTO, Long userId) {
-        return Diary.builder()
-                .title(requestDTO.diaryTitle())
-                .date(requestDTO.diaryDate())
-                .content(requestDTO.diaryContent())
-                .weather(requestDTO.diaryWeather())
-                .emotion(null)
-                .summary(null)
-                .subject(null)
-                .userId(userId)
-                .bookMark(false)
-                .font(requestDTO.diaryFont())
-                .fontSize(requestDTO.diaryFontSize())
-                .thumbnail(
-                        (requestDTO.diaryImageUrls() != null && !requestDTO.diaryImageUrls().isEmpty())
-                                ? requestDTO.diaryImageUrls().getFirst()
-                                : null
-                )
-                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
-                .build();
+        return build(requestDTO.diaryTitle(), requestDTO.diaryDate(), requestDTO.diaryContent(),
+                requestDTO.diaryWeather(), requestDTO.diaryFont(), requestDTO.diaryFontSize(),
+                extractThumbnail(requestDTO.diaryImageUrls()), userId);
     }
 
     public static Diary publish(Long userId, DraftDiaryReqPublishDTO requestDTO) {
+        return build(requestDTO.diaryTitle(), requestDTO.diaryDate(), requestDTO.diaryContent(),
+                requestDTO.diaryWeather(), requestDTO.diaryFont(), requestDTO.diaryFontSize(),
+                extractThumbnail(requestDTO.diaryImageUrls()), userId);
+    }
+
+    private static String extractThumbnail(List<String> imageUrls) {
+        return (imageUrls != null && !imageUrls.isEmpty()) ? imageUrls.getFirst() : null;
+    }
+
+    private static Diary build(String title, LocalDate date, String content, DiaryWeather weather,
+                               DiaryFont font, DiaryFontSize fontSize, String thumbnail, Long userId) {
         return Diary.builder()
-                .title(requestDTO.diaryTitle())
-                .date(requestDTO.diaryDate())
-                .content(requestDTO.diaryContent())
-                .weather(requestDTO.diaryWeather())
+                .title(title)
+                .date(date)
+                .content(content)
+                .weather(weather)
                 .emotion(null)
                 .summary(null)
                 .subject(null)
                 .userId(userId)
                 .bookMark(false)
-                .font(requestDTO.diaryFont())
-                .fontSize(requestDTO.diaryFontSize())
-                .thumbnail(
-                        (requestDTO.diaryImageUrls() != null && !requestDTO.diaryImageUrls().isEmpty())
-                                ? requestDTO.diaryImageUrls().getFirst()
-                                : null
-                )
+                .font(font)
+                .fontSize(fontSize)
+                .thumbnail(thumbnail)
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();
     }
@@ -124,15 +115,16 @@ public class Diary extends BaseTimeEntity {
         this.title = requestDTO.diaryTitle();
         this.content = requestDTO.diaryContent();
         this.weather = requestDTO.diaryWeather();
+        this.font = requestDTO.diaryFont();
+        this.fontSize = requestDTO.diaryFontSize();
+        this.thumbnail = extractThumbnail(requestDTO.diaryImageUrls());
+        resetAnalysisFields();
+    }
+
+    private void resetAnalysisFields() {
         this.emotion = null;
         this.summary = null;
         this.subject = null;
-        this.font = requestDTO.diaryFont();
-        this.fontSize = requestDTO.diaryFontSize();
-        this.thumbnail =
-                (requestDTO.diaryImageUrls() != null && !requestDTO.diaryImageUrls().isEmpty())
-                        ? requestDTO.diaryImageUrls().getFirst()
-                        : null;
     }
 
     public void analyzeDiaryResult(Map<String, String> gptResponse) {

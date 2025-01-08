@@ -23,7 +23,7 @@ public class DiaryAnalyzeFacadeImpl implements DiaryAnalyzeFacade {
     public DiaryResAnalyzeDTO analyze(Long diaryId) {
         final var userId = JwtUtil.getUserId();
         Diary findDiary = diaryService.findDiaryById(diaryId);
-        diaryService.validateDiaryAccess(findDiary, userId);
+        diaryService.validateDiaryAccess(userId, findDiary);
         return gptService.analyzeDiary(diaryService.findDiaryById(diaryId));
     }
 }

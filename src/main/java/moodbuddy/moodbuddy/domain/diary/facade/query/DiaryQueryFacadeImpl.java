@@ -23,20 +23,20 @@ public class DiaryQueryFacadeImpl implements DiaryQueryFacade {
     public PageCustom<DiaryResQueryDTO> getDiaries(Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
         log.info("[getDiaries 조회] getDiaries(): {}", userId);
-        return diaryQueryService.getDiaries(pageable, userId);
+        return diaryQueryService.getDiaries(userId, pageable);
     }
 
     @Override
     public PageCustom<DiaryResQueryDTO> getDiariesByEmotion(DiaryEmotion diaryEmotion, Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
         log.info("[getDiariesByEmotion 조회] getDiariesByEmotion(): {}", userId);
-        return diaryQueryService.getDiariesByEmotion(diaryEmotion, pageable, userId);
+        return diaryQueryService.getDiariesByEmotion(userId, diaryEmotion, pageable);
     }
 
     @Override
     public PageCustom<DiaryResQueryDTO> getDiariesByFilter(DiaryReqFilterDTO requestDTO, Pageable pageable) {
         final Long userId = JwtUtil.getUserId();
         log.info("[getDiariesByFilter 조회] getDiariesByFilter(): {}", userId);
-        return diaryQueryService.getDiariesByFilter(requestDTO, pageable, userId);
+        return diaryQueryService.getDiariesByFilter(userId, requestDTO, pageable);
     }
 }

@@ -32,7 +32,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     @Transactional
-    public DraftDiary saveDraftDiary(DraftDiaryReqSaveDTO requestDTO, final Long userId) {
+    public DraftDiary saveDraftDiary(final Long userId, DraftDiaryReqSaveDTO requestDTO) {
         return draftDiaryRepository.save((DraftDiary.of(
                 requestDTO,
                 userId)));
@@ -40,7 +40,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     @Transactional
-    public Long publishDraftDiary(DraftDiaryReqPublishDTO requestDTO, Long userId) {
+    public Long publishDraftDiary(final Long userId, DraftDiaryReqPublishDTO requestDTO) {
         try {
             var draftDiary = findDraftDiaryById(requestDTO.diaryId());
             validateDraftDiaryAccess(userId, draftDiary);
@@ -58,14 +58,14 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     @Override
     @Transactional
-    public void deleteDraftDiaries(DraftDiaryReqSelectDeleteDTO requestDTO, Long userId) {
+    public void deleteDraftDiaries(final Long userId, DraftDiaryReqSelectDeleteDTO requestDTO) {
         requestDTO.diaryIdList().forEach(draftDiaryId ->
                 findDraftDiaryById(draftDiaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
         );
     }
 
     @Override
-    public DraftDiaryResDetailDTO getDraftDiary(Long diaryId, Long userId) {
+    public DraftDiaryResDetailDTO getDraftDiary(final Long userId, final Long diaryId) {
         final var draftDiary = findDraftDiaryById(diaryId);
         validateDraftDiaryAccess(userId, draftDiary);
         return draftDiaryRepository.getDraftDiaryById(diaryId);

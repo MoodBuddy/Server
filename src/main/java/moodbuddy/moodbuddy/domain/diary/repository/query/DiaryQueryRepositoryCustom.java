@@ -8,6 +8,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface DiaryQueryRepositoryCustom {
     PageCustom<DiaryResQueryDTO> findDiariesWithPageable(Long userId, Pageable pageable);
-    PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(DiaryEmotion emotion, Long userId, Pageable pageable);
-    PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(DiaryReqFilterDTO filterDTO, Long userId, Pageable pageable);
+    PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(Long userId, DiaryEmotion emotion, Pageable pageable);
+    PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(Long userId, DiaryReqFilterDTO filterDTO, Pageable pageable);
 }
