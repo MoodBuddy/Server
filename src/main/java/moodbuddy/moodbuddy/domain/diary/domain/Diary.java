@@ -65,7 +65,7 @@ public class Diary extends BaseTimeEntity {
     @Column(name = "font_size")
     private DiaryFontSize fontSize;
 
-    @Column(name = "thumbnail", columnDefinition = "varchar(255)")
+    @Column(name = "thumbnail")
     private String thumbnail;
 
     @Enumerated(EnumType.STRING)
