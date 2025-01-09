@@ -34,7 +34,7 @@ public class DiaryImageServiceImpl implements DiaryImageService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.s3.imgFolder}")
+    @Value("${cloud.aws.s3.diary_images_folder}")
     private String imgFolder;
 
     @Override

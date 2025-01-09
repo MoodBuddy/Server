@@ -56,7 +56,7 @@ public class Diary extends BaseEntity {
     /** 추가 칼럼 **/
     @Enumerated(EnumType.STRING)
     @Column(name = "diary_font")
-    private DiaryFont diaryFont;
+    private DiaryFont diaryFont; 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "diary_font_size")
