@@ -1,3 +1,4 @@
+
 DELIMITER //
 CREATE PROCEDURE GenerateTestData()
 BEGIN
@@ -60,7 +61,7 @@ SET j = 1;
             -- 일기 데이터 삽입 (일기마다 고유한 diary_id를 추적)
             INSERT INTO diary (
                 title, date, content, weather, emotion,
-                status, subject, summary, user_id,
+				subject, summary, user_id,
                 book_mark, font, font_size, thumbnail, mood_buddy_status, version, created_time, updated_time
             ) VALUES (
                 CONCAT('더미 제목_', j),
@@ -78,7 +79,6 @@ SET j = 1;
                     WHEN 2 THEN 'ANGER'
                     ELSE 'SURPRISE'
                 END,
-                'PUBLISHED',
                 CASE j % 4
                     WHEN 0 THEN 'DAILY'
                     WHEN 1 THEN 'GROWTH'
