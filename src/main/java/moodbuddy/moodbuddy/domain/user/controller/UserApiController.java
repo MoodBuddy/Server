@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.profile.dto.request.ProfileReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
+import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

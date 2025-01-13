@@ -8,16 +8,16 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
-import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryConcurrentUpdateException;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNoAccessException;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryTodayExistingException;
+import moodbuddy.moodbuddy.global.error.ErrorCode;
+import moodbuddy.moodbuddy.domain.diary.exception.DiaryConcurrentUpdateException;
+import moodbuddy.moodbuddy.domain.diary.exception.DiaryNoAccessException;
+import moodbuddy.moodbuddy.domain.diary.exception.DiaryNotFoundException;
+import moodbuddy.moodbuddy.domain.diary.exception.DiaryTodayExistingException;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
-import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.DIARY_NOT_FOUND;
+import static moodbuddy.moodbuddy.global.error.ErrorCode.DIARY_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)

@@ -7,7 +7,7 @@ import moodbuddy.moodbuddy.domain.diary.service.count.DiaryCountService;
 import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
 import moodbuddy.moodbuddy.domain.quddyTI.mapper.QuddyTIMapper;
 import moodbuddy.moodbuddy.domain.quddyTI.service.QuddyTIService;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
+import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;

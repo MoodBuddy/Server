@@ -12,15 +12,15 @@ import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResDetailDTO
 import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResFindOneDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.repository.DraftDiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
-import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
-import moodbuddy.moodbuddy.global.common.exception.diary.draft.DraftDiaryConcurrentUpdateException;
-import moodbuddy.moodbuddy.global.common.exception.diary.draft.DraftDiaryNotFoundException;
-import moodbuddy.moodbuddy.global.common.exception.draftDiary.DraftDiaryNoAccessException;
+import moodbuddy.moodbuddy.global.error.ErrorCode;
+import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryConcurrentUpdateException;
+import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryNotFoundException;
+import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryNoAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.DRAFT_DIARY_NO_ACCESS;
+import static moodbuddy.moodbuddy.global.error.ErrorCode.DRAFT_DIARY_NO_ACCESS;
 
 @Service
 @Transactional(readOnly = true)
