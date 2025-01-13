@@ -13,7 +13,7 @@ import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
 import moodbuddy.moodbuddy.domain.draftDiary.service.image.DraftDiaryImageService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.global.redis.service.RedisService;
+import moodbuddy.moodbuddy.infra.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

@@ -12,7 +12,7 @@ import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
 import moodbuddy.moodbuddy.infra.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.global.redis.service.RedisService;
+import moodbuddy.moodbuddy.infra.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

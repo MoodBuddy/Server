@@ -5,7 +5,7 @@ import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
-import moodbuddy.moodbuddy.global.redis.service.RedisService;
+import moodbuddy.moodbuddy.infra.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
