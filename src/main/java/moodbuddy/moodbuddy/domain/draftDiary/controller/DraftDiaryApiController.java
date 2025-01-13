@@ -3,6 +3,7 @@ package moodbuddy.moodbuddy.domain.draftDiary.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSaveDTO;
@@ -26,14 +27,14 @@ public class DraftDiaryApiController {
     @PostMapping("/save")
     @Operation(summary = "일기 임시 저장", description = "일기를 임시 저장합니다.")
     public ResponseEntity<DraftDiaryResSaveDTO> saveDraftDiary(@Parameter(description = "임시 저장 일기 정보를 담고 있는 DTO")
-                                                       @RequestBody DraftDiaryReqSaveDTO requestDTO) {
+                                                       @RequestBody @Valid DraftDiaryReqSaveDTO requestDTO) {
         return ResponseEntity.ok().body(draftDiaryFacade.saveDraftDiary(requestDTO));
     }
 
     @PostMapping("/publish")
     @Operation(summary = "임시 저장 일기 -> 일기 저장으로 변경", description = "임시 저장 일기 -> 일기 저장으로 변경합니다.")
     public ResponseEntity<DiaryResSaveDTO> publishDraftDiary(@Parameter(description = "변경할 일기 정보를 담고 있는 DTO")
-                                                    @RequestBody DraftDiaryReqPublishDTO requestDTO) {
+                                                    @RequestBody @Valid DraftDiaryReqPublishDTO requestDTO) {
         return ResponseEntity.ok().body(draftDiaryFacade.publishDraftDiary(requestDTO));
     }
 
@@ -53,7 +54,7 @@ public class DraftDiaryApiController {
     @PostMapping("/delete")
     @Operation(summary = "임시 저장 일기 선택 삭제", description = "임시 저장 일기를 선택해서 삭제합니다.")
     public ResponseEntity<?> deleteDraftDiaries(@Parameter(description = "삭제할 임시 저장 일기 고유 식별자를 담고 있는 DTO")
-                                               @RequestBody DraftDiaryReqSelectDeleteDTO requestDTO) {
+                                               @RequestBody @Valid DraftDiaryReqSelectDeleteDTO requestDTO) {
         draftDiaryFacade.deleteDraftDiaries(requestDTO);
         return ResponseEntity.ok().body("임시 저장 일기 선택 삭제 완료.");
     }

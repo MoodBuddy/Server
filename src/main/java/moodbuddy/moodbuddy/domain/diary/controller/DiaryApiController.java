@@ -3,6 +3,7 @@ package moodbuddy.moodbuddy.domain.diary.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
@@ -23,7 +24,7 @@ public class DiaryApiController {
     @PostMapping("/save")
     @Operation(summary = "일기 작성", description = "새로운 일기를 작성합니다.")
     public ResponseEntity<DiaryResSaveDTO> saveDiary(@Parameter(description = "일기 정보를 담고 있는 DTO")
-                                                      @RequestBody DiaryReqSaveDTO requestDTO) {
+                                                      @RequestBody @Valid DiaryReqSaveDTO requestDTO) {
         return ResponseEntity.ok().body(diaryFacade.saveDiary(requestDTO));
     }
 
@@ -32,7 +33,7 @@ public class DiaryApiController {
     @PostMapping("/update")
     @Operation(summary = "일기 수정", description = "기존 일기를 수정합니다.")
     public ResponseEntity<DiaryResSaveDTO> updateDiary(@Parameter(description = "수정된 일기 정보를 담고 있는 DTO")
-                                                        @RequestBody DiaryReqUpdateDTO requestDTO) {
+                                                        @RequestBody @Valid DiaryReqUpdateDTO requestDTO) {
         return ResponseEntity.ok().body(diaryFacade.updateDiary(requestDTO));
     }
 

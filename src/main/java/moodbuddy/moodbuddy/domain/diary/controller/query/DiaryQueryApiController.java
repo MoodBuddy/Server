@@ -38,7 +38,7 @@ public class DiaryQueryApiController {
     @GetMapping("/filter")
     @Operation(summary = "일기 필터링으로 전체 조회", description = "여러 필터링을 선택하여 일기를 모두 조회합니다.")
     public ResponseEntity<PageCustom<DiaryResQueryDTO>> getDiariesByFilter(@Parameter(description = "필터링 데이터를 담고 있는 DTO")
-                                                                   @RequestParam(value = "keyWord", required = false) String keyWord,
+                                                                           @RequestParam(value = "keyWord", required = false) String keyWord,
                                                                            @RequestParam(value = "year", required = false) Integer year,
                                                                            @RequestParam(value = "month", required = false) Integer month,
                                                                            @RequestParam(value = "emotion", required = false) DiaryEmotion emotion,
