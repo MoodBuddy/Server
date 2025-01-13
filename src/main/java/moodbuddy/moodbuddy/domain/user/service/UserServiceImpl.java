@@ -16,7 +16,7 @@ import moodbuddy.moodbuddy.global.common.exception.ErrorCode;
 import moodbuddy.moodbuddy.global.common.exception.profile.ProfileImageNotFoundByUserIdException;
 import moodbuddy.moodbuddy.global.common.exception.profile.ProfileNotFoundByUserIdException;
 import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundByUserIdException;
-import moodbuddy.moodbuddy.global.common.sms.SmsService;
+import moodbuddy.moodbuddy.external.sms.SmsService;
 import moodbuddy.moodbuddy.domain.user.dto.request.*;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarMonthListDTO;

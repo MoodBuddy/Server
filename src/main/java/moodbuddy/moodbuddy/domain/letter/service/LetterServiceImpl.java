@@ -18,10 +18,10 @@ import moodbuddy.moodbuddy.global.common.exception.letter.LetterNotFoundByIdExce
 import moodbuddy.moodbuddy.global.common.exception.letter.LetterNumsException;
 import moodbuddy.moodbuddy.global.common.exception.profile.ProfileNotFoundByUserIdException;
 import moodbuddy.moodbuddy.global.common.exception.user.UserNotFoundByUserIdException;
-import moodbuddy.moodbuddy.global.common.gpt.dto.GPTMessageDTO;
-import moodbuddy.moodbuddy.global.common.gpt.dto.GPTResponseDTO;
-import moodbuddy.moodbuddy.global.common.gpt.service.GptService;
-import moodbuddy.moodbuddy.global.common.sms.SmsService;
+import moodbuddy.moodbuddy.external.gpt.dto.GptMessageDTO;
+import moodbuddy.moodbuddy.external.gpt.dto.GptResponseDTO;
+import moodbuddy.moodbuddy.external.gpt.service.GptService;
+import moodbuddy.moodbuddy.external.sms.SmsService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -208,7 +208,7 @@ public class LetterServiceImpl implements LetterService {
             Letter letter = getLetterById(letterResSaveDTO.getLetterId());
 
             // GPT의 응답을 가져옴
-            GPTResponseDTO response = getGPTResponseDto(letter);
+            GptResponseDTO response = getGPTResponseDto(letter);
 
             // 유저의 알림 설정에 따라 메시지를 전송
             sendMessageIfEnabled(user);
@@ -225,14 +225,14 @@ public class LetterServiceImpl implements LetterService {
                 .orElseThrow(()->new LetterNotFoundByIdException(ErrorCode.LETTER_NOT_FOUND_BY_ID));
     }
 
-    private GPTResponseDTO getGPTResponseDto(Letter letter){
+    private GptResponseDTO getGPTResponseDto(Letter letter){
         return gptService.letterAnswerSave(letter.getLetterWorryContent(), letter.getLetterFormat());
     }
 
-    private void updateAnswerFromGptResponse(GPTResponseDTO response, LetterResSaveDTO letterResSaveDTO){
+    private void updateAnswerFromGptResponse(GptResponseDTO response, LetterResSaveDTO letterResSaveDTO){
         if (response != null && response.getChoices() != null) {
-            for (GPTResponseDTO.Choice choice : response.getChoices()) {
-                GPTMessageDTO message = choice.getMessage();
+            for (GptResponseDTO.Choice choice : response.getChoices()) {
+                GptMessageDTO message = choice.getMessage();
                 if (message != null) {
                     String answer = message.getContent();
                     letterRepository.updateAnswerByLetterId(letterResSaveDTO.getLetterId(), answer);

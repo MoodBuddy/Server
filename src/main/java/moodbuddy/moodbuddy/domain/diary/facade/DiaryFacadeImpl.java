@@ -10,7 +10,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
-import moodbuddy.moodbuddy.global.common.elasticSearch.diary.service.DiaryDocumentService;
+import moodbuddy.moodbuddy.infra.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.global.common.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.common.util.JwtUtil;
