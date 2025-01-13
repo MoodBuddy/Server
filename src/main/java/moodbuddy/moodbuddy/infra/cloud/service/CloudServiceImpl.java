@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.infra.cloud.dto.response.CloudResUrlDTO;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
+import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.Date;

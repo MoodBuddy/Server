@@ -6,10 +6,10 @@ import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.infra.elasticSearch.diary.domain.DiaryDocument;
 import moodbuddy.moodbuddy.infra.elasticSearch.diary.repository.DiaryDocumentRepository;
-import moodbuddy.moodbuddy.global.common.exception.diary.DiaryNotFoundException;
+import moodbuddy.moodbuddy.global.exception.diary.DiaryNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static moodbuddy.moodbuddy.global.common.exception.ErrorCode.DIARY_NOT_FOUND;
+import static moodbuddy.moodbuddy.global.exception.ErrorCode.DIARY_NOT_FOUND;
 
 @Service
 @Transactional(readOnly = true)

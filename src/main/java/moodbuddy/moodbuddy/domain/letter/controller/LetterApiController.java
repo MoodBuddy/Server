@@ -2,22 +2,14 @@ package moodbuddy.moodbuddy.domain.letter.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.letter.dto.request.LetterReqDTO;
 import moodbuddy.moodbuddy.domain.letter.dto.request.LetterReqUpdateDTO;
-import moodbuddy.moodbuddy.domain.letter.dto.response.LetterResDetailsDTO;
-import moodbuddy.moodbuddy.domain.letter.dto.response.LetterResPageDTO;
 import moodbuddy.moodbuddy.domain.letter.dto.response.LetterResSaveDTO;
 import moodbuddy.moodbuddy.domain.letter.service.LetterService;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @RestController
 @RequiredArgsConstructor

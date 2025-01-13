@@ -7,7 +7,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.domain.diary.service.query.DiaryQueryService;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
-import moodbuddy.moodbuddy.global.common.util.JwtUtil;
+import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
