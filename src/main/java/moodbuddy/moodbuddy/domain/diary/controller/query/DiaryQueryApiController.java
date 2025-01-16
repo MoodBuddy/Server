@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import moodbuddy.moodbuddy.domain.diary.dto.request.find.DiaryReqFilterDTO;
+import moodbuddy.moodbuddy.domain.diary.dto.request.query.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;

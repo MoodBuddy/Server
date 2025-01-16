@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.domain.diary.dto.request.find;
+package moodbuddy.moodbuddy.domain.diary.dto.request.query;
 
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
