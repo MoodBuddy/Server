@@ -89,15 +89,7 @@ dependencies {
     // slack
     implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
-    // Elasticsearch
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-    //    implementation 'org.springframework.data:spring-data-elasticsearch:4.2.2'
-
     // actuator
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
-    // devtools
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
 }
 
 tasks.named('test') {

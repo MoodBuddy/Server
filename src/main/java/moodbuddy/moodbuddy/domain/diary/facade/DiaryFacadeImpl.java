@@ -10,7 +10,6 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
-import moodbuddy.moodbuddy.infra.elasticSearch.diary.service.DiaryDocumentService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.infra.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.util.JwtUtil;
@@ -26,7 +25,6 @@ import java.util.List;
 public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;
     private final DraftDiaryService draftDiaryService;
-    private final DiaryDocumentService diaryDocumentService;
     private final DiaryImageService diaryImageService;
     private final BookMarkService bookMarkService;
     private final UserService userService;
@@ -35,7 +33,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
     @Override
     @Transactional
     public DiaryResSaveDTO saveDiary(DiaryReqSaveDTO requestDTO) {
-        //TODO 일기 저장, 이미지 저장, 일라스틱서치 저장 분리할 필요가 있음.
         final var userId = JwtUtil.getUserId();
         diaryService.validateExistingDiary(userId, requestDTO.diaryDate());
         var diaryId = diaryService.saveDiary(userId, requestDTO);
