@@ -2,7 +2,6 @@ package moodbuddy.moodbuddy.domain.diary.repository.count;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import moodbuddy.moodbuddy.domain.diary.domain.QDiary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import java.time.LocalDate;
@@ -16,20 +15,22 @@ public class DiaryCountRepositoryImpl implements DiaryCountRepositoryCustom {
     }
 
     @Override
-    public long countByEmotionAndDateRange(DiaryEmotion emotion, LocalDate start, LocalDate end) {
-        QDiary qDiary = diary;
-        return queryFactory.selectFrom(qDiary)
-                .where(qDiary.date.between(start, end)
-                        .and(qDiary.emotion.eq(emotion)))
+    public long countByEmotionAndDateRange(final Long userId, DiaryEmotion emotion, LocalDate start, LocalDate end) {
+        return queryFactory.selectFrom(diary)
+                .where(diary.date.between(start, end)
+                        .and(diary.emotion.eq(emotion))
+                        .and(diary.userId.eq(userId))
+                )
                 .fetchCount();
     }
 
     @Override
-    public long countBySubjectAndDateRange(DiarySubject subject, LocalDate start, LocalDate end) {
-        QDiary qDiary = diary;
-        return queryFactory.selectFrom(qDiary)
-                .where(qDiary.date.between(start, end)
-                        .and(qDiary.subject.eq(subject)))
+    public long countBySubjectAndDateRange(final Long userId, DiarySubject subject, LocalDate start, LocalDate end) {
+        return queryFactory.selectFrom(diary)
+                .where(diary.date.between(start, end)
+                        .and(diary.subject.eq(subject))
+                        .and(diary.userId.eq(userId))
+                )
                 .fetchCount();
     }
 }

@@ -12,6 +12,7 @@ import moodbuddy.moodbuddy.domain.profile.repository.ProfileImageRepository;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResLoginDTO;
 import moodbuddy.moodbuddy.domain.user.domain.User;
 import moodbuddy.moodbuddy.domain.user.repository.UserRepository;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.properties.KakaoProperties;
 import moodbuddy.moodbuddy.domain.user.dto.KakaoProfile;
 import moodbuddy.moodbuddy.domain.user.dto.KakaoTokenDto;
@@ -151,7 +152,7 @@ public class KakaoServiceImpl implements KakaoService{
                             .kakaoId(kakaoProfile.getId())
                             .alarm(kakaoProfile.getKakaoAccount().isTalkMessage())
                             .userCurDiaryNums(0)
-                            .deleted(false)
+                            .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
 //                            .accessToken(JwtUtil.createJwt(kakaoProfile.getId()))
 //                            .accessTokenExpiredAt(LocalDate.now().plusYears(1L))
 //                            .refreshToken(JwtUtil.createRefreshToken(kakaoProfile.getId()))

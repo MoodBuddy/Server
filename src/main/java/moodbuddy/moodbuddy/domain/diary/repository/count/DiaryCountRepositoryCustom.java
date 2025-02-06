@@ -6,6 +6,6 @@ import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
 import java.time.LocalDate;
 
 public interface DiaryCountRepositoryCustom {
-    long countByEmotionAndDateRange(DiaryEmotion emotion, LocalDate start, LocalDate end);
-    long countBySubjectAndDateRange(DiarySubject subject, LocalDate start, LocalDate end);
+    long countByEmotionAndDateRange(final Long userId, DiaryEmotion emotion, LocalDate start, LocalDate end);
+    long countBySubjectAndDateRange(final Long userId, DiarySubject subject, LocalDate start, LocalDate end);
 }

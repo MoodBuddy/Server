@@ -8,6 +8,7 @@ import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
 import moodbuddy.moodbuddy.domain.quddyTI.mapper.QuddyTIMapper;
 import moodbuddy.moodbuddy.domain.quddyTI.service.QuddyTIService;
 import moodbuddy.moodbuddy.global.util.JwtUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class QuddyTIFacadeImpl implements QuddyTIFacade {
+    private final JdbcTemplate jdbcTemplate;
     private final QuddyTIService quddyTIService;
     private final DiaryCountService diaryCountService;
     private final QuddyTIMapper quddyTIMapper;
@@ -30,15 +32,12 @@ public class QuddyTIFacadeImpl implements QuddyTIFacade {
         );
     }
 
-    @Override
     @Transactional
-    public void createAndUpadteQuddyTI() {
-        final Long userId = JwtUtil.getUserId();
+    public void createAndUpdateQuddyTI(final Long userId) {
         quddyTIService.createNewMonth(userId, LocalDate.now());
         LocalDate[] dates = getLastMonthDates();
-        Map<DiaryEmotion, Long> emotionCounts = diaryCountService.getEmotionCountsByDate(dates);
-        Map<DiarySubject, Long> subjectCounts = diaryCountService.getSubjectCountsByDate(dates);
-
+        Map<DiaryEmotion, Long> emotionCounts = diaryCountService.getEmotionCountsByDate(userId, dates);
+        Map<DiarySubject, Long> subjectCounts = diaryCountService.getSubjectCountsByDate(userId, dates);
         quddyTIService.processLastMonth(userId, getLastMonthDates(), emotionCounts, subjectCounts);
     }
 

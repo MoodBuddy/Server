@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.*;
 import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
+import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 
 @Entity
 @Getter
@@ -47,8 +48,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "gender", columnDefinition = "tinyint")
     private Boolean gender;
 
-    @Column(name = "deleted", columnDefinition = "tinyint")
-    private Boolean deleted;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "mood_buddy_status")
+    private MoodBuddyStatus moodBuddyStatus;
 
     @Column(name = "user_cur_diary_nums", columnDefinition = "int")
     private Integer userCurDiaryNums;
