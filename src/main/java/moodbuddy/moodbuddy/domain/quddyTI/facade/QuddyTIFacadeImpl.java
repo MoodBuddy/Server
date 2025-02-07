@@ -19,7 +19,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class QuddyTIFacadeImpl implements QuddyTIFacade {
-    private final JdbcTemplate jdbcTemplate;
     private final QuddyTIService quddyTIService;
     private final DiaryCountService diaryCountService;
     private final QuddyTIMapper quddyTIMapper;
@@ -33,8 +32,7 @@ public class QuddyTIFacadeImpl implements QuddyTIFacade {
     }
 
     @Transactional
-    public void createAndUpdateQuddyTI(final Long userId) {
-        quddyTIService.createNewMonth(userId, LocalDate.now());
+    public void update(final Long userId) {
         LocalDate[] dates = getLastMonthDates();
         Map<DiaryEmotion, Long> emotionCounts = diaryCountService.getEmotionCountsByDate(userId, dates);
         Map<DiarySubject, Long> subjectCounts = diaryCountService.getSubjectCountsByDate(userId, dates);

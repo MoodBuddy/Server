@@ -22,7 +22,6 @@ import java.util.Optional;
 @Slf4j
 public class QuddyTIServiceImpl implements QuddyTIService {
     private final QuddyTIRepository quddyTIRepository;
-    private static final String formatMonth = "%02d";
 
     @Override
     public QuddyTI getQuddyTIByDate(final Long userId, String year, String month) {
@@ -31,16 +30,10 @@ public class QuddyTIServiceImpl implements QuddyTIService {
 
     @Override
     @Transactional
-    public void createNewMonth(final Long userId, LocalDate currentDate) {
-        quddyTIRepository.save(QuddyTI.of(userId, formatYear(currentDate), formatMonth(currentDate)));
-    }
-
-    @Override
-    @Transactional
     public void processLastMonth(final Long userId, LocalDate[] dateRange, Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
         String quddyTIType = generateType(emotionCounts, subjectCounts);
-        QuddyTI findQuddyTI = getQuddyTIByUserIdAndDate(userId, formatYear(dateRange[0]), formatMonth(dateRange[1]));
-        updateLastMonth(findQuddyTI, emotionCounts, subjectCounts, quddyTIType);
+//        QuddyTI findQuddyTI = getQuddyTIByUserIdAndDate(userId, formatYear(dateRange[0]), formatMonth(dateRange[1]));
+//        updateLastMonth(findQuddyTI, emotionCounts, subjectCounts, quddyTIType);
     }
 
     private String generateType(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
@@ -101,13 +94,5 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     private QuddyTI getQuddyTIByUserIdAndDate(Long userId, String year, String month) {
         return quddyTIRepository.findByUserIdAndYearAndMonth(userId, year, month)
                 .orElseThrow(() -> new QuddyTINotFoundException(ErrorCode.QUDDYTI_NOT_FOUND));
-    }
-
-    private String formatYear(LocalDate date) {
-        return String.valueOf(date.getYear());
-    }
-
-    private String formatMonth(LocalDate date) {
-        return String.format(formatMonth, date.getMonthValue());
     }
 }

@@ -1,31 +1,33 @@
-package moodbuddy.moodbuddy.infra.batch.job;
+package moodbuddy.moodbuddy.infra.quartz.job;
 
-import lombok.RequiredArgsConstructor;
-import org.quartz.Job;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.Date;
 
 @Component
-@RequiredArgsConstructor
-public class QuddyTIQuartzJob implements Job {
-    private final JobLauncher jobLauncher;
-    private final org.springframework.batch.core.Job quddyTICalculationJob;
+@DisallowConcurrentExecution
+public class QuddyTIBatchJobScheduler implements org.quartz.Job {
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private Job batchJob;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
             JobParameters jobParameters = new JobParametersBuilder()
-                    .addDate("runTime", new Date())
+                    .addLong("time", System.currentTimeMillis())
                     .toJobParameters();
-
-            jobLauncher.run(quddyTICalculationJob, jobParameters);
+            jobLauncher.run(batchJob, jobParameters);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new JobExecutionException(e);
         }
     }
 }
