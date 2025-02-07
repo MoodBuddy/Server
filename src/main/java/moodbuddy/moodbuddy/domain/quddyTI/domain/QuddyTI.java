@@ -88,21 +88,4 @@ public class QuddyTI extends BaseTimeEntity {
                 .moodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
                 .build();
     }
-
-    public void updateQuddyTI(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts, String quddyTIType) {
-        this.happinessCount = emotionCounts.getOrDefault(DiaryEmotion.HAPPINESS, 0L).intValue();
-        this.angerCount = emotionCounts.getOrDefault(DiaryEmotion.ANGER, 0L).intValue();
-        this.disgustCount = emotionCounts.getOrDefault(DiaryEmotion.DISGUST, 0L).intValue();
-        this.fearCount = emotionCounts.getOrDefault(DiaryEmotion.FEAR, 0L).intValue();
-        this.neutralCount = emotionCounts.getOrDefault(DiaryEmotion.NEUTRAL, 0L).intValue();
-        this.sadnessCount = emotionCounts.getOrDefault(DiaryEmotion.SADNESS, 0L).intValue();
-        this.surpriseCount = emotionCounts.getOrDefault(DiaryEmotion.SURPRISE, 0L).intValue();
-        this.dailyCount = subjectCounts.getOrDefault(DiarySubject.DAILY, 0L).intValue();
-        this.growthCount = subjectCounts.getOrDefault(DiarySubject.GROWTH, 0L).intValue();
-        this.emotionCount = subjectCounts.getOrDefault(DiarySubject.EMOTION, 0L).intValue();
-        this.travelCount = subjectCounts.getOrDefault(DiarySubject.TRAVEL, 0L).intValue();
-        this.quddyTI = quddyTIType;
-        this.moodBuddyStatus = MoodBuddyStatus.ACTIVE;
-        this.diaryFrequency = (int) emotionCounts.values().stream().mapToLong(Long::longValue).sum();
-    }
 }
