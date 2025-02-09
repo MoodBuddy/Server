@@ -4,11 +4,13 @@ import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTI;
 import moodbuddy.moodbuddy.infra.batch.process.QuddyTICreatProcessor;
 import moodbuddy.moodbuddy.infra.batch.process.QuddyTIUpdateProcessor;
 import moodbuddy.moodbuddy.infra.batch.read.QuddyTIReader;
-import moodbuddy.moodbuddy.infra.batch.write.QuddyTIWriter;
+import moodbuddy.moodbuddy.infra.batch.write.QuddyTICreateWriter;
+import moodbuddy.moodbuddy.infra.batch.write.QuddyTIUpdateWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.item.support.CompositeItemProcessor;
+import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -31,12 +33,12 @@ public class QuddyTIBatchConfig {
     @Bean
     public Step quddyTIStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                             QuddyTIReader reader, CompositeItemProcessor<Long, QuddyTI> compositeProcessor,
-                            QuddyTIWriter writer) {
+                            CompositeItemWriter<QuddyTI> quddyTICompositeWriter) {
         return new StepBuilder("quddyTIStep", jobRepository)
                 .<Long, QuddyTI>chunk(10, transactionManager)
                 .reader(reader)
                 .processor(compositeProcessor)
-                .writer(writer)
+                .writer(quddyTICompositeWriter)
                 .build();
     }
 
@@ -46,5 +48,12 @@ public class QuddyTIBatchConfig {
         CompositeItemProcessor<Long, QuddyTI> compositeProcessor = new CompositeItemProcessor<>();
         compositeProcessor.setDelegates(Arrays.asList(createProcessor, updateProcessor));
         return compositeProcessor;
+    }
+    @Bean
+    public CompositeItemWriter<QuddyTI> quddyTICompositeWriter(
+            QuddyTICreateWriter createWriter, QuddyTIUpdateWriter updateWriter) {
+        CompositeItemWriter<QuddyTI> compositeItemWriter = new CompositeItemWriter<>();
+        compositeItemWriter.setDelegates(Arrays.asList(createWriter, updateWriter));
+        return compositeItemWriter;
     }
 }
