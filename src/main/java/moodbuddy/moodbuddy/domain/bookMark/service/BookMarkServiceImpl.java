@@ -7,7 +7,6 @@ import moodbuddy.moodbuddy.domain.bookMark.repository.BookMarkRepository;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +22,7 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Override
     public boolean toggle(Diary diary, final Long userId) {
         var findBookMark = bookMarkRepository.findByUserIdAndDiaryId(userId, diary.getId());
-        if(findBookMark.isPresent()) {
-            return cancelToggle(diary, findBookMark.get());
-        }
-        return saveToggle(diary, userId);
+        return findBookMark.map(bookMark -> cancelToggle(diary, bookMark)).orElseGet(() -> saveToggle(diary, userId));
     }
 
     private boolean saveToggle(Diary diary, Long userId) {
@@ -43,7 +39,6 @@ public class BookMarkServiceImpl implements BookMarkService {
     }
 
     @Override
-    @Cacheable(cacheNames = "getBookMarks", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
     public PageCustom<DiaryResQueryDTO> getBookMarks(Pageable pageable, final Long userId) {
         return bookMarkRepository.getBookMarksWithPageable(userId, pageable);
     }

@@ -18,13 +18,23 @@ public class DiaryQueryServiceImpl implements DiaryQueryService {
     private final DiaryQueryRepository diaryQueryRepository;
 
     @Override
-    @Cacheable(cacheNames = "getDiaries", key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
+    @Cacheable(
+            cacheNames = "getDiaries",
+            key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize",
+            unless = "#result == null",
+            cacheManager = "getDiariesCacheManager"
+    )
     public PageCustom<DiaryResQueryDTO> getDiaries(final Long userId, Pageable pageable) {
         return diaryQueryRepository.findDiariesWithPageable(userId, pageable);
     }
 
     @Override
-    @Cacheable(cacheNames = "getDiariesByEmotion", key = "'userId:'+#userId+'_'+'diaryEmotion:'+#diaryEmotion+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize", unless = "#result == null")
+    @Cacheable(
+            cacheNames = "getDiariesByEmotion",
+            key = "'userId:'+#userId+'_'+'diaryEmotion:'+#diaryEmotion+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize",
+            unless = "#result == null",
+            cacheManager = "getDiariesByEmotionCacheManager"
+    )
     public PageCustom<DiaryResQueryDTO> getDiariesByEmotion(final Long userId, DiaryEmotion diaryEmotion, Pageable pageable) {
         return diaryQueryRepository.findDiariesByEmotionWithPageable(userId, diaryEmotion, pageable);
     }
@@ -32,7 +42,9 @@ public class DiaryQueryServiceImpl implements DiaryQueryService {
     @Override
     @Cacheable(
             cacheNames = "getDiariesByFilter",
-            key = "'userId:' + #userId + '_'+'filter:' + (#requestDTO.diaryEmotion() ?: 'defaultEmotion') + (#requestDTO.diarySubject() ?: 'defaultSubject') + (#requestDTO.keyWord() ?: 'defaultKeyword') + (#requestDTO.year() ?: 'defaultYear') + (#requestDTO.month() ?: 'defaultMonth') + '_'+'pageable.offset:' + #pageable.offset + '_'+'pageable.pageSize:' + #pageable.pageSize", unless = "#result == null"
+            key = "'userId:' + #userId + '_'+'filter:' + (#requestDTO.diaryEmotion() ?: 'defaultEmotion') + (#requestDTO.diarySubject() ?: 'defaultSubject') + (#requestDTO.keyWord() ?: 'defaultKeyword') + (#requestDTO.year() ?: 'defaultYear') + (#requestDTO.month() ?: 'defaultMonth') + '_'+'pageable.offset:' + #pageable.offset + '_'+'pageable.pageSize:' + #pageable.pageSize",
+            unless = "#result == null",
+            cacheManager = "getDiariesByFilterCacheManager"
     )
     public PageCustom<DiaryResQueryDTO> getDiariesByFilter(final Long userId, DiaryReqFilterDTO requestDTO, Pageable pageable) {
         return diaryQueryRepository.findDiariesByFilterWithPageable(userId, requestDTO, pageable);

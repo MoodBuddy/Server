@@ -14,15 +14,12 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void deleteDiaryCaches(Long userId) {
+        deleteCacheByUserIdAndCacheName(userId, "getDiary");
         deleteCacheByUserIdAndCacheName(userId, "getDiaries");
         deleteCacheByUserIdAndCacheName(userId, "getDiariesByEmotion");
         deleteCacheByUserIdAndCacheName(userId, "getDiariesByFilter");
     }
 
-    @Override
-    public void deleteBookMarkCaches(Long userId) {
-        deleteCacheByUserIdAndCacheName(userId, "getBookMarks");
-    }
     private void deleteCacheByUserIdAndCacheName(Long userId, String cacheName) {
         String pattern = cacheName + "::userId:" + userId + "*";
         Set<String> keys = redisTemplate.keys(pattern);

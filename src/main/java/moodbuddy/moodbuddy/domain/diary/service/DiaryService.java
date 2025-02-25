@@ -12,6 +12,5 @@ public interface DiaryService {
     LocalDate deleteDiary(final Long userId, final Long diaryId);
     DiaryResDetailDTO getDiary(final Long userId, final Long diaryId);
     Diary findDiaryById(Long diaryId);
-    void validateDiaryAccess(final Long userId, Diary findDiary);
     void validateExistingDiary(final Long userId, LocalDate diaryDate);
 }

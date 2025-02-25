@@ -12,18 +12,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
-
 import static org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair.fromSerializer;
 
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
-    private ObjectMapper objectMapper() {
+    protected ObjectMapper objectMapper() {
         PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
                 .allowIfSubType(Object.class)
                 .build();
@@ -36,7 +33,7 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory cf) {
+    public CacheManager getDiaryCacheManager(RedisConnectionFactory cf) {
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(cf)
                 .cacheDefaults(defaultCacheConfiguration())
@@ -44,8 +41,35 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory();
+    public CacheManager getDiariesCacheManager(RedisConnectionFactory cf) {
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(cf)
+                .cacheDefaults(defaultCacheConfiguration())
+                .build();
+    }
+
+    @Bean
+    public CacheManager getDiariesByEmotionCacheManager(RedisConnectionFactory cf) {
+        RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(5))
+                .disableCachingNullValues();
+
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(cf)
+                .cacheDefaults(cacheConfig)
+                .build();
+    }
+
+    @Bean
+    public CacheManager getDiariesByFilterCacheManager(RedisConnectionFactory cf) {
+        RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(5))
+                .disableCachingNullValues();
+
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(cf)
+                .cacheDefaults(cacheConfig)
+                .build();
     }
 
     private RedisCacheConfiguration defaultCacheConfiguration() {
@@ -54,14 +78,6 @@ public class RedisCacheConfig {
                 .disableCachingNullValues()
                 .serializeKeysWith(fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper())))
-                .entryTtl(Duration.ofMinutes(2));
-    }
-
-    @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
-        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
-        return redisTemplate;
+                .entryTtl(Duration.ofHours(24));
     }
 }
