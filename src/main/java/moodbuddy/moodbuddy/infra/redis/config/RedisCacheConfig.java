@@ -20,7 +20,6 @@ import static org.springframework.data.redis.serializer.RedisSerializationContex
 @Configuration
 @EnableCaching
 public class RedisCacheConfig {
-
     protected ObjectMapper objectMapper() {
         PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator.builder()
                 .allowIfSubType(Object.class)
@@ -31,6 +30,14 @@ public class RedisCacheConfig {
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                 .registerModule(new JavaTimeModule())
                 .activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
+    }
+
+    @Bean
+    public CacheManager getDiaryCacheManager(RedisConnectionFactory cf) {
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(cf)
+                .cacheDefaults(defaultCacheConfiguration())
+                .build();
     }
 
     @Bean

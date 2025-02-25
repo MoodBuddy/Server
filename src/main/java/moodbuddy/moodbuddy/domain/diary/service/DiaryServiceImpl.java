@@ -56,7 +56,12 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    @Cacheable(cacheNames = "getDiary", key = "'userId:'+#userId+'_'+'diaryId:'+#diaryId", unless = "#result == null")
+    @Cacheable(
+            cacheNames = "getDiary",
+            key = "'userId:'+#userId+'_'+'diaryId:'+#diaryId",
+            unless = "#result == null",
+            cacheManager = "getDiaryCacheManager"
+    )
     public DiaryResDetailDTO getDiary(final Long userId, final Long diaryId) {
         final Diary findDiary = findDiaryById(diaryId);
         validateDiaryAccess(userId, findDiary);
