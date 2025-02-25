@@ -35,8 +35,17 @@ public class RedisCacheConfig {
                 .activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
     }
 
+    private RedisCacheConfiguration defaultCacheConfiguration() {
+        return RedisCacheConfiguration
+                .defaultCacheConfig()
+                .disableCachingNullValues()
+                .serializeKeysWith(fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper())))
+                .entryTtl(Duration.ofHours(24));
+    }
+
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory cf) {
+    public CacheManager getDiariesCacheManager(RedisConnectionFactory cf) {
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(cf)
                 .cacheDefaults(defaultCacheConfiguration())
@@ -44,17 +53,20 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory();
+    public CacheManager getDiariesByEmotionAndFilterCacheManager(RedisConnectionFactory cf) {
+        RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(5))
+                .disableCachingNullValues();
+
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(cf)
+                .cacheDefaults(cacheConfig)  // TTL 5분 적용
+                .build();
     }
 
-    private RedisCacheConfiguration defaultCacheConfiguration() {
-        return RedisCacheConfiguration
-                .defaultCacheConfig()
-                .disableCachingNullValues()
-                .serializeKeysWith(fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper())))
-                .entryTtl(Duration.ofMinutes(2));
+    @Bean
+    public RedisConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory();
     }
 
     @Bean
