@@ -14,6 +14,7 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void deleteDiaryCaches(Long userId) {
+        deleteCacheByUserIdAndCacheName(userId, "getDiary");
         deleteCacheByUserIdAndCacheName(userId, "getDiaries");
         deleteCacheByUserIdAndCacheName(userId, "getDiariesByEmotion");
         deleteCacheByUserIdAndCacheName(userId, "getDiariesByFilter");
