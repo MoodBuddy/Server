@@ -53,14 +53,26 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public CacheManager getDiariesByEmotionAndFilterCacheManager(RedisConnectionFactory cf) {
+    public CacheManager getDiariesByEmotionCacheManager(RedisConnectionFactory cf) {
         RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(5))
                 .disableCachingNullValues();
 
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(cf)
-                .cacheDefaults(cacheConfig)  // TTL 5분 적용
+                .cacheDefaults(cacheConfig)
+                .build();
+    }
+
+    @Bean
+    public CacheManager getDiariesByFilterCacheManager(RedisConnectionFactory cf) {
+        RedisCacheConfiguration cacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofMinutes(5))
+                .disableCachingNullValues();
+
+        return RedisCacheManager.RedisCacheManagerBuilder
+                .fromConnectionFactory(cf)
+                .cacheDefaults(cacheConfig)
                 .build();
     }
 
