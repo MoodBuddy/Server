@@ -44,3 +44,5 @@ src/test
 
 .DS_Store
 *.hprof
+
+sql
