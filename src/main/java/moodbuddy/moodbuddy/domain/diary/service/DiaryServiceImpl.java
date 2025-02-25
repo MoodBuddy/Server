@@ -38,7 +38,7 @@ public class DiaryServiceImpl implements DiaryService {
     public Long updateDiary(final Long userId,  DiaryReqUpdateDTO requestDTO) {
         try {
             var findDiary = findDiaryById(requestDTO.diaryId());
-            validateDiaryAccess(userId, findDiary);
+            findDiary.validateAccess(userId);
             findDiary.updateDiary(requestDTO);
             return findDiary.getId();
         } catch (OptimisticLockException ex) {
@@ -50,7 +50,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public LocalDate deleteDiary(final Long userId,  final Long diaryId) {
         final var findDiary = findDiaryById(diaryId);
-        validateDiaryAccess(userId, findDiary);
+        findDiary.validateAccess(userId);
         findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
         return findDiary.getDate();
     }
@@ -64,15 +64,8 @@ public class DiaryServiceImpl implements DiaryService {
     )
     public DiaryResDetailDTO getDiary(final Long userId, final Long diaryId) {
         final Diary findDiary = findDiaryById(diaryId);
-        validateDiaryAccess(userId, findDiary);
+        findDiary.validateAccess(userId);
         return diaryRepository.getDiaryById(diaryId);
-    }
-
-    @Override
-    public void validateDiaryAccess(final Long userId,  Diary findDiary) {
-        if (!findDiary.getUserId().equals(userId)) {
-            throw new DiaryNoAccessException(ErrorCode.DIARY_NO_ACCESS);
-        }
     }
 
     @Override

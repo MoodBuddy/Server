@@ -5,11 +5,13 @@ import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
+import moodbuddy.moodbuddy.domain.diary.exception.DiaryNoAccessException;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
 import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.error.ErrorCode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -109,6 +111,12 @@ public class Diary extends BaseTimeEntity {
                 .thumbnail(thumbnail)
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();
+    }
+
+    public void validateAccess(final Long userId) {
+        if (!this.getUserId().equals(userId)) {
+            throw new DiaryNoAccessException(ErrorCode.DIARY_NO_ACCESS);
+        }
     }
 
     public void updateDiary(DiaryReqUpdateDTO requestDTO) {

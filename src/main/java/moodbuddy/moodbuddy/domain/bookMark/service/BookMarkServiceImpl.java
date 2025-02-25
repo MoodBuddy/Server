@@ -22,10 +22,7 @@ public class BookMarkServiceImpl implements BookMarkService {
     @Override
     public boolean toggle(Diary diary, final Long userId) {
         var findBookMark = bookMarkRepository.findByUserIdAndDiaryId(userId, diary.getId());
-        if(findBookMark.isPresent()) {
-            return cancelToggle(diary, findBookMark.get());
-        }
-        return saveToggle(diary, userId);
+        return findBookMark.map(bookMark -> cancelToggle(diary, bookMark)).orElseGet(() -> saveToggle(diary, userId));
     }
 
     private boolean saveToggle(Diary diary, Long userId) {

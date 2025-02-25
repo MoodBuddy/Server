@@ -22,7 +22,7 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     public boolean toggle(final Long diaryId) {
         final var userId = JwtUtil.getUserId();
         var findDiary = diaryService.findDiaryById(diaryId);
-        diaryService.validateDiaryAccess(userId, findDiary);
+        findDiary.validateAccess(userId);
         return bookMarkService.toggle(findDiary, userId);
     }
 
