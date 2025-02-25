@@ -20,10 +20,6 @@ public class RedisServiceImpl implements RedisService {
         deleteCacheByUserIdAndCacheName(userId, "getDiariesByFilter");
     }
 
-    @Override
-    public void deleteBookMarkCaches(Long userId) {
-        deleteCacheByUserIdAndCacheName(userId, "getBookMarks");
-    }
     private void deleteCacheByUserIdAndCacheName(Long userId, String cacheName) {
         String pattern = cacheName + "::userId:" + userId + "*";
         Set<String> keys = redisTemplate.keys(pattern);
