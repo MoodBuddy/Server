@@ -12,10 +12,10 @@ import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.error.ErrorCode;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import static moodbuddy.moodbuddy.global.common.constants.DiaryConstants.*;
 
 @Entity
 @Getter
@@ -136,9 +136,9 @@ public class Diary extends BaseTimeEntity {
     }
 
     public void analyzeDiaryResult(Map<String, String> gptResponse) {
-        this.subject = DiarySubject.valueOf(gptResponse.get("subject"));
-        this.summary = gptResponse.get("summary");
-        this.emotion = DiaryEmotion.valueOf(gptResponse.get("emotion"));
+        this.subject = DiarySubject.valueOf(gptResponse.get(DIARY_SUBJECT));
+        this.summary = gptResponse.get(DIARY_SUMMARY);
+        this.emotion = DiaryEmotion.valueOf(gptResponse.get(DIARY_EMOTION));
     }
     public void updateDiaryBookMarkCheck(Boolean diaryBookMarkCheck) { this.bookMark = diaryBookMarkCheck; }
     public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) { this.moodBuddyStatus = moodBuddyStatus; }
