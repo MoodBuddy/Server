@@ -15,8 +15,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryReposi
     Optional<Diary> findByUserIdAndDate(Long userId, LocalDate date);
 
     @Lock(LockModeType.OPTIMISTIC)
-    Optional<Diary> findByIdAndMoodBuddyStatus(Long id, MoodBuddyStatus moodBuddyStatus);
-
+    Optional<Diary> findByUserIdAndIdAndMoodBuddyStatus(final Long userId, final Long diaryId, MoodBuddyStatus moodBuddyStatus);
 
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId AND DATE_FORMAT(date, '%Y-%m') = :month AND status = :status", nativeQuery = true)
     List<Diary> findByUserIdAndMonthAndDiaryStatus(@Param("userId") Long userId, @Param("month") String month, @Param("status") String status); // nativeQuery 이므로 status를 enum 값으로 넘겨주면 안된다.

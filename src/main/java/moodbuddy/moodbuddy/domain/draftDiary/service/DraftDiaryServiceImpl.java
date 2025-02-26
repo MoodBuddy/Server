@@ -74,7 +74,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     }
 
     private DraftDiary findDraftDiaryById(final Long userId, final Long draftDiaryId) {
-        return draftDiaryRepository.findByIdAndUserIdAndMoodBuddyStatus(userId, draftDiaryId, MoodBuddyStatus.ACTIVE)
+        return draftDiaryRepository.findByUserIdAndIdAndMoodBuddyStatus(userId, draftDiaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DraftDiaryNotFoundException(DRAFT_DIARY_NO_ACCESS));
     }
 }
