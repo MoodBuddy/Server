@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.*;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqSaveDTO;
+import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryNoAccessException;
 import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
+import moodbuddy.moodbuddy.global.error.ErrorCode;
 
 import java.time.LocalDate;
 
@@ -70,5 +72,11 @@ public class DraftDiary extends BaseTimeEntity {
 
     public void updateMoodBuddyStatus(MoodBuddyStatus moodBuddyStatus) {
         this.moodBuddyStatus = moodBuddyStatus;
+    }
+
+    public void validateDraftDiaryAccess(final Long userId) {
+        if (!this.getUserId().equals(userId)) {
+            throw new DraftDiaryNoAccessException(ErrorCode.DRAFT_DIARY_NO_ACCESS);
+        }
     }
 }

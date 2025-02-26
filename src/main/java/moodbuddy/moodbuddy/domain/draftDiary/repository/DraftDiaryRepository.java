@@ -12,6 +12,6 @@ import java.util.Optional;
 
 public interface DraftDiaryRepository extends JpaRepository<DraftDiary, Long>, DraftDiaryRepositoryCustom {
     @Lock(LockModeType.OPTIMISTIC)
-    Optional<DraftDiary> findByIdAndMoodBuddyStatus(Long diaryId, MoodBuddyStatus moodBuddyStatus);
+    Optional<DraftDiary> findByIdAndUserIdAndMoodBuddyStatus(Long userId, Long diaryId, MoodBuddyStatus moodBuddyStatus);
     List<DraftDiary> findAllByUserIdAndDate(Long userId, LocalDate diaryDate);
 }
