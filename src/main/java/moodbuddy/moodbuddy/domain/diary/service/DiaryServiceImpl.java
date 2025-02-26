@@ -48,10 +48,14 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public LocalDate deleteDiary(final Long userId,  final Long diaryId) {
-        final var findDiary = findDiaryById(diaryId);
-        findDiary.validateAccess(userId);
-        findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
-        return findDiary.getDate();
+        try {
+            final var findDiary = findDiaryById(diaryId);
+            findDiary.validateAccess(userId);
+            findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
+            return findDiary.getDate();
+        } catch (OptimisticLockException ex) {
+            throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_DELETE);
+        }
     }
 
     @Override
