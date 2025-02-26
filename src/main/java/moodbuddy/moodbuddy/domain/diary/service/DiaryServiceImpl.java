@@ -36,8 +36,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public Long updateDiary(final Long userId,  DiaryReqUpdateDTO requestDTO) {
         try {
-            var findDiary = findDiaryById(requestDTO.diaryId());
-            findDiary.validateAccess(userId);
+            var findDiary = findDiaryById(userId, requestDTO.diaryId());
             findDiary.updateDiary(requestDTO);
             return findDiary.getId();
         } catch (OptimisticLockException ex) {
@@ -49,8 +48,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public LocalDate deleteDiary(final Long userId,  final Long diaryId) {
         try {
-            final var findDiary = findDiaryById(diaryId);
-            findDiary.validateAccess(userId);
+            final var findDiary = findDiaryById(userId, diaryId);
             findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
             return findDiary.getDate();
         } catch (OptimisticLockException ex) {
@@ -76,7 +74,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public Diary findDiaryById(final Long diaryId) {
+    public Diary findDiaryById(final Long userId, final Long diaryId) {
         return diaryRepository.findByIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
     }

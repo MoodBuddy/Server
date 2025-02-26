@@ -21,8 +21,7 @@ public class BookMarkFacadeImpl implements BookMarkFacade {
     @Transactional
     public boolean toggle(final Long diaryId) {
         final var userId = JwtUtil.getUserId();
-        var findDiary = diaryService.findDiaryById(diaryId);
-        findDiary.validateAccess(userId);
+        var findDiary = diaryService.findDiaryById(userId, diaryId);
         return bookMarkService.toggle(findDiary, userId);
     }
 

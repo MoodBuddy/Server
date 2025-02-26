@@ -22,8 +22,6 @@ public class DiaryAnalyzeFacadeImpl implements DiaryAnalyzeFacade {
     @Transactional
     public DiaryResAnalyzeDTO analyze(Long diaryId) {
         final var userId = JwtUtil.getUserId();
-        Diary findDiary = diaryService.findDiaryById(diaryId);
-        findDiary.validateAccess(userId);
-        return gptService.analyzeDiary(diaryService.findDiaryById(diaryId));
+        return gptService.analyzeDiary(diaryService.findDiaryById(userId, diaryId));
     }
 }
