@@ -57,9 +57,12 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     @Override
     @Transactional
     public void deleteDraftDiaries(final Long userId, DraftDiaryReqSelectDeleteDTO requestDTO) {
-        requestDTO.diaryIdList().forEach(draftDiaryId ->
-                findDraftDiaryById(userId, draftDiaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
-        );
+        try {
+            requestDTO.diaryIdList().forEach(draftDiaryId ->
+                    findDraftDiaryById(userId, draftDiaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
+        } catch (OptimisticLockException ex) {
+            throw new DraftDiaryConcurrentUpdateException(ErrorCode.DRAFT_DIARY_CONCURRENT_DELETE);
+        }
     }
 
     @Override
