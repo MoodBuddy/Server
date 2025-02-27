@@ -74,7 +74,7 @@ public class Diary extends BaseTimeEntity {
 
     @Version
     @Column(name = "version", nullable = false)
-    private Integer version;
+    private Long version;
 
     public static Diary of(DiaryReqSaveDTO requestDTO, Long userId) {
         return build(requestDTO.diaryTitle(), requestDTO.diaryDate(), requestDTO.diaryContent(),

@@ -13,6 +13,7 @@ import moodbuddy.moodbuddy.domain.diary.exception.DiaryConcurrentUpdateException
 import moodbuddy.moodbuddy.domain.diary.exception.DiaryNotFoundException;
 import moodbuddy.moodbuddy.domain.diary.exception.DiaryTodayExistingException;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -39,7 +40,7 @@ public class DiaryServiceImpl implements DiaryService {
             var findDiary = findDiaryById(userId, requestDTO.diaryId());
             findDiary.updateDiary(requestDTO);
             return findDiary.getId();
-        } catch (OptimisticLockException ex) {
+        } catch (ObjectOptimisticLockingFailureException ex) {
             throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);
         }
     }

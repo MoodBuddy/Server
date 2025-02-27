@@ -55,7 +55,7 @@ public class DraftDiary extends BaseTimeEntity {
 
     @Version
     @Column(name = "version", nullable = false)
-    private Integer version;
+    private Long version;
 
     public static DraftDiary of(DraftDiaryReqSaveDTO requestDTO, Long userId) {
         return DraftDiary.builder()

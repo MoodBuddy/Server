@@ -89,7 +89,8 @@ dependencies {
     // slack
     implementation 'com.github.maricn:logback-slack-appender:1.4.0'
 
-    // actuator
+    // h2
+    implementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
