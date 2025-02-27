@@ -2,6 +2,7 @@ package moodbuddy.moodbuddy.domain.diary.service;
 
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
+import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
@@ -37,7 +38,8 @@ public class DiaryCurrentTest {
     private DiaryRepository diaryRepository;
     private Diary diary;
     private Long diaryId;
-    private DiaryReqUpdateDTO requestDTO;
+    private DiaryReqSaveDTO saveRequestDTO;
+    private DiaryReqUpdateDTO updateRequestDTO;
 
     @BeforeEach
     @DisplayName("setUp")
@@ -46,7 +48,38 @@ public class DiaryCurrentTest {
         diary = createTestDiary();
         diaryRepository.save(diary);
         diaryId = diary.getId();
-        requestDTO = createUpdateDTO();
+        saveRequestDTO = createSaveDTO();
+        updateRequestDTO = createUpdateDTO();
+    }
+
+    @Test
+    @DisplayName("일기 저장할 때 동시성 테스트")
+    public void 일기_저장할_때_동시성_테스트() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+
+        AtomicInteger successCount = new AtomicInteger(0);
+        AtomicInteger failureCount = new AtomicInteger(0);
+
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            executorService.submit(() -> {
+                try {
+                    diaryService.saveDiary(1L, saveRequestDTO);
+                    successCount.incrementAndGet();
+                } catch (Exception e) {
+                    failureCount.incrementAndGet();
+                    e.printStackTrace();
+                } finally{
+                    latch.countDown();
+                }
+            });
+        }
+
+        executorService.shutdown();
+        latch.await();
+
+        assertThat(successCount.get()).isEqualTo(1);
+        assertThat(failureCount.get()).isEqualTo(THREAD_COUNT - 1);
     }
 
     @Test
@@ -61,7 +94,7 @@ public class DiaryCurrentTest {
         for (int i = 0; i < THREAD_COUNT; i++) {
             executorService.submit(() -> {
                 try {
-                    diaryService.updateDiary(1L, requestDTO);
+                    diaryService.updateDiary(1L, updateRequestDTO);
                     successCount.incrementAndGet();
                 } catch (Exception e) {
                     failureCount.incrementAndGet();
@@ -76,7 +109,7 @@ public class DiaryCurrentTest {
         latch.await();
 
         Diary findDiary = diaryService.findDiaryById(1L, diaryId);
-        assertThat(findDiary.getTitle()).isEqualTo(requestDTO.diaryTitle());
+        assertThat(findDiary.getTitle()).isEqualTo(updateRequestDTO.diaryTitle());
         assertThat(successCount.get()).isEqualTo(1);
         assertThat(failureCount.get()).isEqualTo(THREAD_COUNT - 1);
     }
@@ -212,6 +245,18 @@ public class DiaryCurrentTest {
                 .fontSize(DiaryFontSize.PX30)
                 .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                 .build();
+    }
+
+    private DiaryReqSaveDTO createSaveDTO() {
+        return new DiaryReqSaveDTO(
+                "쿼카의 하루",
+                LocalDate.of(2023, 7, 3),
+                "쿼카쿼카쿼카쿼카쿼카쿼카",
+                DiaryWeather.CLEAR,
+                DiaryFont.INTER,
+                DiaryFontSize.PX30,
+                List.of("imageUrl1", "imageUrl2")
+        );
     }
 
     private DiaryReqUpdateDTO createUpdateDTO() {

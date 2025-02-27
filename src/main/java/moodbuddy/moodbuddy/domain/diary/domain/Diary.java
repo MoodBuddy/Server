@@ -20,7 +20,7 @@ import static moodbuddy.moodbuddy.global.common.constants.DiaryConstants.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "diary")
+@Table(name = "diary", uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "date"}))
 public class Diary extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +65,7 @@ public class Diary extends BaseTimeEntity {
     @Column(name = "font_size")
     private DiaryFontSize fontSize;
 
-    @Column(name = "thumbnail")
+    @Column(name = "thumbnail", columnDefinition = "text")
     private String thumbnail;
 
     @Enumerated(EnumType.STRING)
