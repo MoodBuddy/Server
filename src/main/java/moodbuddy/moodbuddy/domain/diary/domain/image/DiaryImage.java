@@ -20,7 +20,7 @@ public class DiaryImage extends BaseTimeEntity {
     @Column(name = "diary_id")
     private Long diaryId;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "text")
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryRepositoryCustom {
-    Optional<Diary> findByUserIdAndDate(Long userId, LocalDate date);
+    boolean existsByUserIdAndDate(Long userId, LocalDate date);
 
     @Lock(LockModeType.OPTIMISTIC)
     Optional<Diary> findByUserIdAndIdAndMoodBuddyStatus(final Long userId, final Long diaryId, MoodBuddyStatus moodBuddyStatus);

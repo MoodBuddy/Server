@@ -69,7 +69,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public void validateExistingDiary(final Long userId,  LocalDate diaryDate) {
-        if (diaryRepository.findByUserIdAndDate(userId, diaryDate).isPresent()) {
+        if (diaryRepository.existsByUserIdAndDate(userId, diaryDate)) {
             throw new DiaryTodayExistingException(ErrorCode.DIARY_TODAY_EXISTING);
         }
     }
