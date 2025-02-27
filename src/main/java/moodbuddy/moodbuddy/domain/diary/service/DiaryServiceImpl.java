@@ -13,6 +13,7 @@ import moodbuddy.moodbuddy.domain.diary.exception.DiaryConcurrentUpdateException
 import moodbuddy.moodbuddy.domain.diary.exception.DiaryNotFoundException;
 import moodbuddy.moodbuddy.domain.diary.exception.DiaryTodayExistingException;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -36,11 +37,10 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public Long updateDiary(final Long userId,  DiaryReqUpdateDTO requestDTO) {
         try {
-            var findDiary = findDiaryById(requestDTO.diaryId());
-            findDiary.validateAccess(userId);
+            var findDiary = findDiaryById(userId, requestDTO.diaryId());
             findDiary.updateDiary(requestDTO);
             return findDiary.getId();
-        } catch (OptimisticLockException ex) {
+        } catch (ObjectOptimisticLockingFailureException ex) {
             throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);
         }
     }
@@ -48,10 +48,13 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public LocalDate deleteDiary(final Long userId,  final Long diaryId) {
-        final var findDiary = findDiaryById(diaryId);
-        findDiary.validateAccess(userId);
-        findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
-        return findDiary.getDate();
+        try {
+            final var findDiary = findDiaryById(userId, diaryId);
+            findDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE);
+            return findDiary.getDate();
+        } catch (OptimisticLockException ex) {
+            throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_DELETE);
+        }
     }
 
     @Override
@@ -72,8 +75,8 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public Diary findDiaryById(final Long diaryId) {
-        return diaryRepository.findByIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
+    public Diary findDiaryById(final Long userId, final Long diaryId) {
+        return diaryRepository.findByUserIdAndIdAndMoodBuddyStatus(userId, diaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DiaryNotFoundException(DIARY_NOT_FOUND));
     }
 }

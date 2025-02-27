@@ -15,6 +15,7 @@ public enum ErrorCode {
 
     /** Diary **/
     DIARY_CONCURRENT_UPDATE(400, "DIARY-ERR-400", "동시에 일기를 수정할 수 없습니다."),
+    DIARY_CONCURRENT_DELETE(400, "DIARY-ERR-400", "동시에 일기를 삭제할 수 없습니다."),
     DIARY_NOT_FOUND(400, "DIARY-ERR-400", "일기를 찾을 수 없습니다."),
     DIARY_NO_ACCESS(403, "DIARY-ERR-403", "접근할 수 없는 일기입니다."),
     DIARY_TODAY_EXISTING(409, "DIARY-ERR-409", "오늘 이미 일기를 작성했습니다."),
@@ -23,6 +24,7 @@ public enum ErrorCode {
     DRAFT_DIARY_NOT_FOUND(400, "DRAFT-DIARY-ERR-400", "임시 저장 일기를 찾을 수 없습니다."),
     DRAFT_DIARY_NO_ACCESS(403, "DRAFT-DIARY-ERR-403", "접근할 수 없는 임시 저장 일기입니다."),
     DRAFT_DIARY_CONCURRENT_UPDATE(400, "DRAFT-DIARY-ERR-400", "동시에 임시 저장 일기를 수정할 수 없습니다."),
+    DRAFT_DIARY_CONCURRENT_DELETE(400, "DRAFT-DIARY-ERR-400", "동시에 임시 저장 일기를 삭제할 수 없습니다."),
 
 
     /** Letter **/

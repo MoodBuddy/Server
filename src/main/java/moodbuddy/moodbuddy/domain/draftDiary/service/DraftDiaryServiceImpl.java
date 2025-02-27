@@ -15,7 +15,7 @@ import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.error.ErrorCode;
 import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryConcurrentUpdateException;
 import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryNotFoundException;
-import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryNoAccessException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -41,11 +41,11 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     @Transactional
     public Long publishDraftDiary(final Long userId, DraftDiaryReqPublishDTO requestDTO) {
         try {
-            var findDraftDiary = findDraftDiaryById(requestDTO.diaryId());
-            validateDraftDiaryAccess(userId, findDraftDiary);
+            var findDraftDiary = findDraftDiaryById(userId, requestDTO.diaryId());
+            findDraftDiary.validateDraftDiaryAccess(userId);
             deleteDraftDiariesByDate(userId, findDraftDiary.getDate());
             return diaryRepository.save(Diary.publish(userId, requestDTO)).getId();
-        } catch (OptimisticLockException ex) {
+        } catch (ObjectOptimisticLockingFailureException ex) {
             throw new DraftDiaryConcurrentUpdateException(ErrorCode.DRAFT_DIARY_CONCURRENT_UPDATE);
         }
     }
@@ -58,16 +58,17 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
     @Override
     @Transactional
     public void deleteDraftDiaries(final Long userId, DraftDiaryReqSelectDeleteDTO requestDTO) {
-        requestDTO.diaryIdList().forEach(draftDiaryId ->
-                findDraftDiaryById(draftDiaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
-        );
+        try {
+            requestDTO.diaryIdList().forEach(draftDiaryId ->
+                    findDraftDiaryById(userId, draftDiaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
+        } catch (ObjectOptimisticLockingFailureException ex) {
+            throw new DraftDiaryConcurrentUpdateException(ErrorCode.DRAFT_DIARY_CONCURRENT_DELETE);
+        }
     }
 
     @Override
     public DraftDiaryResDetailDTO getDraftDiary(final Long userId, final Long diaryId) {
-        final var findDraftDiary = findDraftDiaryById(diaryId);
-        validateDraftDiaryAccess(userId, findDraftDiary);
-        return draftDiaryRepository.getDraftDiaryById(diaryId);
+        return draftDiaryRepository.getDraftDiaryById(userId, diaryId);
     }
 
     @Override
@@ -76,14 +77,8 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
                 .forEach(draftDiary -> draftDiary.updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
     }
 
-    private DraftDiary findDraftDiaryById(final Long diaryId) {
-        return draftDiaryRepository.findByIdAndMoodBuddyStatus(diaryId, MoodBuddyStatus.ACTIVE)
+    private DraftDiary findDraftDiaryById(final Long userId, final Long draftDiaryId) {
+        return draftDiaryRepository.findByUserIdAndIdAndMoodBuddyStatus(userId, draftDiaryId, MoodBuddyStatus.ACTIVE)
                 .orElseThrow(() -> new DraftDiaryNotFoundException(DRAFT_DIARY_NO_ACCESS));
-    }
-
-    private void validateDraftDiaryAccess(final Long userId, DraftDiary draftDiary) {
-        if (!draftDiary.getUserId().equals(userId)) {
-            throw new DraftDiaryNoAccessException(ErrorCode.DRAFT_DIARY_NO_ACCESS);
-        }
     }
 }
