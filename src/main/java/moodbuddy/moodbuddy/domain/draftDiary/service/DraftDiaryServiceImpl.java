@@ -15,6 +15,7 @@ import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import moodbuddy.moodbuddy.global.error.ErrorCode;
 import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryConcurrentUpdateException;
 import moodbuddy.moodbuddy.domain.draftDiary.exception.DraftDiaryNotFoundException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -44,7 +45,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
             findDraftDiary.validateDraftDiaryAccess(userId);
             deleteDraftDiariesByDate(userId, findDraftDiary.getDate());
             return diaryRepository.save(Diary.publish(userId, requestDTO)).getId();
-        } catch (OptimisticLockException ex) {
+        } catch (ObjectOptimisticLockingFailureException ex) {
             throw new DraftDiaryConcurrentUpdateException(ErrorCode.DRAFT_DIARY_CONCURRENT_UPDATE);
         }
     }
@@ -60,7 +61,7 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
         try {
             requestDTO.diaryIdList().forEach(draftDiaryId ->
                     findDraftDiaryById(userId, draftDiaryId).updateMoodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE));
-        } catch (OptimisticLockException ex) {
+        } catch (ObjectOptimisticLockingFailureException ex) {
             throw new DraftDiaryConcurrentUpdateException(ErrorCode.DRAFT_DIARY_CONCURRENT_DELETE);
         }
     }
