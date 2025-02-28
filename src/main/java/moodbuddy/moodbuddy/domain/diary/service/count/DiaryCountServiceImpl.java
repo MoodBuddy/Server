@@ -3,7 +3,7 @@ package moodbuddy.moodbuddy.domain.diary.service.count;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
-import moodbuddy.moodbuddy.domain.diary.repository.count.DiaryCountRepository;
+import moodbuddy.moodbuddy.infra.batch.QuddyTIBatchJDBCRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -14,13 +14,13 @@ import java.util.Map;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class DiaryCountServiceImpl implements DiaryCountService {
-    private final DiaryCountRepository diaryCountRepository;
+    private final QuddyTIBatchJDBCRepository quddyTIBatchJDBCRepository;
 
     @Override
     public Map<DiaryEmotion, Long> getEmotionCountsByDate(LocalDate[] dates) {
         EnumMap<DiaryEmotion, Long> emotionCounts = new EnumMap<>(DiaryEmotion.class);
         for (DiaryEmotion emotion : DiaryEmotion.values()) {
-            long count = diaryCountRepository.countByEmotionAndDateRange(emotion, dates[0], dates[1]);
+            long count = quddyTIBatchJDBCRepository.findEmotionCountsByDate(emotion, dates[0], dates[1]);
             emotionCounts.put(emotion, count);
         }
         return emotionCounts;
@@ -30,7 +30,7 @@ public class DiaryCountServiceImpl implements DiaryCountService {
     public Map<DiarySubject, Long> getSubjectCountsByDate(LocalDate[] dates) {
         EnumMap<DiarySubject, Long> subjectCounts = new EnumMap<>(DiarySubject.class);
         for (DiarySubject subject : DiarySubject.values()) {
-            long count = diaryCountRepository.countBySubjectAndDateRange(subject, dates[0], dates[1]);
+            long count = quddyTIBatchJDBCRepository.findSubjectCountsByDate(subject, dates[0], dates[1]);
             subjectCounts.put(subject, count);
         }
         return subjectCounts;
