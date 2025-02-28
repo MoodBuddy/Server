@@ -10,11 +10,10 @@ import moodbuddy.moodbuddy.domain.quddyTI.repository.QuddyTIRepository;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class QuddyTIBatchJDBCRepositoryTest {
     @Autowired
     private DiaryRepository diaryRepository;
@@ -32,12 +32,12 @@ public class QuddyTIBatchJDBCRepositoryTest {
     @Autowired
     private QuddyTIBatchJDBCRepository quddyTIBatchJDBCRepository;
 
-    @BeforeEach
+    @BeforeAll
     @DisplayName("setUp")
     public void setUp() {
         for (int i = 0; i < 10; i++) {
             diaryRepository.save(Diary.builder()
-                    .userId(1L)
+                    .userId(2L)
                     .date(LocalDate.now().minusDays(i))
                     .title("Diary " + i)
                     .content("Content of Diary " + i)
@@ -49,36 +49,43 @@ public class QuddyTIBatchJDBCRepositoryTest {
                     .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
                     .build());
         }
-//        quddyTIRepository.save(QuddyTI.builder()
-//                .userId(1L)
-//                .year("2025")
-//                .month("01")
-//                .diaryFrequency(2)
-//                .dailyCount(1)
-//                .growthCount(1)
-//                .emotionCount(2)
-//                .travelCount(0)
-//                .happinessCount(1)
-//                .angerCount(0)
-//                .disgustCount(0)
-//                .fearCount(0)
-//                .neutralCount(0)
-//                .sadnessCount(1)
-//                .surpriseCount(0)
-//                .quddyTI("TEST")
-//                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
-//                .build());
+        quddyTIRepository.save(QuddyTI.builder()
+                .userId(2L)
+                .quddyTIYear("2025")
+                .quddyTIMonth("01")
+                .diaryFrequency(2)
+                .dailyCount(1)
+                .growthCount(1)
+                .emotionCount(2)
+                .travelCount(0)
+                .happinessCount(1)
+                .angerCount(0)
+                .disgustCount(0)
+                .fearCount(0)
+                .neutralCount(0)
+                .sadnessCount(1)
+                .surpriseCount(0)
+                .quddyTIType("TEST")
+                .moodBuddyStatus(MoodBuddyStatus.ACTIVE)
+                .build());
+    }
+
+    @AfterAll
+    @DisplayName("finish")
+    public void finish() {
+        diaryRepository.deleteAll();
+        quddyTIRepository.deleteAll();
     }
 
     @Test
     @DisplayName("QuddyTI 찾기 테스트")
     public void QuddyTI_찾기_테스트() {
-        QuddyTI quddyTI = quddyTIBatchJDBCRepository.findQuddyTIByUserIdAndDate(1L, "2025", "01");
+        QuddyTI quddyTI = quddyTIBatchJDBCRepository.findQuddyTIByUserIdAndDate(2L, "2025", "01");
         assertNotNull(quddyTI);
-        assertEquals(1L, quddyTI.getUserId());
-        assertEquals("2025", quddyTI.getYear());
-        assertEquals("01", quddyTI.getMonth());
-        assertEquals("TEST", quddyTI.getQuddyTI());
+        assertEquals(2L, quddyTI.getUserId());
+        assertEquals("2025", quddyTI.getQuddyTIYear());
+        assertEquals("01", quddyTI.getQuddyTIMonth());
+        assertEquals("TEST", quddyTI.getQuddyTIType());
     }
 
     @Test

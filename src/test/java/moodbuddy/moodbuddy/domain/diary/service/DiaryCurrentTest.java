@@ -8,9 +8,7 @@ import moodbuddy.moodbuddy.domain.diary.repository.DiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DiaryCurrentTest {
     private static final int THREAD_COUNT = 5;
     @Autowired
@@ -41,15 +40,20 @@ public class DiaryCurrentTest {
     private DiaryReqSaveDTO saveRequestDTO;
     private DiaryReqUpdateDTO updateRequestDTO;
 
-    @BeforeEach
+    @BeforeAll
     @DisplayName("setUp")
     public void setUp() {
-        diaryRepository.deleteAll();
         diary = createTestDiary();
         diaryRepository.save(diary);
         diaryId = diary.getId();
         saveRequestDTO = createSaveDTO();
         updateRequestDTO = createUpdateDTO();
+    }
+
+    @AfterAll
+    @DisplayName("finish")
+    public void finish() {
+        diaryRepository.deleteAll();
     }
 
     @Test

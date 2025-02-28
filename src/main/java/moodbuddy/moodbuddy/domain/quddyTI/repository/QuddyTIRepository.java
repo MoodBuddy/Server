@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface QuddyTIRepository extends JpaRepository<QuddyTI, Long> {
-    Optional<QuddyTI> findByUserIdAndYearAndMonth(
+    Optional<QuddyTI> findByUserIdAndQuddyTIYearAndQuddyTIMonth(
             Long userId,
             String year,
             String month

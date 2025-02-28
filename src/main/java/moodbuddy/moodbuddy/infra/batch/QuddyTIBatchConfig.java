@@ -103,16 +103,16 @@ public class QuddyTIBatchConfig {
     public JdbcBatchItemWriter<QuddyTI> saveQuddyTI() {
         return new JdbcBatchItemWriterBuilder<QuddyTI>()
                 .dataSource(dataSource)
-                .sql("INSERT INTO quddy_ti (user_id, year, month, diary_frequency, daily_count, growth_count, " +
+                .sql("INSERT INTO quddy_ti (user_id, quddy_ti_year, quddy_ti_month, diary_frequency, daily_count, growth_count, " +
                         "emotion_count, travel_count, happiness_count, anger_count, disgust_count, fear_count, neutral_count, " +
-                        "sadness_count, surprise_count, quddy_ti, mood_buddy_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                        "sadness_count, surprise_count, quddy_ti_type, mood_buddy_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
                 .beanMapped()
                 .itemPreparedStatementSetter(new ItemPreparedStatementSetter<QuddyTI>() {
                     @Override
                     public void setValues(QuddyTI item, PreparedStatement ps) throws SQLException {
                         ps.setLong(1, item.getUserId());
-                        ps.setString(2, item.getYear());
-                        ps.setString(3, item.getMonth());
+                        ps.setString(2, item.getQuddyTIYear());
+                        ps.setString(3, item.getQuddyTIMonth());
                         ps.setInt(4, item.getDiaryFrequency());
                         ps.setInt(5, item.getDailyCount());
                         ps.setInt(6, item.getGrowthCount());
@@ -125,7 +125,7 @@ public class QuddyTIBatchConfig {
                         ps.setInt(13, item.getNeutralCount());
                         ps.setInt(14, item.getSadnessCount());
                         ps.setInt(15, item.getSurpriseCount());
-                        ps.setString(16, item.getQuddyTI());
+                        ps.setString(16, item.getQuddyTIType());
                         ps.setString(17, item.getMoodBuddyStatus().name());
                     }
                 })
@@ -138,7 +138,7 @@ public class QuddyTIBatchConfig {
                 .dataSource(dataSource)
                 .sql("UPDATE quddy_ti SET diary_frequency = ?, daily_count = ?, growth_count = ?, emotion_count = ?, " +
                         "travel_count = ?, happiness_count = ?, anger_count = ?, disgust_count = ?, fear_count = ?, neutral_count = ?, " +
-                        "sadness_count = ?, surprise_count = ?, quddy_ti = ? WHERE id = ? AND user_id = ? AND year = ? AND month = ?")
+                        "sadness_count = ?, surprise_count = ?, quddy_ti_type = ? WHERE id = ? AND user_id = ? AND quddy_ti_year = ? AND quddy_ti_month = ?")
                 .beanMapped()
                 .itemPreparedStatementSetter(new ItemPreparedStatementSetter<QuddyTI>() {
                     @Override
@@ -155,11 +155,11 @@ public class QuddyTIBatchConfig {
                         ps.setInt(10, item.getNeutralCount());
                         ps.setInt(11, item.getSadnessCount());
                         ps.setInt(12, item.getSurpriseCount());
-                        ps.setString(13, item.getQuddyTI());
+                        ps.setString(13, item.getQuddyTIType());
                         ps.setLong(14, item.getId());
                         ps.setLong(15, item.getUserId());
-                        ps.setString(16, item.getYear());
-                        ps.setString(17, item.getMonth());
+                        ps.setString(16, item.getQuddyTIYear());
+                        ps.setString(17, item.getQuddyTIMonth());
                     }
                 })
                 .build();

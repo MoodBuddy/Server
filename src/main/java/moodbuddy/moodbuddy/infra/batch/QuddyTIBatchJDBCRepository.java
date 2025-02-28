@@ -14,14 +14,14 @@ import java.time.LocalDate;
 public class QuddyTIBatchJDBCRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public QuddyTI findQuddyTIByUserIdAndDate(Long userId, String year, String month) {
-        String sql = "SELECT * FROM quddy_ti WHERE user_id = ? AND year = ? AND month = ?";
+    public QuddyTI findQuddyTIByUserIdAndDate(Long userId, String quddyTIYear, String quddyTIMonth) {
+        String sql = "SELECT * FROM quddy_ti WHERE user_id = ? AND quddy_ti_year = ? AND quddy_ti_month = ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
             return QuddyTI.builder()
                     .id(rs.getLong("id"))
                     .userId(rs.getLong("user_id"))
-                    .year(rs.getString("year"))
-                    .month(rs.getString("month"))
+                    .quddyTIYear(rs.getString("quddy_ti_year"))
+                    .quddyTIMonth(rs.getString("quddy_ti_month"))
                     .diaryFrequency(rs.getInt("diary_frequency"))
                     .dailyCount(rs.getInt("daily_count"))
                     .growthCount(rs.getInt("growth_count"))
@@ -34,10 +34,10 @@ public class QuddyTIBatchJDBCRepository {
                     .neutralCount(rs.getInt("neutral_count"))
                     .sadnessCount(rs.getInt("sadness_count"))
                     .surpriseCount(rs.getInt("surprise_count"))
-                    .quddyTI(rs.getString("quddy_ti"))
+                    .quddyTIType(rs.getString("quddy_ti_type"))
                     .moodBuddyStatus(MoodBuddyStatus.valueOf(rs.getString("mood_buddy_status")))
                     .build();
-        }, userId, year, month);
+        }, userId, quddyTIYear, quddyTIMonth);
     }
 
     public long findEmotionCountsByDate(DiaryEmotion emotion, LocalDate start, LocalDate end) {

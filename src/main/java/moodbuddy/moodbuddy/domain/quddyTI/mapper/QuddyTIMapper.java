@@ -11,8 +11,8 @@ public interface QuddyTIMapper {
     QuddyTIMapper INSTANCE = Mappers.getMapper(QuddyTIMapper.class);
 
     @Mapping(target = "userId", source = "userId")
-    @Mapping(target = "quddyTIYear", source = "year")
-    @Mapping(target = "quddyTIMonth", source = "month")
+    @Mapping(target = "quddyTIYear", source = "quddyTIYear")
+    @Mapping(target = "quddyTIMonth", source = "quddyTIMonth")
     @Mapping(target = "diaryFrequency", source = "diaryFrequency")
     @Mapping(target = "happinessCount", source = "happinessCount")
     @Mapping(target = "angerCount", source = "angerCount")
@@ -25,7 +25,7 @@ public interface QuddyTIMapper {
     @Mapping(target = "growthCount", source = "growthCount")
     @Mapping(target = "emotionCount", source = "emotionCount")
     @Mapping(target = "travelCount", source = "travelCount")
-    @Mapping(target = "quddyTI", source = "quddyTI")
+    @Mapping(target = "quddyTIType", source = "quddyTIType")
     @Mapping(target = "moodBuddyStatus", source = "moodBuddyStatus")
     QuddyTIResDetailDTO toResDetailDTO(QuddyTI quddyTI);
 }

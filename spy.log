@@ -130,3 +130,14 @@
 1736085649044|85|rollback|connection 89674|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
 1736085649046|0|rollback|connection 90329|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
 1736085649046|0|rollback|connection 89568|url jdbc:mysql://localhost:3306/moodbuddy_db?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8||
+1740748378611|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists book_mark cascade |     drop table if exists book_mark cascade 
+1740748378612|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists diary cascade |     drop table if exists diary cascade 
+1740748378612|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists diary_image cascade |     drop table if exists diary_image cascade 
+1740748378612|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists draft_diary cascade |     drop table if exists draft_diary cascade 
+1740748378612|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists draft_diary_image cascade |     drop table if exists draft_diary_image cascade 
+1740748378612|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists letter cascade |     drop table if exists letter cascade 
+1740748378613|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists month_comment cascade |     drop table if exists month_comment cascade 
+1740748378613|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists profile cascade |     drop table if exists profile cascade 
+1740748378613|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists profile_image cascade |     drop table if exists profile_image cascade 
+1740748378613|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists quddy_ti cascade |     drop table if exists quddy_ti cascade 
+1740748378613|0|statement|connection 74|url jdbc:h2:mem:test|     drop table if exists user cascade |     drop table if exists user cascade 
