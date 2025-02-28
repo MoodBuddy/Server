@@ -4,6 +4,4 @@ import moodbuddy.moodbuddy.domain.quddyTI.dto.response.QuddyTIResDetailDTO;
 
 public interface QuddyTIFacade {
     QuddyTIResDetailDTO getQuddyTIByDate(String year, String month);
-    void createAndUpadteQuddyTI();
-
 }

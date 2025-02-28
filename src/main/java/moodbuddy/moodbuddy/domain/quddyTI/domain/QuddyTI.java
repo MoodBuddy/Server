@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
+import moodbuddy.moodbuddy.domain.quddyTI.domain.type.QuddyTIType;
+import moodbuddy.moodbuddy.domain.quddyTI.exception.QuddyTIInvalidateException;
 import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
-
+import moodbuddy.moodbuddy.global.error.ErrorCode;
 import java.util.Map;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -24,11 +27,11 @@ public class QuddyTI extends BaseTimeEntity {
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
 
-    @Column(name = "year", columnDefinition = "varchar(4)")
-    private String year;
+    @Column(name = "quddy_ti_year", columnDefinition = "varchar(4)")
+    private String quddyTIYear;
 
-    @Column(name = "month", columnDefinition = "varchar(2)")
-    private String month;
+    @Column(name = "quddy_ti_month", columnDefinition = "varchar(2)")
+    private String quddyTIMonth;
 
     @Column(name = "diary_frequency", columnDefinition = "int")
     private Integer diaryFrequency;
@@ -59,8 +62,8 @@ public class QuddyTI extends BaseTimeEntity {
     private Integer surpriseCount;
 
     /** 쿼디티아이 **/
-    @Column(name = "quddy_ti", columnDefinition = "varchar(10)")
-    private String quddyTI;
+    @Column(name = "quddy_ti_type", columnDefinition = "varchar(10)")
+    private String quddyTIType;
 
     /** 쿼디티아이 상태 **/
     @Enumerated(EnumType.STRING)
@@ -70,8 +73,8 @@ public class QuddyTI extends BaseTimeEntity {
     public static QuddyTI of(Long userId, String year, String month) {
         return QuddyTI.builder()
                 .userId(userId)
-                .year(year)
-                .month(month)
+                .quddyTIYear(year)
+                .quddyTIMonth(month)
                 .diaryFrequency(0)
                 .dailyCount(0)
                 .growthCount(0)
@@ -84,12 +87,12 @@ public class QuddyTI extends BaseTimeEntity {
                 .neutralCount(0)
                 .sadnessCount(0)
                 .surpriseCount(0)
-                .quddyTI(null)
+                .quddyTIType(null)
                 .moodBuddyStatus(MoodBuddyStatus.DIS_ACTIVE)
                 .build();
     }
 
-    public void updateQuddyTI(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts, String quddyTIType) {
+    public void update(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
         this.happinessCount = emotionCounts.getOrDefault(DiaryEmotion.HAPPINESS, 0L).intValue();
         this.angerCount = emotionCounts.getOrDefault(DiaryEmotion.ANGER, 0L).intValue();
         this.disgustCount = emotionCounts.getOrDefault(DiaryEmotion.DISGUST, 0L).intValue();
@@ -101,8 +104,40 @@ public class QuddyTI extends BaseTimeEntity {
         this.growthCount = subjectCounts.getOrDefault(DiarySubject.GROWTH, 0L).intValue();
         this.emotionCount = subjectCounts.getOrDefault(DiarySubject.EMOTION, 0L).intValue();
         this.travelCount = subjectCounts.getOrDefault(DiarySubject.TRAVEL, 0L).intValue();
-        this.quddyTI = quddyTIType;
+        this.quddyTIType = generateType(emotionCounts, subjectCounts);
         this.moodBuddyStatus = MoodBuddyStatus.ACTIVE;
         this.diaryFrequency = (int) emotionCounts.values().stream().mapToLong(Long::longValue).sum();
+    }
+
+    private String generateType(Map<DiaryEmotion, Long> emotionCounts, Map<DiarySubject, Long> subjectCounts) {
+        String diaryType = getDiaryFrequent(emotionCounts);
+        if (QuddyTIType.NO_DIARY.getValue().equals(diaryType)) {
+            return QuddyTIType.NO_DIARY.getValue();
+        }
+        String mostFrequentSubject = findMostFrequentEntry(subjectCounts)
+                .map(subject -> subject.name().substring(0, 1))
+                .orElseThrow(() -> new QuddyTIInvalidateException(ErrorCode.QUDDYTI_INVALIDATE));
+        String mostFrequentEmotion = findMostFrequentEntry(emotionCounts)
+                .map(this::getEmotionAbbreviation)
+                .orElseThrow(() -> new QuddyTIInvalidateException(ErrorCode.QUDDYTI_INVALIDATE));
+
+        return diaryType + mostFrequentSubject + mostFrequentEmotion;
+    }
+
+    private String getDiaryFrequent(Map<DiaryEmotion, Long> emotionCounts) {
+        long totalDiaryCount = emotionCounts.values().stream().mapToLong(Long::longValue).sum();
+        return totalDiaryCount == 0 ? QuddyTIType.NO_DIARY.getValue() : (totalDiaryCount >= 15 ? QuddyTIType.TYPE_J.getValue() : QuddyTIType.TYPE_P.getValue());
+    }
+
+    private <T> Optional<T> findMostFrequentEntry(Map<T, Long> counts) {
+        return counts.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey);
+    }
+
+    private String getEmotionAbbreviation(DiaryEmotion emotion) {
+        return Optional.ofNullable(emotion)
+                .map(DiaryEmotion::getAbbreviation)
+                .orElse(QuddyTIType.NO_DIARY.getValue());
     }
 }

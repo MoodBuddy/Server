@@ -1,6 +1,5 @@
 package moodbuddy.moodbuddy.domain.draftDiary.service;
 
-import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 import moodbuddy.moodbuddy.domain.draftDiary.domain.DraftDiary;
 import moodbuddy.moodbuddy.domain.draftDiary.dto.request.DraftDiaryReqPublishDTO;
@@ -9,15 +8,12 @@ import moodbuddy.moodbuddy.domain.draftDiary.repository.DraftDiaryRepository;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +22,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DraftDiaryCurrentTest {
     private static final int THREAD_COUNT = 5;
     @Autowired
@@ -50,6 +46,12 @@ public class DraftDiaryCurrentTest {
         draftDiaryId = draftDiaries.getFirst().getId();
         requestDTO = createDraftDiaryReqPublishDTO(draftDiaryId);
         selectDeleteDTO = createDraftDiaryReqSelectDeleteDTO(draftDiaries);
+    }
+
+    @AfterEach
+    @DisplayName("finish")
+    public void finish() {
+        draftDiaryRepository.deleteAll();
     }
 
     @Test

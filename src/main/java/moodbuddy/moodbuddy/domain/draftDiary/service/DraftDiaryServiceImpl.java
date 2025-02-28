@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+
+import static moodbuddy.moodbuddy.global.error.ErrorCode.DRAFT_DIARY_NOT_FOUND;
 import static moodbuddy.moodbuddy.global.error.ErrorCode.DRAFT_DIARY_NO_ACCESS;
 
 @Service
@@ -79,6 +81,6 @@ public class DraftDiaryServiceImpl implements DraftDiaryService {
 
     private DraftDiary findDraftDiaryById(final Long userId, final Long draftDiaryId) {
         return draftDiaryRepository.findByUserIdAndIdAndMoodBuddyStatus(userId, draftDiaryId, MoodBuddyStatus.ACTIVE)
-                .orElseThrow(() -> new DraftDiaryNotFoundException(DRAFT_DIARY_NO_ACCESS));
+                .orElseThrow(() -> new DraftDiaryNotFoundException(DRAFT_DIARY_NOT_FOUND));
     }
 }

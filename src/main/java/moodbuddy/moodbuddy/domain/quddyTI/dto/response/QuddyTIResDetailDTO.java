@@ -18,7 +18,7 @@ public record QuddyTIResDetailDTO(
         Integer growthCount,
         Integer emotionCount,
         Integer travelCount,
-        String quddyTI,
+        String quddyTIType,
         MoodBuddyStatus moodBuddyStatus
 ) {
 }
