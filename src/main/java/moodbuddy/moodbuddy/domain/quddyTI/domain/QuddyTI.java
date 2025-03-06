@@ -17,25 +17,25 @@ import java.util.Optional;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "quddy_ti")
+@Table(name = "quddy_ti", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"user_id", "quddy_ti_year", "quddy_ti_month"})
+})
 public class QuddyTI extends BaseTimeEntity {
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
-
     @Column(name = "quddy_ti_year", columnDefinition = "varchar(4)")
     private String quddyTIYear;
-
     @Column(name = "quddy_ti_month", columnDefinition = "varchar(2)")
     private String quddyTIMonth;
 
     @Column(name = "diary_frequency", columnDefinition = "int")
     private Integer diaryFrequency;
-
     @Column(name = "daily_count", columnDefinition = "int")
     private Integer dailyCount;
     @Column(name = "growth_count", columnDefinition = "int")

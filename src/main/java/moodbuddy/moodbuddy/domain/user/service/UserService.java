@@ -8,7 +8,6 @@ import moodbuddy.moodbuddy.domain.user.dto.response.UserResCalendarSummaryDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.UserResMainPageDTO;
 import moodbuddy.moodbuddy.domain.user.dto.response.*;
 import moodbuddy.moodbuddy.domain.user.domain.User;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -46,20 +45,16 @@ public interface UserService {
     // 다음 달 나에게 짧은 한 마디 수정
     UserResMonthCommentUpdateDTO monthCommentUpdate(UserReqMonthCommentUpdateDTO userReqMonthCommentUpdateDTO);
 
-    // 매월 1이 자정에 자동으로 curDiaryNums 0으로 초기화
-    void changeDiaryNums();
-
     // 이번 달 일기 개수와 편지지 개수 변경
     void changeCount(Long userId, boolean increment);
-
-     void setUserCheckTodayDairy(Long userId, Boolean check);
+    void changeDiaryNums();
+    void setUserCheckTodayDairy(Long userId, Boolean check);
 
     /** 오늘 일기 작성한 지 가능 여부 **/
     UserResCheckTodayDiaryDTO checkTodayDiary();
 
     /** 테스트 (로그인 / 회원가입) **/
     UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO);
-    UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO);
     User getUserById(Long userId);
     User getUserByKakaoId(Long kakaoId);
 }

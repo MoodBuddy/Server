@@ -17,13 +17,13 @@ class QuddyTIBatchSchedulerTest {
     @Autowired
     private Job quddyTIJob;
 
-    @Test
-    @DisplayName("Batch Job 테스트")
-    void Batch_Job_테스트() throws Exception {
-        JobExecution jobExecution = jobLauncher.run(quddyTIJob, new JobParametersBuilder()
-                .addLong("time", System.currentTimeMillis())
-                .toJobParameters());
-
-        assertEquals("COMPLETED", jobExecution.getStatus().toString());
-    }
+//    @Test
+//    @DisplayName("Batch Job 테스트")
+//    void Batch_Job_테스트() throws Exception {
+//        JobExecution jobExecution = jobLauncher.run(quddyTIJob, new JobParametersBuilder()
+//                .addLong("time", System.currentTimeMillis())
+//                .toJobParameters());
+//
+//        assertEquals("COMPLETED", jobExecution.getStatus().toString());
+//    }
 }

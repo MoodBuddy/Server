@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class QuddyTIBatchScheduler {
+public class QuddyTICreateBatchScheduler {
     private final JobLauncher jobLauncher;
-    private final Job quddyTIJob;
+    private final Job quddyTICreateJob;
 
-    @Scheduled(cron = "0 0 0 1 * ?")
+//    @Scheduled(fixedDelay = 5000)
     public void runBatchJob() throws JobExecutionException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
                 .toJobParameters();
-        jobLauncher.run(quddyTIJob, jobParameters);
+        jobLauncher.run(quddyTICreateJob, jobParameters);
     }
 }
