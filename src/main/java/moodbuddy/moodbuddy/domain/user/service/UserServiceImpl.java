@@ -1,4 +1,5 @@
 package moodbuddy.moodbuddy.domain.user.service;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
@@ -31,7 +32,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -474,32 +474,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 자정에 자동으로 실행
     public void changeDiaryNums(){
-        try{
-            List<User> users = userRepository.findAll();
-            for(User user : users){
-                user.setUserCurDiaryNums(0);// 새로운 달의 일기 개수를 위해 userCurDiaryNums 초기화
-            }
-        } catch (Exception e) {
-            log.error("[UserService] changeDiaryNums error"+ e);
-            throw new RuntimeException(e);
+        List<User> users = userRepository.findAll();
+        for(User user : users){
+            user.setUserCurDiaryNums(0);// 새로운 달의 일기 개수를 위해 userCurDiaryNums 초기화
         }
     }
 
     @Override
     @Transactional
     public void changeCount(Long userId, boolean increment) {
-        try {
-            User user = getUserById(userId);
-
-            if (!increment) {
-                user.plusUserNumCount();
-            } else {
-                user.minusUserNumCount();
-            }
-
-        } catch (Exception e) {
-            log.error("[UserService] changeCount error: " + e);
-            throw new RuntimeException(e);
+        User user = getUserById(userId);
+        if (!increment) {
+            user.plusUserNumCount();
+        } else {
+            user.minusUserNumCount();
         }
     }
 
@@ -522,13 +510,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResLoginDTO login(UserReqLoginDTO userReqLoginDTO) {
         return UserMapper.toUserResLoginDTO(getUserById(userReqLoginDTO.getUserId()));
-    }
-
-    /** 테스트를 위한 임시 자체 회원가입 **/
-    @Override
-    public UserResSaveDTO save(UserReqSaveDTO userReqSaveDTO) {
-
-        return null;
     }
 
     @Override
