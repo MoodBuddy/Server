@@ -13,16 +13,16 @@ import java.util.Map;
 import java.util.Optional;
 
 @Entity
+@Setter
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "quddy_ti", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"user_id", "quddy_ti_year", "quddy_ti_month"})
 })
 public class QuddyTI extends BaseTimeEntity {
     @Id
-    @Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;

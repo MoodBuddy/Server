@@ -10,6 +10,7 @@ import moodbuddy.moodbuddy.domain.quddyTI.repository.QuddyTIRepository;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFont;
 import moodbuddy.moodbuddy.global.common.base.type.DiaryFontSize;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
+import moodbuddy.moodbuddy.infra.batch.repository.QuddyTIBatchJDBCRepository;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

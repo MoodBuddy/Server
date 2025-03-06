@@ -3,7 +3,7 @@ package moodbuddy.moodbuddy.domain.diary.service.count;
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiarySubject;
-import moodbuddy.moodbuddy.infra.batch.QuddyTIBatchJDBCRepository;
+import moodbuddy.moodbuddy.infra.batch.repository.QuddyTIBatchJDBCRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.infra.batch;
+package moodbuddy.moodbuddy.infra.batch.repository;
 
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryEmotion;
@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -59,5 +58,21 @@ public class QuddyTIBatchJDBCRepository {
     public long findSubjectCountsByUserIdAndDate(Long userId, DiarySubject subject, LocalDate start, LocalDate end) {
         String sql = "SELECT COUNT(*) FROM diary WHERE user_id = ? AND date BETWEEN ? AND ? AND subject = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, userId, start, end, subject.name());
+    }
+
+    public void updateQuddyTI(QuddyTI quddyTI) {
+        String sql = """
+            UPDATE quddy_ti SET 
+                diary_frequency = ?, daily_count = ?, growth_count = ?, emotion_count = ?, travel_count = ?, 
+                happiness_count = ?, anger_count = ?, disgust_count = ?, fear_count = ?, neutral_count = ?, 
+                sadness_count = ?, surprise_count = ?, quddy_ti_type = ?, mood_buddy_status = ?, updated_time = NOW()
+            WHERE id = ?
+        """;
+
+        jdbcTemplate.update(sql,
+                quddyTI.getDiaryFrequency(), quddyTI.getDailyCount(), quddyTI.getGrowthCount(), quddyTI.getEmotionCount(),
+                quddyTI.getTravelCount(), quddyTI.getHappinessCount(), quddyTI.getAngerCount(), quddyTI.getDisgustCount(),
+                quddyTI.getFearCount(), quddyTI.getNeutralCount(), quddyTI.getSadnessCount(), quddyTI.getSurpriseCount(),
+                quddyTI.getQuddyTIType(), quddyTI.getMoodBuddyStatus().toString(), quddyTI.getId());
     }
 }

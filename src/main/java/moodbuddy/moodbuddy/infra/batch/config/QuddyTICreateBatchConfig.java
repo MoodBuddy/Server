@@ -1,8 +1,9 @@
-package moodbuddy.moodbuddy.infra.batch;
+package moodbuddy.moodbuddy.infra.batch.config;
 
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTI;
 import moodbuddy.moodbuddy.global.util.DateUtil;
+import moodbuddy.moodbuddy.infra.batch.repository.QuddyTIBatchJDBCRepository;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;

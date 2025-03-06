@@ -1,4 +1,4 @@
-package moodbuddy.moodbuddy.infra.batch;
+package moodbuddy.moodbuddy.infra.batch.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -15,7 +15,7 @@ public class QuddyTICreateBatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job quddyTICreateJob;
 
-    @Scheduled(cron = "0 0 2 15 * *")
+    @Scheduled(cron = "0 52 2 * * *")
     public void runBatchJob() throws JobExecutionException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())
