@@ -15,7 +15,7 @@ public class QuddyTICreateBatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job quddyTICreateJob;
 
-//    @Scheduled(fixedDelay = 5000)
+    @Scheduled(cron = "0 0 2 15 * *")
     public void runBatchJob() throws JobExecutionException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("time", System.currentTimeMillis())

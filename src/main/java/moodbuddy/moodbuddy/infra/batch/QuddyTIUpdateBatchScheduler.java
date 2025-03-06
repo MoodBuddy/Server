@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class QuddyTIUpdateBatchScheduler {
-//    private final JobLauncher jobLauncher;
-//    private final Job quddyTIUpdateJob;
-//
-//    @Scheduled(fixedDelay = 10000000)
-//    public void runBatchJob() throws JobExecutionException {
-//        JobParameters jobParameters = new JobParametersBuilder()
-//                .addLong("time", System.currentTimeMillis())
-//                .toJobParameters();
-//        jobLauncher.run(quddyTIUpdateJob, jobParameters);
-//    }
+    private final JobLauncher jobLauncher;
+    private final Job quddyTIUpdateJob;
+
+    @Scheduled(cron = "0 0 2 15 * *")
+    public void runBatchJob() throws JobExecutionException {
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addLong("time", System.currentTimeMillis())
+                .toJobParameters();
+        jobLauncher.run(quddyTIUpdateJob, jobParameters);
+    }
 }
