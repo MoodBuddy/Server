@@ -14,10 +14,13 @@ public class RedisServiceImpl implements RedisService {
     private static final Random random = new Random();
     private final RedisTemplate<String, Object> redisTemplate;
     private final DiaryQueryRepository diaryQueryRepository;
+    private static final String DIARIES_CACHE_PREFIX = "getDiaries::userId:";
+    private static final String DIARY_COUNT_CACHE_PREFIX = "diary_count:userId:";
 
     @Override
     public void deleteDiaryCaches(Long userId) {
-        deleteCacheByUserIdAndCacheName(userId, "getDiaries");
+        deleteCacheByUserIdAndCacheName(userId, DIARIES_CACHE_PREFIX);
+        deleteCountCacheByUserId(userId);
 //
 //        for (int page = 0; page < 10; page++) {
 //            String cacheKey = "getDiaries::userId:" + userId + "_page:" + page + "_size:" + 20;
@@ -32,5 +35,10 @@ public class RedisServiceImpl implements RedisService {
         var pattern = cacheName + "::userId:" + userId + "*";
         var keys = redisTemplate.keys(pattern);
         Optional.ofNullable(keys).filter(keysSet -> !keysSet.isEmpty()).ifPresent(redisTemplate::delete);
+    }
+
+    private void deleteCountCacheByUserId(Long userId) {
+        String countCacheKey = DIARY_COUNT_CACHE_PREFIX + userId;
+        redisTemplate.delete(countCacheKey);
     }
 }
