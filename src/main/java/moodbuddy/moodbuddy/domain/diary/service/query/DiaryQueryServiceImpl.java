@@ -20,7 +20,7 @@ public class DiaryQueryServiceImpl implements DiaryQueryService {
     @Override
     @Cacheable(
             cacheNames = "getDiaries",
-            key = "'userId:'+#userId+'_'+'pageable.offset:'+#pageable.offset+'_'+'pageable.pageSize:'+#pageable.pageSize",
+            key = "'userId:' + #userId + '_page:' + #pageable.pageNumber + '_size:' + #pageable.pageSize",
             unless = "#result == null"
     )
     public PageCustom<DiaryResQueryDTO> getDiaries(final Long userId, Pageable pageable) {

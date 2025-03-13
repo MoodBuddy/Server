@@ -45,7 +45,6 @@ public class RedisCacheConfig {
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory cf) {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put("getDiary", defaultCacheConfiguration().entryTtl(Duration.ofHours(24)));
         cacheConfigurations.put("getDiaries", defaultCacheConfiguration().entryTtl(Duration.ofHours(24)));
 
         return RedisCacheManager.builder(cf)

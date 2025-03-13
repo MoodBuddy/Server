@@ -36,9 +36,8 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = getTotal(userId);
-        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
-
+        long total = pageable.getPageNumber() == 0 ? getTotal(userId, null, null, null, null, null) : -1;
+        int totalPages = total > 0 ? (int) Math.ceil((double) total / pageable.getPageSize()) : -1;
         return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
 
@@ -59,9 +58,8 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = getTotal(userId);
-        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
-
+        long total = pageable.getPageNumber() == 0 ? getTotal(userId, emotion, null, null, null, null) : -1;
+        int totalPages = total > 0 ? (int) Math.ceil((double) total / pageable.getPageSize()) : -1;
         return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
 
@@ -88,9 +86,8 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        long total = getTotal(userId);
-        int totalPages = (int) Math.ceil((double) total / pageable.getPageSize());
-
+        long total = pageable.getPageNumber() == 0 ? getTotal(userId, filterDTO.diaryEmotion(), filterDTO.diarySubject(), filterDTO.year(), filterDTO.month(), filterDTO.keyWord()) : -1;
+        int totalPages = total > 0 ? (int) Math.ceil((double) total / pageable.getPageSize()) : -1;
         return new PageCustom<>(results, totalPages, total, pageable.getPageSize(), pageable.getPageNumber());
     }
 
@@ -124,12 +121,19 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 : null;
     }
 
-    private long getTotal(Long userId) {
+    private long getTotal(Long userId, DiaryEmotion emotion, DiarySubject subject, Integer year, Integer month, String keyWord) {
         return Optional.ofNullable(
                 queryFactory.select(diary.count())
                         .from(diary)
-                        .where(diary.userId.eq(userId)
-                                .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                        .where(
+                                diary.userId.eq(userId),
+                                diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE),
+                                filterEmotion(emotion),
+                                filterSubject(subject),
+                                filterYear(year),
+                                filterMonth(month),
+                                filterKeyWord(keyWord)
+                        )
                         .fetchOne()
         ).orElse(0L);
     }
