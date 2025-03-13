@@ -17,9 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class DiaryQueryServiceImpl implements DiaryQueryService {
     private final DiaryQueryRepository diaryQueryRepository;
 
+    //TODO 오름차순 내림차순 생각해야 함.
     @Override
     @Cacheable(
-            cacheNames = "getDiaries",
+            cacheNames = "diaries",
             key = "'userId:' + #userId + '_page:' + #pageable.pageNumber + '_size:' + #pageable.pageSize",
             unless = "#result == null"
     )
