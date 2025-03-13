@@ -47,8 +47,6 @@ public class RedisCacheConfig {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
         cacheConfigurations.put("getDiary", defaultCacheConfiguration().entryTtl(Duration.ofHours(24)));
         cacheConfigurations.put("getDiaries", defaultCacheConfiguration().entryTtl(Duration.ofHours(24)));
-        cacheConfigurations.put("getDiariesByEmotion", defaultCacheConfiguration().entryTtl(Duration.ofMinutes(5)));
-        cacheConfigurations.put("getDiariesByFilter", defaultCacheConfiguration().entryTtl(Duration.ofMinutes(5)));
 
         return RedisCacheManager.builder(cf)
                 .cacheDefaults(defaultCacheConfiguration())
