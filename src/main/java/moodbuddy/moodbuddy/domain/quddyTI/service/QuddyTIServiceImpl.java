@@ -6,7 +6,6 @@ import moodbuddy.moodbuddy.domain.quddyTI.domain.QuddyTI;
 import moodbuddy.moodbuddy.domain.quddyTI.repository.QuddyTIRepository;
 import moodbuddy.moodbuddy.global.error.ErrorCode;
 import moodbuddy.moodbuddy.domain.quddyTI.exception.QuddyTINotFoundException;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +17,6 @@ public class QuddyTIServiceImpl implements QuddyTIService {
     private final QuddyTIRepository quddyTIRepository;
 
     @Override
-    @Cacheable(
-            cacheNames = "getQuddyTI",
-            key = "'userId:'+#userId+'_'+'year:'+#year + '_month:'+#month",
-            unless = "#result == null"
-    )
     public QuddyTI getQuddyTIByDate(final Long userId, String year, String month) {
         return getQuddyTIByUserIdAndDate(userId, year, month);
     }
