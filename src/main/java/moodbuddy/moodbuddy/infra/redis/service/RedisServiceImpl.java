@@ -39,6 +39,6 @@ public class RedisServiceImpl implements RedisService {
     }
 
     private void cacheFirstPage(Long userId) {
-        diaryQueryService.refreshDiariesCache(userId, PageRequest.of(0, PAGE_SIZE));
+        diaryQueryService.refreshDiariesCache(userId, false, PageRequest.of(0, PAGE_SIZE));
     }
 }

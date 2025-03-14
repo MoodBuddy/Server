@@ -27,7 +27,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     }
 
     @Override
-    public PageCustom<DiaryResQueryDTO> findDiariesWithPageable(Long userId, Pageable pageable) {
+    public PageCustom<DiaryResQueryDTO> findDiariesWithPageable(Long userId, boolean isAscending, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
@@ -38,6 +38,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 .from(diary)
                 .where(diary.userId.eq(userId)
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                .orderBy(isAscending ? diary.date.asc() : diary.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -61,7 +62,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
 
 
     @Override
-    public PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(Long userId, DiaryEmotion emotion, Pageable pageable) {
+    public PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(Long userId, boolean isAscending, DiaryEmotion emotion, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
@@ -73,6 +74,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                 .where(diary.userId.eq(userId)
                         .and(diary.emotion.eq(emotion))
                         .and(diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)))
+                .orderBy(isAscending ? diary.date.asc() : diary.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -83,7 +85,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     }
 
     @Override
-    public PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(Long userId, DiaryReqFilterDTO filterDTO, Pageable pageable) {
+    public PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(Long userId, boolean isAscending, DiaryReqFilterDTO filterDTO, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
                         diary.id,
                         diary.title,
@@ -101,6 +103,7 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
                         filterEmotion(filterDTO.diaryEmotion()),
                         filterSubject(filterDTO.diarySubject())
                 )
+                .orderBy(isAscending ? diary.date.asc() : diary.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
