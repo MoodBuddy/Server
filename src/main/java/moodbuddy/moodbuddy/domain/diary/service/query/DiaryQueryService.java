@@ -10,4 +10,5 @@ public interface DiaryQueryService {
     PageCustom<DiaryResQueryDTO> getDiaries(final Long userId, Pageable pageable);
     PageCustom<DiaryResQueryDTO> getDiariesByEmotion(final Long userId, DiaryEmotion diaryEmotion, Pageable pageable);
     PageCustom<DiaryResQueryDTO> getDiariesByFilter(final Long userId, DiaryReqFilterDTO requestDTO, Pageable pageable);
+    PageCustom<DiaryResQueryDTO> refreshDiariesCache(final Long userId, Pageable pageable);
 }

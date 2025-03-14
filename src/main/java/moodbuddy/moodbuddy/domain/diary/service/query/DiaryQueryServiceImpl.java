@@ -6,6 +6,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.request.query.DiaryReqFilterDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.query.DiaryResQueryDTO;
 import moodbuddy.moodbuddy.domain.diary.repository.query.DiaryQueryRepository;
 import moodbuddy.moodbuddy.global.common.base.PageCustom;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,14 @@ public class DiaryQueryServiceImpl implements DiaryQueryService {
     @Override
     public PageCustom<DiaryResQueryDTO> getDiariesByFilter(final Long userId, DiaryReqFilterDTO requestDTO, Pageable pageable) {
         return diaryQueryRepository.findDiariesByFilterWithPageable(userId, requestDTO, pageable);
+    }
+
+    @Override
+    @CachePut(
+            cacheNames = "diaries",
+            key = "'userId:' + #userId + '_page:' + #pageable.pageNumber + '_size:' + #pageable.pageSize"
+    )
+    public PageCustom<DiaryResQueryDTO> refreshDiariesCache(final Long userId, Pageable pageable) {
+        return diaryQueryRepository.findDiariesWithPageable(userId, pageable);
     }
 }
