@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryRepositoryCustom {
     boolean existsByUserIdAndDate(Long userId, LocalDate date);
 
+    @Lock(LockModeType.OPTIMISTIC)
     Optional<Diary> findByUserIdAndIdAndMoodBuddyStatus(final Long userId, final Long diaryId, MoodBuddyStatus moodBuddyStatus);
 
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId AND DATE_FORMAT(date, '%Y-%m') = :month AND status = :status", nativeQuery = true)
