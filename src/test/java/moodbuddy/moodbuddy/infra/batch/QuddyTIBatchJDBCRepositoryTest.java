@@ -77,17 +77,6 @@ public class QuddyTIBatchJDBCRepositoryTest {
         quddyTIRepository.deleteAll();
     }
 
-//    @Test
-//    @DisplayName("QuddyTI 찾기 테스트")
-//    public void QuddyTI_찾기_테스트() {
-//        QuddyTI quddyTI = quddyTIBatchJDBCRepository.findQuddyTIByUserIdAndDate(2L, "2025", "01").get();
-//        assertNotNull(quddyTI);
-//        assertEquals(2L, quddyTI.getUserId());
-//        assertEquals("2025", quddyTI.getQuddyTIYear());
-//        assertEquals("01", quddyTI.getQuddyTIMonth());
-//        assertEquals("TEST", quddyTI.getQuddyTIType());
-//    }
-
     @Test
     @DisplayName("한 달 기준 일기 감정 갯수 세기 테스트")
     public void 한_달_기준_일기_감정_갯수_세기_테스트() {

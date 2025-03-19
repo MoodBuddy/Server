@@ -1,11 +1,13 @@
 package moodbuddy.moodbuddy.domain.diary.repository;
 
 import jakarta.persistence.LockModeType;
+import jakarta.persistence.QueryHint;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.global.common.base.type.MoodBuddyStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +16,6 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long>, DiaryRepositoryCustom {
     boolean existsByUserIdAndDate(Long userId, LocalDate date);
 
-    @Lock(LockModeType.OPTIMISTIC)
     Optional<Diary> findByUserIdAndIdAndMoodBuddyStatus(final Long userId, final Long diaryId, MoodBuddyStatus moodBuddyStatus);
 
     @Query(value = "SELECT * FROM diary WHERE user_id = :userId AND DATE_FORMAT(date, '%Y-%m') = :month AND status = :status", nativeQuery = true)
