@@ -29,7 +29,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class DiaryCurrentTest {
-    private static final int THREAD_COUNT = 5;
+    private static final int THREAD_COUNT = 10;
     @Autowired
     private DiaryService diaryService;
     @Autowired

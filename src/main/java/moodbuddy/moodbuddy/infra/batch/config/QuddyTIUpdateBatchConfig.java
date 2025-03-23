@@ -19,6 +19,8 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
@@ -45,12 +47,20 @@ public class QuddyTIUpdateBatchConfig {
     }
 
     @Bean
+    public TaskExecutor quddyTIUpcateTaskExecutor() {
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("update-batch-thread-");
+        executor.setConcurrencyLimit(4);
+        return executor;
+    }
+
+    @Bean
     public Step quddyTIUpdateStep() {
         return new StepBuilder("quddyTIUpdateStep", jobRepository)
                 .<QuddyTI, QuddyTI>chunk(50, transactionManager)
                 .reader(quddyTIReader())
                 .processor(findCountProcessor())
                 .writer(updateQuddyTIWriter())
+                .taskExecutor(quddyTIUpcateTaskExecutor())
                 .build();
     }
 
@@ -60,11 +70,13 @@ public class QuddyTIUpdateBatchConfig {
         return new JdbcCursorItemReaderBuilder<QuddyTI>()
                 .dataSource(dataSource)
                 .name("quddyTIReader")
-                .sql("""
+                .sql(
+                """
                 SELECT id, user_id, quddy_ti_year, quddy_ti_month, mood_buddy_status
                 FROM quddy_ti 
                 WHERE quddy_ti_year = ? AND quddy_ti_month = ? AND mood_buddy_status = ?
-            """)
+                """
+                )
                 .queryArguments(
                         DateUtil.formatYear(dates[0]),
                         DateUtil.formatMonth(dates[1]),
@@ -99,6 +111,6 @@ public class QuddyTIUpdateBatchConfig {
 
     @Bean
     public ItemWriter<QuddyTI> updateQuddyTIWriter() {
-        return items -> items.forEach(quddyTIBatchJDBCRepository::updateQuddyTI);
+        return items -> quddyTIBatchJDBCRepository.bulkUpdate(items.getItems());
     }
 }

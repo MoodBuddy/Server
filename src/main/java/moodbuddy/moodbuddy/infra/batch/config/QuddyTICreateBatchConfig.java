@@ -15,6 +15,8 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
@@ -24,6 +26,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @EnableTransactionManagement
 public class QuddyTICreateBatchConfig {
+
     private final JobRepository jobRepository;
     private final DataSource dataSource;
     private final QuddyTIBatchJDBCRepository quddyTIBatchJDBCRepository;
@@ -37,12 +40,20 @@ public class QuddyTICreateBatchConfig {
     }
 
     @Bean
+    public TaskExecutor quddyTICreateTaskExecutor() {
+        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("create-batch-thread-");
+        executor.setConcurrencyLimit(4);
+        return executor;
+    }
+
+    @Bean
     public Step quddyTICreateStep() {
         return new StepBuilder("quddyTICreateStep", jobRepository)
-                .<Long, QuddyTI>chunk(50, transactionManager)
+                .<Long, QuddyTI>chunk(100, transactionManager)
                 .reader(userIdReader())
                 .processor(createQuddyTIProcessor())
                 .writer(saveQuddyTIWriter())
+                .taskExecutor(quddyTICreateTaskExecutor())
                 .build();
     }
 
@@ -51,8 +62,8 @@ public class QuddyTICreateBatchConfig {
         return new JdbcCursorItemReaderBuilder<Long>()
                 .dataSource(dataSource)
                 .name("userIdReader")
-                .sql("SELECT user_id FROM user WHERE deleted = 0")
-                .rowMapper((rs, rowNum) -> rs.getLong("user_id"))
+                .sql("SELECT id FROM user WHERE deleted = 0")
+                .rowMapper((rs, rowNum) -> rs.getLong("id"))
                 .fetchSize(100)
                 .saveState(false)
                 .build();
@@ -69,11 +80,6 @@ public class QuddyTICreateBatchConfig {
 
     @Bean
     public ItemWriter<QuddyTI> saveQuddyTIWriter() {
-        return items -> {
-            for (QuddyTI quddyTI : items) {
-                Long id = quddyTIBatchJDBCRepository.save(quddyTI);
-                quddyTI.setId(id);
-            }
-        };
+        return items -> quddyTIBatchJDBCRepository.bulkSave(items.getItems());
     }
 }
