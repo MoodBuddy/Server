@@ -1,6 +1,5 @@
 package moodbuddy.moodbuddy.domain.diary.service;
 
-import moodbuddy.moodbuddy.MoodBuddyApplication;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
@@ -29,7 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class DiaryCurrentTest {
-    private static final int THREAD_COUNT = 5;
+    private static final int THREAD_COUNT = 10;
     @Autowired
     private DiaryService diaryService;
     @Autowired
