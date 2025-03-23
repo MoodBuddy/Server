@@ -17,7 +17,7 @@ public class QuddyTIUpdateBatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job quddyTIUpdateJob;
 
-    @Scheduled(cron = "0 0/2 * * * ?")
+    @Scheduled(cron = "0 0 0 1 * *")
     public void runBatchJob() throws JobExecutionException {
         long start = System.currentTimeMillis();
         System.out.println("QuddyTI Update Batch 시작: " + LocalDateTime.now());

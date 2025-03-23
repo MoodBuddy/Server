@@ -17,8 +17,7 @@ public class QuddyTICreateBatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job quddyTICreateJob;
 
-//    @Scheduled(cron = "0 58 23 L * ?")
-@Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 58 23 L * ?")
     public void runBatchJob() throws JobExecutionException {
         long start = System.currentTimeMillis();
         System.out.println("QuddyTI Create Batch 시작: " + LocalDateTime.now());

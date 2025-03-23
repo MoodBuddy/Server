@@ -15,8 +15,6 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
@@ -40,20 +38,12 @@ public class QuddyTICreateBatchConfig {
     }
 
     @Bean
-    public TaskExecutor quddyTICreateTaskExecutor() {
-        SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor("create-batch-thread-");
-        executor.setConcurrencyLimit(4);
-        return executor;
-    }
-
-    @Bean
     public Step quddyTICreateStep() {
         return new StepBuilder("quddyTICreateStep", jobRepository)
                 .<Long, QuddyTI>chunk(100, transactionManager)
                 .reader(userIdReader())
                 .processor(createQuddyTIProcessor())
                 .writer(saveQuddyTIWriter())
-                .taskExecutor(quddyTICreateTaskExecutor())
                 .build();
     }
 
