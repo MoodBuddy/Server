@@ -14,21 +14,47 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
 public class QuddyTIBatchJDBCRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public long findEmotionCountsByUserIdAndDate(Long userId, DiaryEmotion emotion, LocalDate start, LocalDate end) {
-        String sql = "SELECT COUNT(*) FROM diary WHERE user_id = ? AND date BETWEEN ? AND ? AND emotion = ?";
-        return jdbcTemplate.queryForObject(sql, Long.class, userId, start, end, emotion.name());
+    public Map<DiaryEmotion, Long> findEmotionGroupCountsByUserIdAndDate(Long userId, LocalDate start, LocalDate end) {
+        String sql = "SELECT emotion, COUNT(*) FROM diary WHERE user_id = ? AND date BETWEEN ? AND ? GROUP BY emotion";
+
+        return jdbcTemplate.query(sql, rs -> {
+            EnumMap<DiaryEmotion, Long> map = new EnumMap<>(DiaryEmotion.class);
+            while (rs.next()) {
+                String emotionStr = rs.getString("emotion");
+                long count = rs.getLong("COUNT(*)");
+                map.put(DiaryEmotion.valueOf(emotionStr), count);
+            }
+            for (DiaryEmotion e : DiaryEmotion.values()) {
+                map.putIfAbsent(e, 0L);
+            }
+            return map;
+        }, userId, start, end);
     }
 
-    public long findSubjectCountsByUserIdAndDate(Long userId, DiarySubject subject, LocalDate start, LocalDate end) {
-        String sql = "SELECT COUNT(*) FROM diary WHERE user_id = ? AND date BETWEEN ? AND ? AND subject = ?";
-        return jdbcTemplate.queryForObject(sql, Long.class, userId, start, end, subject.name());
+    public Map<DiarySubject, Long> findSubjectGroupCountsByUserIdAndDate(Long userId, LocalDate start, LocalDate end) {
+        String sql = "SELECT subject, COUNT(*) FROM diary WHERE user_id = ? AND date BETWEEN ? AND ? GROUP BY subject";
+
+        return jdbcTemplate.query(sql, rs -> {
+            EnumMap<DiarySubject, Long> map = new EnumMap<>(DiarySubject.class);
+            while (rs.next()) {
+                String subjectStr = rs.getString("subject");
+                long count = rs.getLong("COUNT(*)");
+                map.put(DiarySubject.valueOf(subjectStr), count);
+            }
+            for (DiarySubject s : DiarySubject.values()) {
+                map.putIfAbsent(s, 0L);
+            }
+            return map;
+        }, userId, start, end);
     }
 
     public void bulkUpdate(List<? extends QuddyTI> items) {
@@ -38,7 +64,7 @@ public class QuddyTIBatchJDBCRepository {
             happiness_count = ?, anger_count = ?, disgust_count = ?, fear_count = ?, neutral_count = ?, 
             sadness_count = ?, surprise_count = ?, quddy_ti_type = ?, mood_buddy_status = ?, updated_time = NOW()
         WHERE id = ?
-    """;
+        """;
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override

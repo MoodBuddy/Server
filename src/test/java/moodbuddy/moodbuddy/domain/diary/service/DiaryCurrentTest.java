@@ -1,6 +1,5 @@
 package moodbuddy.moodbuddy.domain.diary.service;
 
-import moodbuddy.moodbuddy.MoodBuddyApplication;
 import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.domain.type.DiaryWeather;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
