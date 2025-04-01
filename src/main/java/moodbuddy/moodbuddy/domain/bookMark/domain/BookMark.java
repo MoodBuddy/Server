@@ -8,8 +8,13 @@ import moodbuddy.moodbuddy.global.common.base.BaseTimeEntity;
 @Getter
 @Builder
 @AllArgsConstructor
-@Table(name = "book_mark")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(
+        name = "book_mark",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"user_id", "diary_id"})
+        }
+)
 public class BookMark extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
