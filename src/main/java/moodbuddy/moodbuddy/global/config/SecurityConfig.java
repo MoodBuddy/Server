@@ -41,17 +41,8 @@ public class SecurityConfig {
                     CorsConfigurationSource source = request -> {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowedOrigins(Arrays.asList(
-                                "http://react-app:3000",
-                                "http://localhost:5173",
-                                "http://localhost:3000",
                                 "http://localhost:8080",
-                                "http://52.79.54.242:8080",
-                                "http://52.79.54.242:3000",
-                                "http://moodbuddy:8080",
-                                "https://moodbuddy.site",
-                                "http://moodbuddy.site",
-                                "https://neon-cat-f70a98.netlify.app",
-                                "https://main.d28mm6xwy7gaq8.amplifyapp.com/"));
+                                "https://moodbuddy.site"));
                         config.setAllowedHeaders(List.of("*"));
                         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                         config.setAllowCredentials(true);
@@ -63,15 +54,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/actuator/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html/**",
-                                "/swagger-resources/**",
-                                "/v3/api-docs/**",
-                                "api/v2/user/sign-up",
-                                "api/v2/user/login/**",
-                                "api/v2/member/**",
-                                "*"
-                        ).permitAll() // 위 경로들은 모두 접근 허용
-                        .anyRequest().authenticated() // 나머지 요청은 인증 필요
+                                "api/v2/member/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
                 );
 
         return http.build();
