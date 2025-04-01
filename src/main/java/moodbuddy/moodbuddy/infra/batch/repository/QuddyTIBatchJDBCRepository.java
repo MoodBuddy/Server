@@ -100,7 +100,7 @@ public class QuddyTIBatchJDBCRepository {
                 user_id, quddy_ti_year, quddy_ti_month, diary_frequency, daily_count, growth_count,
                 emotion_count, travel_count, happiness_count, anger_count, disgust_count, fear_count,
                 neutral_count, sadness_count, surprise_count, quddy_ti_type, mood_buddy_status, created_time, updated_time
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
