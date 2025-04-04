@@ -12,7 +12,6 @@ import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
 import moodbuddy.moodbuddy.domain.diary.service.query.DiaryQueryService;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.infra.redis.service.RedisService;
 import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,6 @@ public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryImageService diaryImageService;
     private final BookMarkService bookMarkService;
     private final UserService userService;
-    private final RedisService redisService;
 
     @Override
     @Transactional
@@ -74,12 +72,10 @@ public class DiaryFacadeImpl implements DiaryFacade {
         }
         checkToday(diaryDate, userId, false);
         draftDiaryService.deleteByDate(userId, diaryDate);
-        redisService.deleteDiaryCaches(userId);
     }
 
     private void postDelete(Long userId, LocalDate diaryDate) {
         checkToday(diaryDate, userId, true);
-        redisService.deleteDiaryCaches(userId);
     }
 
     private void checkToday(LocalDate diaryDate, Long userId, boolean increment) {

@@ -12,7 +12,7 @@ import moodbuddy.moodbuddy.domain.draftDiary.dto.response.DraftDiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
 import moodbuddy.moodbuddy.domain.draftDiary.service.image.DraftDiaryImageService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
-import moodbuddy.moodbuddy.infra.redis.service.RedisService;
+import moodbuddy.moodbuddy.infra.cache.service.CacheService;
 import moodbuddy.moodbuddy.global.util.JwtUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
     private final DiaryImageService diaryImageService;
     private final DraftDiaryImageService draftDiaryImageService;
     private final UserService userService;
-    private final RedisService redisService;
+    private final CacheService cacheService;
 
     @Override
     @Transactional
@@ -50,7 +50,7 @@ public class DraftDiaryFacadeImpl implements DraftDiaryFacade {
             diaryImageService.saveAll(diaryId, requestDTO.diaryImageUrls());
         }
         checkTodayDiary(userId, requestDTO.diaryDate());
-        redisService.deleteDiaryCaches(userId);
+        cacheService.delete(userId);
         return new DiaryResSaveDTO(diaryId);
     }
 

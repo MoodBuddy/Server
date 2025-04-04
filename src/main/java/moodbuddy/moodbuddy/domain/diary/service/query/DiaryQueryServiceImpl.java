@@ -42,16 +42,6 @@ public class DiaryQueryServiceImpl implements DiaryQueryService {
     }
 
     @Override
-    @Cacheable(
-            cacheNames = "diaries",
-            key = "'userId:' + #userId + '_sort:' + #isAscending + '_page:' + #pageable.pageNumber + '_size:' + #pageable.pageSize",
-            unless = "#result == null"
-    )
-    public PageCustom<DiaryResQueryDTO> refreshDiariesCache(final Long userId, boolean isAscending, Pageable pageable) {
-        return diaryQueryRepository.findDiariesWithPageable(userId, false, pageable);
-    }
-
-    @Override
     @Transactional
     public void save(final Diary diary) {
         diaryQueryRepository.save(DiaryQuery.from(diary));
