@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import static moodbuddy.moodbuddy.domain.diary.domain.QDiary.diary;
+import static moodbuddy.moodbuddy.domain.diary.domain.QDiaryQuery.diaryQuery;
 
 public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     private final JPAQueryFactory queryFactory;
@@ -29,18 +29,18 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     @Override
     public PageCustom<DiaryResQueryDTO> findDiariesWithPageable(Long userId, boolean isAscending, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
-                        diary.id,
-                        diary.title,
-                        diary.date,
-                        diary.content,
-                        diary.thumbnail
+                        diaryQuery.diaryId,
+                        diaryQuery.title,
+                        diaryQuery.date,
+                        diaryQuery.content,
+                        diaryQuery.thumbnail
                 ))
-                .from(diary)
+                .from(diaryQuery)
                 .where(
-                        diary.userId.eq(userId),
-                        diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)
+                        diaryQuery.userId.eq(userId),
+                        diaryQuery.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)
                 )
-                .orderBy(isAscending ? diary.date.asc() : diary.date.desc())
+                .orderBy(isAscending ? diaryQuery.date.asc() : diaryQuery.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -66,19 +66,19 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     @Override
     public PageCustom<DiaryResQueryDTO> findDiariesByEmotionWithPageable(Long userId, boolean isAscending, DiaryEmotion emotion, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
-                        diary.id,
-                        diary.title,
-                        diary.date,
-                        diary.content,
-                        diary.thumbnail
+                        diaryQuery.diaryId,
+                        diaryQuery.title,
+                        diaryQuery.date,
+                        diaryQuery.content,
+                        diaryQuery.thumbnail
                 ))
-                .from(diary)
+                .from(diaryQuery)
                 .where(
-                        diary.userId.eq(userId),
-                        diary.emotion.eq(emotion),
-                        diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)
+                        diaryQuery.userId.eq(userId),
+                        diaryQuery.emotion.eq(emotion),
+                        diaryQuery.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE)
                 )
-                .orderBy(isAscending ? diary.date.asc() : diary.date.desc())
+                .orderBy(isAscending ? diaryQuery.date.asc() : diaryQuery.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -91,23 +91,23 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
     @Override
     public PageCustom<DiaryResQueryDTO> findDiariesByFilterWithPageable(Long userId, boolean isAscending, DiaryReqFilterDTO filterDTO, Pageable pageable) {
         var results = queryFactory.select(Projections.constructor(DiaryResQueryDTO.class,
-                        diary.id,
-                        diary.title,
-                        diary.date,
-                        diary.content,
-                        diary.thumbnail
+                        diaryQuery.diaryId,
+                        diaryQuery.title,
+                        diaryQuery.date,
+                        diaryQuery.content,
+                        diaryQuery.thumbnail
                 ))
-                .from(diary)
+                .from(diaryQuery)
                 .where(
-                        diary.userId.eq(userId),
-                        diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE),
+                        diaryQuery.userId.eq(userId),
+                        diaryQuery.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE),
                         filterKeyWord(filterDTO.keyWord()),
                         filterYear(filterDTO.year()),
                         filterMonth(filterDTO.month()),
                         filterEmotion(filterDTO.diaryEmotion()),
                         filterSubject(filterDTO.diarySubject())
                 )
-                .orderBy(isAscending ? diary.date.asc() : diary.date.desc())
+                .orderBy(isAscending ? diaryQuery.date.asc() : diaryQuery.date.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -119,41 +119,41 @@ public class DiaryQueryRepositoryImpl implements DiaryQueryRepositoryCustom {
 
     private BooleanExpression filterKeyWord(String keyWord) {
         return keyWord != null && !keyWord.isEmpty()
-                ? diary.title.containsIgnoreCase(keyWord).or(diary.content.containsIgnoreCase(keyWord))
+                ? diaryQuery.title.containsIgnoreCase(keyWord).or(diaryQuery.content.containsIgnoreCase(keyWord))
                 : null;
     }
 
     private BooleanExpression filterYear(Integer year) {
         return year != null
-                ? diary.date.year().eq(year)
+                ? diaryQuery.date.year().eq(year)
                 : null;
     }
 
     private BooleanExpression filterMonth(Integer month) {
         return month != null
-                ? diary.date.month().eq(month)
+                ? diaryQuery.date.month().eq(month)
                 : null;
     }
 
     private BooleanExpression filterEmotion(DiaryEmotion emotion) {
         return emotion != null
-                ? diary.emotion.eq(emotion)
+                ? diaryQuery.emotion.eq(emotion)
                 : null;
     }
 
     private BooleanExpression filterSubject(DiarySubject subject) {
         return subject != null
-                ? diary.subject.eq(subject)
+                ? diaryQuery.subject.eq(subject)
                 : null;
     }
 
     private long getTotal(Long userId, DiaryEmotion emotion, DiarySubject subject, Integer year, Integer month, String keyWord) {
         return Optional.ofNullable(
-                queryFactory.select(diary.count())
-                        .from(diary)
+                queryFactory.select(diaryQuery.count())
+                        .from(diaryQuery)
                         .where(
-                                diary.userId.eq(userId),
-                                diary.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE),
+                                diaryQuery.userId.eq(userId),
+                                diaryQuery.moodBuddyStatus.eq(MoodBuddyStatus.ACTIVE),
                                 filterEmotion(emotion),
                                 filterSubject(subject),
                                 filterYear(year),
