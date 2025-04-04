@@ -2,6 +2,7 @@ package moodbuddy.moodbuddy.domain.diary.facade;
 
 import lombok.RequiredArgsConstructor;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
+import moodbuddy.moodbuddy.domain.diary.domain.Diary;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
@@ -33,58 +34,58 @@ public class DiaryFacadeImpl implements DiaryFacade {
     @Override
     @Transactional
     public DiaryResSaveDTO save(DiaryReqSaveDTO requestDTO) {
-        final var userId = JwtUtil.getUserId();
-        var diaryId = diaryService.save(userId, requestDTO);
-        saveDiaryImages(diaryId, requestDTO.diaryImageUrls());
-        checkTodayDiary(userId, requestDTO.diaryDate(), false);
-        deleteData(userId, requestDTO.diaryDate());
-        return new DiaryResSaveDTO(diaryId);
+        Long userId = JwtUtil.getUserId();
+        Diary diary = diaryService.save(userId, requestDTO);
+        diaryQueryService.save(diary);
+        postSaveOrUpdate(diary.getId(), userId, requestDTO.diaryDate(), requestDTO.diaryImageUrls());
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override
     @Transactional
     public DiaryResSaveDTO update(DiaryReqUpdateDTO requestDTO) {
-        final var userId = JwtUtil.getUserId();
-        var diaryId = diaryService.update(userId, requestDTO);
-        diaryImageService.deleteAll(diaryId);
-        saveDiaryImages(diaryId, requestDTO.diaryImageUrls());
-        deleteData(userId, requestDTO.diaryDate());
-        return new DiaryResSaveDTO(diaryId);
+        Long userId = JwtUtil.getUserId();
+        Diary diary = diaryService.update(userId, requestDTO);
+        diaryQueryService.update(diary);
+        diaryImageService.deleteAll(diary.getId());
+        postSaveOrUpdate(diary.getId(), userId, requestDTO.diaryDate(), requestDTO.diaryImageUrls());
+        return new DiaryResSaveDTO(diary.getId());
     }
 
     @Override
     @Transactional
-    public void delete(final Long diaryId) {
-        final var userId = JwtUtil.getUserId();
-        var diaryDate = diaryService.delete(userId, diaryId);
+    public void delete(Long diaryId) {
+        Long userId = JwtUtil.getUserId();
+        LocalDate diaryDate = diaryService.delete(userId, diaryId);
+        diaryQueryService.delete(diaryId);
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
-        checkTodayDiary(userId, diaryDate, true);
-        redisService.deleteDiaryCaches(userId);
+        postDelete(userId, diaryDate);
     }
 
     @Override
-    public DiaryResDetailDTO getDiary(final Long diaryId) {
-        final var userId = JwtUtil.getUserId();
-        return diaryService.getDiary(userId, diaryId);
+    public DiaryResDetailDTO getDiary(Long diaryId) {
+        return diaryService.getDiary(JwtUtil.getUserId(), diaryId);
     }
 
-    private void checkTodayDiary(final Long userId, LocalDate diaryDate, boolean check) {
-        var today = LocalDate.now();
-        if (diaryDate.isEqual(today)) {
-            userService.changeCount(userId, check);
-            userService.setUserCheckTodayDairy(userId, check);
+    private void postSaveOrUpdate(Long diaryId, Long userId, LocalDate diaryDate, List<String> imageUrls) {
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            diaryImageService.saveAll(diaryId, imageUrls);
         }
-    }
-
-    private void deleteData(final Long userId, LocalDate date) {
-        draftDiaryService.deleteByDate(userId, date);
+        checkToday(diaryDate, userId, false);
+        draftDiaryService.deleteByDate(userId, diaryDate);
         redisService.deleteDiaryCaches(userId);
     }
 
-    private void saveDiaryImages(Long diaryId, List<String> requestDTO) {
-        if (requestDTO != null) {
-            diaryImageService.saveAll(diaryId, requestDTO);
+    private void postDelete(Long userId, LocalDate diaryDate) {
+        checkToday(diaryDate, userId, true);
+        redisService.deleteDiaryCaches(userId);
+    }
+
+    private void checkToday(LocalDate diaryDate, Long userId, boolean increment) {
+        if (LocalDate.now().isEqual(diaryDate)) {
+            userService.changeCount(userId, increment);
+            userService.setUserCheckTodayDairy(userId, increment);
         }
     }
 }

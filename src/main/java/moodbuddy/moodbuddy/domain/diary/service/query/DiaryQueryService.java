@@ -12,4 +12,7 @@ public interface DiaryQueryService {
     PageCustom<DiaryResQueryDTO> getDiariesByEmotion(final Long userId, boolean isAscending, DiaryEmotion diaryEmotion, Pageable pageable);
     PageCustom<DiaryResQueryDTO> getDiariesByFilter(final Long userId, boolean isAscending, DiaryReqFilterDTO requestDTO, Pageable pageable);
     PageCustom<DiaryResQueryDTO> refreshDiariesCache(final Long userId, boolean isAscending, Pageable pageable);
+    void save(final Diary diary);
+    void update(final Diary diary);
+    void delete(final Long diaryId);
 }

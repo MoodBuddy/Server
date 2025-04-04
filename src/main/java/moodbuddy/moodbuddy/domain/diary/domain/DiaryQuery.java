@@ -29,10 +29,7 @@ public class DiaryQuery {
 
     @Column(name = "user_id", nullable = false, columnDefinition = "bigint")
     private Long userId;
-
-    @Column(name = "book_mark")
-    private Boolean bookMark;
-
+    
     @Column(name = "thumbnail", columnDefinition = "text")
     private String thumbnail;
 
@@ -58,11 +55,21 @@ public class DiaryQuery {
                 .date(diary.getDate())
                 .content(previewContent)
                 .userId(diary.getUserId())
-                .bookMark(diary.getBookMark())
                 .thumbnail(diary.getThumbnail())
                 .emotion(diary.getEmotion())
                 .subject(diary.getSubject())
                 .moodBuddyStatus(diary.getMoodBuddyStatus())
                 .build();
+    }
+
+    public void update(Diary diary) {
+        this.title = diary.getTitle();
+        this.date = diary.getDate();
+        this.content = diary.getContent();
+        this.userId = diary.getUserId();
+        this.thumbnail = diary.getThumbnail();
+        this.emotion = diary.getEmotion();
+        this.subject = diary.getSubject();
+        this.moodBuddyStatus = diary.getMoodBuddyStatus();
     }
 }

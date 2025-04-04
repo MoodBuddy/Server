@@ -26,19 +26,19 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public Long save(final Long userId, DiaryReqSaveDTO requestDTO) {
+    public Diary save(final Long userId, DiaryReqSaveDTO requestDTO) {
         return diaryRepository.save(Diary.of(
                 requestDTO,
-                userId)).getId();
+                userId));
     }
 
     @Override
     @Transactional
-    public Long update(final Long userId, DiaryReqUpdateDTO requestDTO) {
+    public Diary update(final Long userId, DiaryReqUpdateDTO requestDTO) {
         try {
             var findDiary = findDiaryById(userId, requestDTO.diaryId());
             findDiary.updateDiary(requestDTO);
-            return findDiary.getId();
+            return findDiary;
         } catch (ObjectOptimisticLockingFailureException ex) {
             throw new DiaryConcurrentUpdateException(ErrorCode.DIARY_CONCURRENT_UPDATE);
         }
