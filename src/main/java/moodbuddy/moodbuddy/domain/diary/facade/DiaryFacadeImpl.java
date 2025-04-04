@@ -1,7 +1,6 @@
 package moodbuddy.moodbuddy.domain.diary.facade;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import moodbuddy.moodbuddy.domain.bookMark.service.BookMarkService;
 import moodbuddy.moodbuddy.domain.diary.dto.request.save.DiaryReqSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.request.update.DiaryReqUpdateDTO;
@@ -9,6 +8,7 @@ import moodbuddy.moodbuddy.domain.diary.dto.response.DiaryResDetailDTO;
 import moodbuddy.moodbuddy.domain.diary.dto.response.save.DiaryResSaveDTO;
 import moodbuddy.moodbuddy.domain.diary.service.image.DiaryImageService;
 import moodbuddy.moodbuddy.domain.diary.service.DiaryService;
+import moodbuddy.moodbuddy.domain.diary.service.query.DiaryQueryService;
 import moodbuddy.moodbuddy.domain.draftDiary.service.DraftDiaryService;
 import moodbuddy.moodbuddy.domain.user.service.UserService;
 import moodbuddy.moodbuddy.infra.redis.service.RedisService;
@@ -23,6 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class DiaryFacadeImpl implements DiaryFacade {
     private final DiaryService diaryService;
+    private final DiaryQueryService diaryQueryService;
     private final DraftDiaryService draftDiaryService;
     private final DiaryImageService diaryImageService;
     private final BookMarkService bookMarkService;
@@ -31,10 +32,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResSaveDTO saveDiary(DiaryReqSaveDTO requestDTO) {
+    public DiaryResSaveDTO save(DiaryReqSaveDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        diaryService.validateExistingDiary(userId, requestDTO.diaryDate());
-        var diaryId = diaryService.saveDiary(userId, requestDTO);
+        var diaryId = diaryService.save(userId, requestDTO);
         saveDiaryImages(diaryId, requestDTO.diaryImageUrls());
         checkTodayDiary(userId, requestDTO.diaryDate(), false);
         deleteData(userId, requestDTO.diaryDate());
@@ -43,9 +43,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public DiaryResSaveDTO updateDiary(DiaryReqUpdateDTO requestDTO) {
+    public DiaryResSaveDTO update(DiaryReqUpdateDTO requestDTO) {
         final var userId = JwtUtil.getUserId();
-        var diaryId = diaryService.updateDiary(userId, requestDTO);
+        var diaryId = diaryService.update(userId, requestDTO);
         diaryImageService.deleteAll(diaryId);
         saveDiaryImages(diaryId, requestDTO.diaryImageUrls());
         deleteData(userId, requestDTO.diaryDate());
@@ -54,9 +54,9 @@ public class DiaryFacadeImpl implements DiaryFacade {
 
     @Override
     @Transactional
-    public void deleteDiary(final Long diaryId) {
+    public void delete(final Long diaryId) {
         final var userId = JwtUtil.getUserId();
-        var diaryDate = diaryService.deleteDiary(userId, diaryId);
+        var diaryDate = diaryService.delete(userId, diaryId);
         bookMarkService.deleteByDiaryId(diaryId);
         diaryImageService.deleteAll(diaryId);
         checkTodayDiary(userId, diaryDate, true);
@@ -78,7 +78,7 @@ public class DiaryFacadeImpl implements DiaryFacade {
     }
 
     private void deleteData(final Long userId, LocalDate date) {
-        draftDiaryService.deleteDraftDiariesByDate(userId, date);
+        draftDiaryService.deleteByDate(userId, date);
         redisService.deleteDiaryCaches(userId);
     }
 
