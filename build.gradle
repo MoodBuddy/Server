@@ -98,6 +98,9 @@ dependencies {
 
     // jdbc
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
+
+    // caffeine
+    implementation 'com.github.ben-manes.caffeine:caffeine'
 }
 
 tasks.named('test') {
